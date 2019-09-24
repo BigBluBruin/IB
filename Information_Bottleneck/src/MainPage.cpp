@@ -6,7 +6,7 @@
 #include <time.h>
 #include <random>
 
-std::vector<unsigned> random_cluster(const unsigned total_num, const unsigned quan_size)
+/*std::vector<unsigned> random_cluster(const unsigned total_num, const unsigned quan_size)
 {
     //initialize random seed
     std::random_device rd;
@@ -48,7 +48,24 @@ std::vector<unsigned> random_cluster(const unsigned total_num, const unsigned qu
     }
 
     return cluster;
-}
+}*/
+
+ /*std::vector<std::vector<double>> quantize_to_xt2(std::vector<std::vector<double>> & input, std::vector<unsigned> & cluster)
+ {
+     std::vector<std::vector<double>> join_prob_xt(2,std::vector<double>(cluster.size(),0));
+     std::vector<double>::iterator iter1=input[0].begin();
+     std::vector<double>::iterator iter2=input[1].begin();
+     int i=0;
+     for (const unsigned & cluval: cluster)
+     {
+         join_prob_xt[0][i]=std::accumulate(iter1,iter1+cluval,0);
+         join_prob_xt[1][i]=std::accumulate(iter2,iter2+cluval,0);
+         iter1=iter1+cluval;
+         iter2=iter2+cluval;
+         i+=1;
+     }
+     return join_prob_xt;
+ }*/
 
 int main()
 {
@@ -101,7 +118,7 @@ int main()
     myfile.close();*/
 
     //test for randome cluster//
-    std::ofstream myfile("random_cluster_test.txt");
+    /*std::ofstream myfile("random_cluster_test.txt");
     myfile << "--------repeat test-------" << std::endl;
     std::vector<unsigned> out = random_cluster(4, 4);
     for (const auto &term : out)
@@ -116,6 +133,24 @@ int main()
             myfile << term << "  ";
         myfile << std::endl;
     }
-    myfile.close();
+    myfile.close();*/
+    /*std::vector<std::vector<double>> join{{1,2,3,4,5},{6,7,8,9,10}};
+    std::ofstream myfile("quantization_cluster_test.txt");
+    myfile<<"original prob-------"<<std::endl;
+    for(const auto & firlay: join)
+    {
+        for(const auto& seclay:firlay)
+            myfile<<seclay<<"  ";
+        myfile<<std::endl;
+    }
+    std::vector<unsigned> cluster{1,2,2};
+    std::vector<std::vector<double>> quaned=quantize_to_xt2(join,cluster);
+    myfile<<"after cluster--------"<<std::endl;
+    for(const auto & firlay: quaned)
+    {
+        for(const auto& seclay:firlay)
+            myfile<<seclay<<"  ";
+        myfile<<std::endl;
+    }*/
     return 0;
 }
