@@ -1,6 +1,7 @@
 
 #include "Information_Bottleneck/itbox.h"
 #include "Information_Bottleneck/overloadvec.h"
+#include "Information_Bottleneck/stats.h"
 #include <iostream>
 #include <fstream>
 #include <time.h>
@@ -155,7 +156,7 @@ int main()
 
 
     //test: KL & JS divergence 
-    std::vector<double> p1{0.3,0.3,0.4};
+    /*std::vector<double> p1{0.3,0.3,0.4};
     std::vector<double> p2{0.1,0.5,0.4};
     std::ofstream myfile("testing_KL_JS");
     for (const auto & term: p1)
@@ -165,6 +166,23 @@ int main()
         myfile<<term<<"  ";
     myfile<<std::endl;
     myfile<<"KL divergence between p1 and p2: "<<it_kl(p1,p2)<<std::endl;
-    myfile<<"JS divergence between p1 and p2 with para 0.4 and 0.6: "<<it_js(0.4,p1,0.6,p2);
+    myfile<<"JS divergence between p1 and p2 with para 0.4 and 0.6: "<<it_js(0.4,p1,0.6,p2);*/
+
+    /*this section test gaussian partition*/
+    std::vector<std::vector<double>> prob_join_xy=gaussian_disretization(-2,2,6,0.2);
+    std::ofstream myfile("testing_channel_dist.txt");
+    myfile<<"------min=-2, max=2, sigma^2=0.6, cardi=4------"<<std::endl;
+    double sum=0;
+    for(const auto & layer1: prob_join_xy)
+    {
+        for(const auto & term: layer1)
+        {
+            myfile<<term<<"  ";
+            sum+=term;
+        }
+        myfile<<std::endl;
+    }
+    myfile<<"probablity sum is: "<<sum<<"."<<std::endl;
+    myfile.close();
     return 0;
 }
