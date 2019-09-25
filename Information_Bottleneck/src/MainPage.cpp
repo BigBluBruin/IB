@@ -152,5 +152,19 @@ int main()
             myfile<<seclay<<"  ";
         myfile<<std::endl;
     }*/
+
+
+    //test: KL & JS divergence 
+    std::vector<double> p1{0.3,0.3,0.4};
+    std::vector<double> p2{0.1,0.5,0.4};
+    std::ofstream myfile("testing_KL_JS");
+    for (const auto & term: p1)
+        myfile<<term<<"  ";
+    myfile<<std::endl;
+    for (const auto & term: p2)
+        myfile<<term<<"  ";
+    myfile<<std::endl;
+    myfile<<"KL divergence between p1 and p2: "<<it_kl(p1,p2)<<std::endl;
+    myfile<<"JS divergence between p1 and p2 with para 0.4 and 0.6: "<<it_js(0.4,p1,0.6,p2);
     return 0;
 }

@@ -84,9 +84,9 @@ double it_kl(std::vector<double> trudist, std::vector<double> appdist)
     std::vector<double>::iterator iter1, iter2;
     for (iter1 = trudist.begin(), iter2 = appdist.begin(); iter1 < trudist.end() && iter2 < appdist.end(); iter1++, iter2++)
     {
-        result = (*iter1) * log2((*iter1) / (*iter2));
+        result += (*iter1) * log2((*iter1) / (*iter2));
     }
-    return -result;
+    return result;
 }
 
 double it_js(double p1, std::vector<double> dist1, double p2, std::vector<double> dist2)

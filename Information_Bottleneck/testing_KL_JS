@@ -1,0 +1,4 @@
+0.3  0.3  0.4  
+0.1  0.5  0.4  
+KL divergence between p1 and p2: 0.254399
+JS divergence between p1 and p2 with para 0.4 and 0.6: 0.0547665
