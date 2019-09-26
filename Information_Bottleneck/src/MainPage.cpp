@@ -52,7 +52,7 @@
     return cluster;
 }*/
 
- std::vector<std::vector<double>> quantize_to_xt2(std::vector<std::vector<double>> & input, std::vector<unsigned> & cluster)
+ /*-std::vector<std::vector<double>> quantize_to_xt2(std::vector<std::vector<double>> & input, std::vector<unsigned> & cluster)
  {
      std::vector<std::vector<double>> join_prob_xt(2,std::vector<double>(cluster.size(),0.0));
      std::vector<double>::iterator iter1=input[0].begin();
@@ -69,7 +69,7 @@
      }
      std::cout<<std::endl;
      return join_prob_xt;
- }
+ }*/
 
 int main()
 {
@@ -196,13 +196,13 @@ int main()
     unsigned quansize=16;
     std::vector<std::vector<double>> prob_join_xy=gaussian_disretization(-2,2,2000,sigma2);
     std::vector<unsigned> partit{170,47,438,57,102,128,21,37,37,21,128,102,57,438,47,170};
-    std::vector<std::vector<double>> prob_join_xt=quantize_to_xt2(prob_join_xy,partit);
+    /*std::vector<std::vector<double>> prob_join_xt=quantize_to_xt2(prob_join_xy,partit);
     std::cout<<"------first 170 elements----"<<std::endl;
     for (int ii=0 ;ii<170;ii++)
     {
         std::cout<<prob_join_xy[0][ii]<<"  ";
     }
-    std::cout<<std::endl;
+    std::cout<<std::endl;*/
 
     /*for(const auto& layer1: prob_join_xt)
     {
@@ -211,8 +211,8 @@ int main()
         std::cout<<std::endl;
     }*/
 
-    //IB_kernel kernel_instance(prob_join_xy,quansize,500);
-    //kernel_instance.smIB();
+    IB_kernel kernel_instance(prob_join_xy,quansize,3000);
+    kernel_instance.smIB();
 
     /*This part is used to test mutual information*/
     /*std::vector<std::vector<double>> joint{{0.15,0.2,0.15},{0.2,0.1,0.2}};
