@@ -4,6 +4,7 @@
 #include <vector>
 #include <iostream>
 #include "Information_Bottleneck/overloadvec.h"
+#include "Information_Bottleneck/itbox.h"
 
 
 /*This package gives statistical tools*/

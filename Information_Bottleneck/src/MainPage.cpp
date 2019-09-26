@@ -2,6 +2,7 @@
 #include "Information_Bottleneck/itbox.h"
 #include "Information_Bottleneck/overloadvec.h"
 #include "Information_Bottleneck/stats.h"
+#include "Information_Bottleneck/IB_kernel.h"
 #include <iostream>
 #include <fstream>
 #include <time.h>
@@ -51,22 +52,24 @@
     return cluster;
 }*/
 
- /*std::vector<std::vector<double>> quantize_to_xt2(std::vector<std::vector<double>> & input, std::vector<unsigned> & cluster)
+ std::vector<std::vector<double>> quantize_to_xt2(std::vector<std::vector<double>> & input, std::vector<unsigned> & cluster)
  {
-     std::vector<std::vector<double>> join_prob_xt(2,std::vector<double>(cluster.size(),0));
+     std::vector<std::vector<double>> join_prob_xt(2,std::vector<double>(cluster.size(),0.0));
      std::vector<double>::iterator iter1=input[0].begin();
      std::vector<double>::iterator iter2=input[1].begin();
      int i=0;
      for (const unsigned & cluval: cluster)
      {
-         join_prob_xt[0][i]=std::accumulate(iter1,iter1+cluval,0);
-         join_prob_xt[1][i]=std::accumulate(iter2,iter2+cluval,0);
+         
+         join_prob_xt[0][i]=std::accumulate(iter1,iter1+cluval,0.0);
+         join_prob_xt[1][i]=std::accumulate(iter2,iter2+cluval,0.0);
          iter1=iter1+cluval;
          iter2=iter2+cluval;
          i+=1;
      }
+     std::cout<<std::endl;
      return join_prob_xt;
- }*/
+ }
 
 int main()
 {
@@ -169,7 +172,7 @@ int main()
     myfile<<"JS divergence between p1 and p2 with para 0.4 and 0.6: "<<it_js(0.4,p1,0.6,p2);*/
 
     /*this section test gaussian partition*/
-    std::vector<std::vector<double>> prob_join_xy=gaussian_disretization(-2,2,6,0.2);
+    /*std::vector<std::vector<double>> prob_join_xy=gaussian_disretization(-2,2,6,0.2);
     std::ofstream myfile("testing_channel_dist.txt");
     myfile<<"------min=-2, max=2, sigma^2=0.6, cardi=4------"<<std::endl;
     double sum=0;
@@ -183,6 +186,37 @@ int main()
         myfile<<std::endl;
     }
     myfile<<"probablity sum is: "<<sum<<"."<<std::endl;
-    myfile.close();
+    myfile.close();*/
+    /*std::vector<double> aa{1,2,3,4,5};
+    std::cout<<std::accumulate(aa.begin(),aa.begin()+1,0)<<std::endl;
+    std::cout<<std::accumulate(aa.begin(),aa.end(),0)<<std::endl;*/
+
+    /*This part is used to test information bottleneck part*/
+    double sigma2=0.1;
+    unsigned quansize=16;
+    std::vector<std::vector<double>> prob_join_xy=gaussian_disretization(-2,2,2000,sigma2);
+    std::vector<unsigned> partit{170,47,438,57,102,128,21,37,37,21,128,102,57,438,47,170};
+    std::vector<std::vector<double>> prob_join_xt=quantize_to_xt2(prob_join_xy,partit);
+    std::cout<<"------first 170 elements----"<<std::endl;
+    for (int ii=0 ;ii<170;ii++)
+    {
+        std::cout<<prob_join_xy[0][ii]<<"  ";
+    }
+    std::cout<<std::endl;
+
+    /*for(const auto& layer1: prob_join_xt)
+    {
+        for(const auto&term:layer1)
+            std::cout<<term<<"  ";
+        std::cout<<std::endl;
+    }*/
+
+    //IB_kernel kernel_instance(prob_join_xy,quansize,500);
+    //kernel_instance.smIB();
+
+    /*This part is used to test mutual information*/
+    /*std::vector<std::vector<double>> joint{{0.15,0.2,0.15},{0.2,0.1,0.2}};
+    std::cout<<it_mi(joint)<<std::endl;*/
+
     return 0;
 }

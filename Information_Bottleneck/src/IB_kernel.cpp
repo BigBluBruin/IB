@@ -9,22 +9,24 @@ IB_kernel::IB_kernel(std::vector<std::vector<double>> input, unsigned quan, int 
 }
 std::vector<std::vector<double>> IB_kernel::quantize_to_xt(std::vector<std::vector<double>> &input, std::vector<unsigned> &cluster)
 {
-    std::vector<std::vector<double>> join_prob_xt(2, std::vector<double>(cluster.size(), 0));
+    std::vector<std::vector<double>> join_prob_xt(2, std::vector<double>(cluster.size(), 0.0));
     std::vector<double>::iterator iter1 = input[0].begin();
     std::vector<double>::iterator iter2 = input[1].begin();
     int i = 0;
     for (const unsigned &cluval : cluster)
     {
-        join_prob_xt[0][i] = std::accumulate(iter1, iter1 + cluval, 0);
-        join_prob_xt[1][i] = std::accumulate(iter2, iter2 + cluval, 0);
+        join_prob_xt[0][i] = std::accumulate(iter1, iter1 + cluval, 0.0);
+        join_prob_xt[1][i] = std::accumulate(iter2, iter2 + cluval, 0.0);
         iter1 = iter1 + cluval;
         iter2 = iter2 + cluval;
+        i=i+1;
     }
     return join_prob_xt;
 }
 
 std::vector<unsigned> IB_kernel::random_cluster(const unsigned total_num, const unsigned quan_size)
 {
+
     //initialize random seed
     std::random_device rd;
     std::mt19937 generator(rd());
@@ -37,9 +39,12 @@ std::vector<unsigned> IB_kernel::random_cluster(const unsigned total_num, const 
         remaining[ii] = ii + 1;
     }
 
-    for (const auto &term : remaining)
-        std::cout << term;
-    std::cout << std::endl;
+    //----------debuging-------------
+    /*for (const auto &term : remaining)
+        std::cout << term<<std::endl;
+    std::cout << std::endl;*/
+    //----------debuging--------------
+
     std::vector<unsigned> chosen(quan_size - 1);
     int selected;
 
@@ -48,9 +53,9 @@ std::vector<unsigned> IB_kernel::random_cluster(const unsigned total_num, const 
     {
         std::uniform_int_distribution<> distribution(0, total_num - 2 - ii);
         selected = distribution(generator);
-        std::cout << "round: " << ii << "select:" << selected;
+        //std::cout << "round: " << ii << "select:" << selected;
         chosen[ii] = remaining[selected];
-        std::cout << "number" << chosen[ii] << std::endl;
+        //std::cout << "number" << chosen[ii] << std::endl;
         remaining.erase(remaining.begin() + selected);
     }
 
@@ -63,6 +68,10 @@ std::vector<unsigned> IB_kernel::random_cluster(const unsigned total_num, const 
     {
         cluster[ii] = chosen[ii + 1] - chosen[ii];
     }
+
+    /*for (const auto& term: cluster)
+        std::cout<<term<<std::endl;
+    std::cout<<std::endl;*/
 
     return cluster;
 }
@@ -80,7 +89,7 @@ void IB_kernel::smIB()
     for (int run_ind = 0; run_ind < max_run; run_ind++)
     {
         //step 1: generate a random cluster
-        std::vector<unsigned> left_par = random_cluster(prob_join_xy[1].size(), quan_size / 2);
+        std::vector<unsigned> left_par = random_cluster(prob_join_xy[1].size()/2, quan_size / 2);
         std::vector<double>::iterator iter1, iter2;
         unsigned counter;
         std::vector<unsigned> right_par = left_par;
@@ -88,7 +97,11 @@ void IB_kernel::smIB()
         std::vector<unsigned> partition;
         std::copy(left_par.begin(), left_par.end(), std::back_inserter(partition));
         std::copy(right_par.begin(), right_par.end(), std::back_inserter(partition));
-
+        //------debugging-------------------
+        /*for (const auto& term: partition)
+            std::cout<<term<<std::endl;
+        std::cout<<std::endl;*/
+        //-----------------------------------
         //step 2: for all left part
         for (unsigned ii = 0; ii < quan_size / 2 - 1; ii++)
         {
@@ -106,25 +119,32 @@ void IB_kernel::smIB()
                     iter1 = prob_join_xy[0].begin() + counter;
                     iter2 = iter1 + partition[ii] - 1;
                     left_join.resize(2);
-                    left_join[0] = std::accumulate(iter1, iter2, 0);
+                    left_join[0] = std::accumulate(iter1, iter2, 0.0);
                     iter1 = prob_join_xy[1].begin() + counter;
                     iter2 = iter1 + partition[ii] - 1;
-                    left_join[1] = std::accumulate(iter1, iter2, 0);
+                    left_join[1] = std::accumulate(iter1, iter2, 0.0);
+
+
                     //single
                     sin_join = {prob_join_xy[0][counter + partition[ii] - 1], prob_join_xy[1][counter + partition[ii] - 1]};
                     //right
                     iter1 = prob_join_xy[0].begin() + counter + partition[ii];
                     iter2 = iter1 + partition[ii + 1];
                     right_join.resize(2);
-                    right_join[0] = std::accumulate(iter1, iter2, 0);
+                    right_join[0] = std::accumulate(iter1, iter2, 0.0);
                     iter1 = prob_join_xy[1].begin() + counter + partition[ii];
                     iter2 = iter1 + partition[ii + 1];
-                    right_join[1] = std::accumulate(iter1, iter2, 0);
+                    right_join[1] = std::accumulate(iter1, iter2, 0.0);
                     py = left_join[0] + left_join[1];
                     pt = sin_join[0] + sin_join[1];
+                    ave_prob(left_join);
+                    ave_prob(sin_join);
+                    //std::cout<<"left: "<<py<<"single: "<<pt<<" "; 
                     left_cost = (py + pt) * it_js(py/(py+pt), left_join, pt/(py+pt), sin_join);
                     py = right_join[0] + right_join[1];
+                    ave_prob(right_join);
                     right_cost = (py + pt) * it_js(py/(py+pt), right_join, pt/(py+pt), sin_join);
+                    //std::cout<<"right: "<<py<<"single: "<<pt<<" ";
                     if (left_cost < right_cost)
                         finish = true;
                     else
@@ -133,19 +153,24 @@ void IB_kernel::smIB()
                         partition[ii + 1]++;
                         partition[quan_size-1-ii]--;
                         partition[quan_size-2-ii]++;
+                        //std::cout<<ii<<"th size is: "<<partition[ii]<<std::endl;
                     }
+                    //std::cout<<left_cost<<"  "<<right_cost<<std::endl;
                 }
                 else
                 {
                     finish = true;
                 }
 
-            } while (finish);
+            } while (!finish);
         }
+        //std::cout<<"left finished"<<std::endl;
 
+        finish=false;
         //step 3: for all right part
         for (unsigned ii = 0; ii < quan_size / 2 - 1; ii++)
-        {
+        {   
+            //std::cout<<"right "<<ii<<"th"<<std::endl;
 
             do
             { //each cluater has at least one element !
@@ -160,25 +185,32 @@ void IB_kernel::smIB()
                     iter1 = prob_join_xy[0].begin() + counter;
                     iter2 = iter1 + partition[ii];
                     left_join.resize(2);
-                    left_join[0] = std::accumulate(iter1, iter2, 0);
+                    left_join[0] = std::accumulate(iter1, iter2, 0.0);
                     iter1 = prob_join_xy[1].begin() + counter;
                     iter2 = iter1 + partition[ii];
-                    left_join[1] = std::accumulate(iter1, iter2, 0);
+                    left_join[1] = std::accumulate(iter1, iter2, 0.0);
+                    //std::cout<<"finished left"<<std::endl;
                     //single
                     sin_join = {prob_join_xy[0][counter + partition[ii]], prob_join_xy[1][counter + partition[ii]]};
                     //right
                     iter1 = prob_join_xy[0].begin() + counter + partition[ii]+1;
-                    iter2 = prob_join_xy[0].begin() + counter + partition[ii + 1];
+                    iter2 = prob_join_xy[0].begin() + counter + partition[ii] +partition[ii + 1];
                     right_join.resize(2);
-                    right_join[0] = std::accumulate(iter1, iter2, 0);
+                    right_join[0] = std::accumulate(iter1, iter2, 0.0);
                     iter1 = prob_join_xy[1].begin() + counter + partition[ii]+1;
-                    iter2 = prob_join_xy[1].begin() + counter + partition[ii+1];
-                    right_join[1] = std::accumulate(iter1, iter2, 0);
+                    iter2 = prob_join_xy[1].begin() + counter + partition[ii] +partition[ii+1];
+                    right_join[1] = std::accumulate(iter1, iter2, 0.0);
+                    //std::cout<<"finished right"<<std::endl;
                     py = left_join[0] + left_join[1];
                     pt = sin_join[0] + sin_join[1];
-                    left_cost = (py + pt) * it_js(py, left_join, pt, sin_join);
+                    //calculate
+                    ave_prob(left_join);
+                    ave_prob(sin_join);
+                    left_cost = (py + pt) * it_js(py/(py+pt), left_join, pt/(py+pt), sin_join);
                     py = right_join[0] + right_join[1];
-                    right_cost = (py + pt) * it_js(py, right_join, pt, sin_join);
+                    ave_prob(right_join);
+                    right_cost = (py + pt) * it_js(py/(py+pt), right_join, pt/(py+pt), sin_join);
+                    //std::cout<<left_cost<<"  "<<right_cost<<"size: "<<std::endl;
                     if (left_cost > right_cost)
                         finish = true;
                     else
@@ -188,14 +220,18 @@ void IB_kernel::smIB()
                         partition[quan_size-1-ii]++;
                         partition[quan_size-2-ii]--;
                     }
+                    //std::cout<<ii<<"th size: "<<partition[ii]<<std::endl;
+                    
                 }
                 else
                 {
                     finish = true;
                 }
+                
 
-            } while (finish);
+            } while (!finish);
         }
+        //std::cout<<"finish left and right in "<<run_ind<<std::endl;
         //step 4: store and replace
         if(run_ind==0)
         {
@@ -213,14 +249,48 @@ void IB_kernel::smIB()
                 best_mi=it_mi(temp_join_xt);
                 best_partition=partition;
             }
+            //std::cout<<it_mi(temp_join_xt)<<std::endl;
+            if(isnan(it_mi(temp_join_xt)))
+            {
+                std::cout<<"------------------"<<std::endl;
+                for(const auto & layer1: temp_join_xt)
+                {
+                    for(const auto& term: layer1)
+                    {
+                        std::cout<<term<<"  ";
+                    }
+                    std::cout<<std::endl;
+                    
+                }
+                std::cout<<"******************"<<std::endl;
+                for(const auto & term: partition)
+                    std::cout<<term<<",";
+                std::cout<<std::endl;
+                return;
+            }
+
         }
+        //std::cout<<"here"<<std::endl;
+        //std::cout<<"finish "<<run_ind<<std::endl;
     }
+
     cluster=best_partition;
+    for(const auto & term: cluster)
+        std::cout<<term<<"  ";
+    std::cout<<std::endl;
     prob_join_xt=quantize_to_xt(prob_join_xy,cluster);
+    /*for(const auto& fir: prob_join_xy)
+    {
+        for(const auto& sec: fir)
+            std::cout<<sec<<"  ";
+        std::cout<<std::endl;
+    }*/
     mi=it_mi(prob_join_xt);
+    std::cout<<mi<<std::endl;
     for(unsigned ind=0;ind<quan_size;ind++)
     {
         prob_t[ind]=prob_join_xt[0][ind]+prob_join_xt[1][ind];
     }
+
 }
 

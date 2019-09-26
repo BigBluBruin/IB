@@ -67,14 +67,36 @@ double it_mi(std::vector<std::vector<double>> joindist)
     /*  dimension 1 -> y 
         dimension 2 -> x
         To calculate llr faster */
-    double result = 0;
-    for (const auto &inner : joindist)
+ 
+    std::vector<double> probx(2,0);
+    for(auto const &term: joindist[0])
+        probx[0]+=term;
+    for(auto const & term: joindist[1])
+        probx[1]+=term;
+    
+    //std::cout<<"p.m.f. of x:"<<std::endl;
+    //std::cout<<probx[0]<<"  "<<probx[1]<<std::endl;
+    
+    std::vector<double> proby(joindist[0].size(),1);
+    for(unsigned ii=0; ii< joindist[0].size(); ii++)
     {
-        for (const auto &term : inner)
+        proby[ii]=joindist[0][ii]+joindist[1][ii];
+    }       
+    /*std::cout<<"p.m.f. of y:"<<std::endl;
+    for(const auto& term: proby)
+        std::cout<<term<<"  ";
+    std::cout<<std::endl;*/
+
+    double result = 0;
+
+    for(unsigned ii=0; ii<2;ii++)
+    {
+        for(unsigned jj=0;jj<proby.size();jj++)
         {
-            result += log2(term);
+            result+=joindist[ii][jj]*log2(joindist[ii][jj]/(probx[ii]*proby[jj]));
         }
     }
+    
     return result;
 }
 
