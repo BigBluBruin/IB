@@ -6,6 +6,7 @@ IB_kernel::IB_kernel(std::vector<std::vector<double>> input, unsigned quan, int 
     quan_size = quan;
     max_run = Max_run;
     prob_join_xt.assign(2,std::vector<double>(quan_size,0));
+    prob_t.assign(quan_size,0);
 }
 std::vector<std::vector<double>> IB_kernel::quantize_to_xt(std::vector<std::vector<double>> &input, std::vector<unsigned> &cluster)
 {
@@ -279,18 +280,12 @@ void IB_kernel::smIB()
         std::cout<<term<<"  ";
     std::cout<<std::endl;
     prob_join_xt=quantize_to_xt(prob_join_xy,cluster);
-    /*for(const auto& fir: prob_join_xy)
-    {
-        for(const auto& sec: fir)
-            std::cout<<sec<<"  ";
-        std::cout<<std::endl;
-    }*/
+    std::cout<<"joint probability size: "<<prob_join_xt[0].size()<<std::endl;
     mi=it_mi(prob_join_xt);
     std::cout<<mi<<std::endl;
     for(unsigned ind=0;ind<quan_size;ind++)
     {
         prob_t[ind]=prob_join_xt[0][ind]+prob_join_xt[1][ind];
     }
-
 }
 

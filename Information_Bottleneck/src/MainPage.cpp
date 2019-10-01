@@ -193,9 +193,9 @@ int main()
 
     /*This part is used to test information bottleneck part*/
     double sigma2=0.1;
-    unsigned quansize=16;
+    unsigned quansize=8;
     std::vector<std::vector<double>> prob_join_xy=gaussian_disretization(-2,2,2000,sigma2);
-    std::vector<unsigned> partit{170,47,438,57,102,128,21,37,37,21,128,102,57,438,47,170};
+    //std::vector<unsigned> partit{170,47,438,57,102,128,21,37,37,21,128,102,57,438,47,170};
     /*std::vector<std::vector<double>> prob_join_xt=quantize_to_xt2(prob_join_xy,partit);
     std::cout<<"------first 170 elements----"<<std::endl;
     for (int ii=0 ;ii<170;ii++)
@@ -211,7 +211,7 @@ int main()
         std::cout<<std::endl;
     }*/
 
-    IB_kernel kernel_instance(prob_join_xy,quansize,3000);
+    IB_kernel kernel_instance(prob_join_xy,quansize,200);
     kernel_instance.smIB();
 
     /*This part is used to test mutual information*/
