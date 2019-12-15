@@ -118,3 +118,13 @@ double it_js(double p1, std::vector<double> dist1, double p2, std::vector<double
     return p1*it_kl(dist1,ave)+p2*it_kl(dist2,ave);
 
 }
+
+std::vector<double> llr_cal(std::vector<std::vector<double>> & joint_prob)
+{
+    std::vector <double> llr(joint_prob[0].size(),-1);
+    for (unsigned index1=0; index1<=joint_prob[0].size(); index1++)
+    {
+        llr[index1]=log(joint_prob[0][index1]/joint_prob[1][index1]);
+    }
+    return llr;
+}

@@ -8,6 +8,7 @@ IB_kernel::IB_kernel(std::vector<std::vector<double>> input, unsigned quan, int 
     prob_join_xt.assign(2,std::vector<double>(quan_size,0));
     prob_t.assign(quan_size,0);
 }
+
 std::vector<std::vector<double>> IB_kernel::quantize_to_xt(std::vector<std::vector<double>> &input, std::vector<unsigned> &cluster)
 {
     std::vector<std::vector<double>> join_prob_xt(2, std::vector<double>(cluster.size(), 0.0));
@@ -40,26 +41,17 @@ std::vector<unsigned> IB_kernel::random_cluster(const unsigned total_num, const 
         remaining[ii] = ii + 1;
     }
 
-    //----------debuging-------------
-    /*for (const auto &term : remaining)
-        std::cout << term<<std::endl;
-    std::cout << std::endl;*/
-    //----------debuging--------------
 
     std::vector<unsigned> chosen(quan_size - 1);
     int selected;
-
     //start
     for (unsigned ii = 0; ii < quan_size - 1; ii++)
     {
         std::uniform_int_distribution<> distribution(0, total_num - 2 - ii);
         selected = distribution(generator);
-        //std::cout << "round: " << ii << "select:" << selected;
         chosen[ii] = remaining[selected];
-        //std::cout << "number" << chosen[ii] << std::endl;
         remaining.erase(remaining.begin() + selected);
     }
-
     chosen.push_back(0);
     chosen.push_back(total_num);
     std::sort(chosen.begin(), chosen.end());
@@ -70,9 +62,6 @@ std::vector<unsigned> IB_kernel::random_cluster(const unsigned total_num, const 
         cluster[ii] = chosen[ii + 1] - chosen[ii];
     }
 
-    /*for (const auto& term: cluster)
-        std::cout<<term<<std::endl;
-    std::cout<<std::endl;*/
 
     return cluster;
 }
@@ -98,6 +87,9 @@ void IB_kernel::smIB()
         std::vector<unsigned> partition;
         std::copy(left_par.begin(), left_par.end(), std::back_inserter(partition));
         std::copy(right_par.begin(), right_par.end(), std::back_inserter(partition));
+        /*back_inserter is a convenience function template that constructs a 
+        std::back_insert_iterator for the container c with the type deduced from 
+        the type of the argument.*/
         //------debugging-------------------
         /*for (const auto& term: partition)
             std::cout<<term<<std::endl;
@@ -113,8 +105,9 @@ void IB_kernel::smIB()
                 {
 
                     //get left, right and single probabilities
+                    /*x += y is equivalent to x = x + y*/
                     counter = 0;
-                    for (unsigned jj = 0; jj < counter; jj++)
+                    for (unsigned jj = 0; jj < ii; jj++)
                         counter += partition[jj];
                     //left
                     iter1 = prob_join_xy[0].begin() + counter;
@@ -124,8 +117,6 @@ void IB_kernel::smIB()
                     iter1 = prob_join_xy[1].begin() + counter;
                     iter2 = iter1 + partition[ii] - 1;
                     left_join[1] = std::accumulate(iter1, iter2, 0.0);
-
-
                     //single
                     sin_join = {prob_join_xy[0][counter + partition[ii] - 1], prob_join_xy[1][counter + partition[ii] - 1]};
                     //right
@@ -180,7 +171,7 @@ void IB_kernel::smIB()
 
                     //get left, right and single probabilities
                     counter = 0;
-                    for (unsigned jj = 0; jj < counter; jj++)
+                    for (unsigned jj = 0; jj < ii; jj++)
                         counter += partition[jj];
                     //left
                     iter1 = prob_join_xy[0].begin() + counter;

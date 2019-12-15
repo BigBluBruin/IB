@@ -12,4 +12,5 @@ double it_js(double p1, std::vector<double> dist1, double p2, std::vector<double
 void ave_prob(std::vector <double> & prob);
 void ave_joinprob(std::vector<std::vector<double>> & joinprob);
 void flow_stop(double & in);
+std::vector<double> llr_cal(std::vector<std::vector<double>> & joint_prob);
 
