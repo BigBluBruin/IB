@@ -3,7 +3,7 @@
 #include "Information_Bottleneck/overloadvec.h"
 #include "Information_Bottleneck/stats.h"
 #include "Information_Bottleneck/IB_kernel.h"
-#include <iostream>
+#include "Discrete_Density_Evolution/Probability_Combination_Tool.h"
 #include <fstream>
 #include <time.h>
 #include <random>
@@ -211,12 +211,55 @@ int main()
         std::cout<<std::endl;
     }*/
 
-    IB_kernel kernel_instance(prob_join_xy,quansize,200);
-    kernel_instance.smIB();
+    /*IB_kernel kernel_instance(prob_join_xy,quansize,200);
+    kernel_instance.smIB();*/
 
     /*This part is used to test mutual information*/
     /*std::vector<std::vector<double>> joint{{0.15,0.2,0.15},{0.2,0.1,0.2}};
     std::cout<<it_mi(joint)<<std::endl;*/
+
+
+    /*This part is used to test index sort*/
+    /*std::vector<double> test;
+    test.push_back(0.2);
+    test.push_back(0.3);
+    test.push_back(-0.1);
+    test.push_back(0.5);
+    std::vector<unsigned> soindex=sorted_pos(test);
+    std::cout<<"sorted pos should be: 2-1-0-3-"<<std::endl;
+    std::cout<<"result is: ";
+    for (const auto &a : soindex)
+        std::cout<<a<<"-";
+    std::cout<<std::endl;*/
+
+    /*This part is used to test LLR combination*/
+    std::vector<std::vector<double>> first_input;
+    first_input.push_back({1,2,3,4});
+    first_input.push_back({5,6,7,8});
+    std::vector<std::vector<double>> second_input;
+    second_input.push_back({9,10,11,12});
+    second_input.push_back({13,14,15,16});
+    std::vector<std::vector<double>> check_combin=prob_combination(first_input,second_input,"check");
+    std::cout<<"-----check output----"<<std::endl;
+    for(const auto &outer: check_combin)
+    {
+         for(const auto & inner: outer)
+            std::cout<<inner<<"  ";
+        std::cout<<std::endl;
+    }
+    std::cout<<std::endl;
+
+
+    std::vector<std::vector<double>> vari_combin=prob_combination(first_input,second_input,"vari");
+    std::cout<<"-----vari output----"<<std::endl;
+    for(const auto &outer: vari_combin)
+    {
+         for(const auto & inner: outer)
+            std::cout<<inner<<"  ";
+        std::cout<<std::endl;
+    }
+    std::cout<<std::endl;
+       
 
     return 0;
 }

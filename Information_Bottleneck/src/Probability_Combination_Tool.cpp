@@ -1,4 +1,4 @@
-#include "Probability_Combination_Tool.h"
+#include "Discrete_Density_Evolution/Probability_Combination_Tool.h"
 
 std::vector<std::vector<double>> prob_combination (std::vector<std::vector<double>> & first_input, std::vector<std::vector<double>> & second_input, const char oper_type[])
 {

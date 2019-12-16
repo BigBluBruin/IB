@@ -52,3 +52,18 @@ std::vector<std::vector<T>> operator + (const std::vector<std::vector<T>>& a, co
             }
     return result;
 }
+
+
+
+/*
+Consider the following (n,k,d) block code:
+D0  D1  D2  D3  D4   | P0
+D5  D6  D7  D8  D9   | P1 
+D10 D11 D12 D13 D14  | P2 
+-------------------------
+P3  P4  P5  P6  P7   |
+where D0-D14 are data bits, P0-P2 are row parity bits and P3-P7 are column parity bits. The transmitted code word will be:
+D0 D1 D2 ... D13 D14 P0 P1 ... P6 P7
+
+How many errors and erasures can it correct? Write a syndrome decoding program that takes a 23 bit input, find the syndrome, determine the error vector from the syndrome and estimate the most likely original codeword.
+*/

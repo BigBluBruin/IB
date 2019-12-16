@@ -19,4 +19,4 @@ std::vector<std::vector<double>> prob_combination (std::vector<std::vector<doubl
 void prob_sort(std::vector<std::vector<double>> & input);
 std::vector<unsigned> sorted_pos(std::vector<double> &input);
 std::vector<std::vector<double>> prob_approx(std::vector<std::vector<double>> input);
-std::vector<std::vector<double>> llr_combination(std::vector<std::vector<double>> input, double threshold);
+std::vector<std::vector<double>> llr_combination(std::vector<std::vector<double>> & input, double threshold);
