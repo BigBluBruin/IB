@@ -95,6 +95,8 @@ Information_Bottleneck/IB_kernel.h
 /mnt/e/Gitrepo/IB/Information_Bottleneck/src/Information_Bottleneck/IB_kernel.h
 Discrete_Density_Evolution/Probability_Combination_Tool.h
 /mnt/e/Gitrepo/IB/Information_Bottleneck/src/Discrete_Density_Evolution/Probability_Combination_Tool.h
+Discrete_Density_Evolution/Regular_DE.h
+/mnt/e/Gitrepo/IB/Information_Bottleneck/src/Discrete_Density_Evolution/Regular_DE.h
 fstream
 -
 time.h

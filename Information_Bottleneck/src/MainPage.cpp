@@ -4,6 +4,7 @@
 #include "Information_Bottleneck/stats.h"
 #include "Information_Bottleneck/IB_kernel.h"
 #include "Discrete_Density_Evolution/Probability_Combination_Tool.h"
+#include "Discrete_Density_Evolution/Regular_DE.h"
 #include <fstream>
 #include <time.h>
 #include <random>
@@ -192,9 +193,20 @@ int main()
     std::cout<<std::accumulate(aa.begin(),aa.end(),0)<<std::endl;*/
 
     /*This part is used to test information bottleneck part*/
-    double sigma2=0.1;
-    unsigned quansize=8;
-    std::vector<std::vector<double>> prob_join_xy=gaussian_disretization(-2,2,2000,sigma2);
+    /*double sigma2=0;
+    for (unsigned index = 0; index < 8; index++)
+    {
+        sigma2+=0.1;
+        unsigned quansize = 16;
+        std::vector<std::vector<double>> prob_join_xy = gaussian_disretization(-2, 2,2000, sigma2);
+        IB_kernel kernel_instance(prob_join_xy, quansize, 3000);
+        //std::cout<<"------sigma2: "<<sigma2<<"----------"<<std::endl;
+        kernel_instance.smIB();
+        for (const auto &aa : kernel_instance.cluster)
+            std::cout << aa << "  ";
+        std::cout << std::endl;
+    }*/
+
     //std::vector<unsigned> partit{170,47,438,57,102,128,21,37,37,21,128,102,57,438,47,170};
     /*std::vector<std::vector<double>> prob_join_xt=quantize_to_xt2(prob_join_xy,partit);
     std::cout<<"------first 170 elements----"<<std::endl;
@@ -211,8 +223,6 @@ int main()
         std::cout<<std::endl;
     }*/
 
-    /*IB_kernel kernel_instance(prob_join_xy,quansize,200);
-    kernel_instance.smIB();*/
 
     /*This part is used to test mutual information*/
     /*std::vector<std::vector<double>> joint{{0.15,0.2,0.15},{0.2,0.1,0.2}};
@@ -233,7 +243,7 @@ int main()
     std::cout<<std::endl;*/
 
     /*This part is used to test LLR combination*/
-    std::vector<std::vector<double>> first_input;
+    /*std::vector<std::vector<double>> first_input;
     first_input.push_back({1,2,3,4});
     first_input.push_back({5,6,7,8});
     std::vector<std::vector<double>> second_input;
@@ -258,8 +268,20 @@ int main()
             std::cout<<inner<<"  ";
         std::cout<<std::endl;
     }
-    std::cout<<std::endl;
-       
+    std::cout<<std::endl;*/
+    
+
+    double dc=3;
+    double dv=6;
+    double code_rate=0.5;
+    double eb_no=-5;
+    double sigma2=pow(10,(-0.1*eb_no)/(2*code_rate));
+    unsigned int quansize=16;
+    unsigned max_iter=50;
+    Regular_DE regularde_ins(dc,dv,sigma2,max_iter,quansize);
+    regularde_ins.Discrete_Density_Evolution();
+
+
 
     return 0;
 }

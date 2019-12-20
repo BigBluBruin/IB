@@ -7,6 +7,7 @@ CMakeFiles/runner.dir/src/IB_kernel.cpp.o: ../include/Information_Bottleneck/ove
 CMakeFiles/runner.dir/src/IB_kernel.cpp.o: ../src/IB_kernel.cpp
 
 CMakeFiles/runner.dir/src/MainPage.cpp.o: ../include/Discrete_Density_Evolution/Probability_Combination_Tool.h
+CMakeFiles/runner.dir/src/MainPage.cpp.o: ../include/Discrete_Density_Evolution/Regular_DE.h
 CMakeFiles/runner.dir/src/MainPage.cpp.o: ../include/Information_Bottleneck/IB_kernel.h
 CMakeFiles/runner.dir/src/MainPage.cpp.o: ../include/Information_Bottleneck/itbox.h
 CMakeFiles/runner.dir/src/MainPage.cpp.o: ../include/Information_Bottleneck/overloadvec.h

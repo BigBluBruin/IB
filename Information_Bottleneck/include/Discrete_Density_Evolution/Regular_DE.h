@@ -14,6 +14,8 @@ public:
 public: 
     std::vector<std::vector<double>> vari_representation;
     std::vector<std::vector<double>> check_representation;
+    std::vector<std::vector<double>> vari_threshold;
+    std::vector<std::vector<double>> check_threshold;
 
 public:
     Regular_DE(unsigned int Dc, unsigned int Dv, double Sigma2, unsigned int Max_iter,unsigned int Quantization_size);

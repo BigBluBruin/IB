@@ -13,6 +13,7 @@ public:
     std::vector<std::vector<double>> prob_join_xt;
     std::vector<double> prob_t;
     std::vector<unsigned> cluster;
+    std::vector<double> threshold;
     double mi;
 
 public:

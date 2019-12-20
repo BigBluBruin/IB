@@ -3,8 +3,8 @@
 
 void flow_stop(double & in)
 {
-    if(in<pow(10,-15))
-        in=pow(10,-15);
+    if(in<pow(10,-20))
+        in=pow(10,-20);
 }
 
 void ave_prob(std::vector <double> & prob)

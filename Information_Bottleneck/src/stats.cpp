@@ -12,7 +12,7 @@ std::vector<std::vector<double>> gaussian_disretization (double min, double max,
     std::vector<double> partition_points = linspace(min,max,cardi-1);  
     std::vector<std::vector<double>> joint_xy(2,std::vector<double>(cardi,0));
     joint_xy[0][0]=0.5*(qfunc(-(min-1)/sigma));
-    std::cout<<"------join_x_y first----"<<std::endl;
+    //std::cout<<"------join_x_y first----"<<std::endl;
     if(joint_xy[0][0]==0)
         std::cout<<"zero"<<std::endl;
     joint_xy[1][0]=0.5*(1-qfunc((min+1)/sigma));

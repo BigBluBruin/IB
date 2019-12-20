@@ -8,6 +8,7 @@ CMakeFiles/runner.dir/src/IB_kernel.cpp.o
  /mnt/e/Gitrepo/IB/Information_Bottleneck/src/IB_kernel.cpp
 CMakeFiles/runner.dir/src/MainPage.cpp.o
  ../include/Discrete_Density_Evolution/Probability_Combination_Tool.h
+ ../include/Discrete_Density_Evolution/Regular_DE.h
  ../include/Information_Bottleneck/IB_kernel.h
  ../include/Information_Bottleneck/itbox.h
  ../include/Information_Bottleneck/overloadvec.h

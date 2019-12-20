@@ -7,6 +7,7 @@ IB_kernel::IB_kernel(std::vector<std::vector<double>> input, unsigned quan, int 
     max_run = Max_run;
     prob_join_xt.assign(2,std::vector<double>(quan_size,0));
     prob_t.assign(quan_size,0);
+    threshold.assign(quan_size/2-1,-1);
 }
 
 std::vector<std::vector<double>> IB_kernel::quantize_to_xt(std::vector<std::vector<double>> &input, std::vector<unsigned> &cluster)
@@ -73,7 +74,7 @@ void IB_kernel::smIB()
     double left_cost, right_cost;
     double py, pt;
     bool finish = false;
-    double best_mi;
+    double best_mi=0;
     std::vector<unsigned> best_partition;
     std::vector<std::vector<double>> temp_join_xt;
     for (int run_ind = 0; run_ind < max_run; run_ind++)
@@ -267,13 +268,19 @@ void IB_kernel::smIB()
     }
 
     cluster=best_partition;
-    for(const auto & term: cluster)
+    /*for(const auto & term: cluster)
         std::cout<<term<<"  ";
-    std::cout<<std::endl;
+    std::cout<<std::endl;*/
     prob_join_xt=quantize_to_xt(prob_join_xy,cluster);
     std::cout<<"joint probability size: "<<prob_join_xt[0].size()<<std::endl;
     mi=it_mi(prob_join_xt);
     std::cout<<mi<<std::endl;
+    unsigned counter;
+    for(unsigned index=0;index<quan_size/2-1;index++)
+    {
+        counter=std::accumulate(cluster.begin(),cluster.begin()+index,0.0);
+        threshold[index]=log(prob_join_xy[0][counter]/prob_join_xy[1][counter]);
+    }
     for(unsigned ind=0;ind<quan_size;ind++)
     {
         prob_t[ind]=prob_join_xt[0][ind]+prob_join_xt[1][ind];
