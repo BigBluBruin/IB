@@ -272,9 +272,9 @@ void IB_kernel::smIB()
         std::cout<<term<<"  ";
     std::cout<<std::endl;*/
     prob_join_xt=quantize_to_xt(prob_join_xy,cluster);
-    std::cout<<"joint probability size: "<<prob_join_xt[0].size()<<std::endl;
+    //std::cout<<"joint probability size: "<<prob_join_xt[0].size()<<std::endl;
     mi=it_mi(prob_join_xt);
-    std::cout<<mi<<std::endl;
+    //std::cout<<mi<<std::endl;
     unsigned counter;
     for(unsigned index=0;index<quan_size/2-1;index++)
     {

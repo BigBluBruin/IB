@@ -58,7 +58,7 @@ std::vector<std::vector<double>> llr_combination(std::vector<std::vector<double>
     {
         std::cout<<aa<<" ";
     }*/
-    std::cout<<std::endl;
+    //std::cout<<std::endl;
     std::vector<std::vector<double>> combined_prob(2);
     std::vector<unsigned> partition;
     std::vector<double>::iterator iter_start, iter_end;
@@ -83,7 +83,7 @@ std::vector<std::vector<double>> llr_combination(std::vector<std::vector<double>
     std::vector<unsigned> partition_reverse = partition;
     std::reverse(partition_reverse.begin(), partition_reverse.end());
     std::copy(partition_reverse.begin(), partition_reverse.end(), std::back_inserter(partition));
-    std::cout<<partition.size()<<std::endl;
+    //std::cout<<partition.size()<<std::endl;
 
     for (unsigned index = 0; index < partition.size(); index++)
     {
@@ -102,6 +102,14 @@ std::vector<std::vector<double>> llr_combination(std::vector<std::vector<double>
         combined_prob[1].push_back(std::accumulate(iter_start, iter_end, 0.0));
 
     }
-    std::cout << "finished partition" << std::endl;
+    //std::cout << "finished partition" << std::endl;
     return combined_prob;
 }
+
+
+
+
+
+
+
+

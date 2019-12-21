@@ -3,8 +3,8 @@
 
 void flow_stop(double & in)
 {
-    if(in<pow(10,-20))
-        in=pow(10,-20);
+    if(in<pow(10,-100))
+        in=pow(10,-100);
 }
 
 void ave_prob(std::vector <double> & prob)
@@ -24,34 +24,86 @@ void ave_prob(std::vector <double> & prob)
 
 }
 
-void ave_joinprob(std::vector<std::vector<double>> & joinprob)
+void ave_joinprob(std::vector<std::vector<double>> &joinprob)
 {
-    double sum=0;
+    double sum = 0;
     std::vector<std::vector<double>>::iterator ounner;
     std::vector<double>::iterator inner;
-    for(ounner=joinprob.begin();ounner!=joinprob.end();ounner++)
+    for (ounner = joinprob.begin(); ounner != joinprob.end(); ounner++)
     {
-        for(inner=(*ounner).begin();inner!=(*ounner).begin();inner++)
+        for (inner = (*ounner).begin(); inner != (*ounner).end(); inner++)
         {
             flow_stop(*inner);
         }
     }
-    for(const auto& out: joinprob)
+
+    sum=0;
+    for (const auto &out : joinprob)
     {
-        for(const auto& term: out)
+        for (const auto &term : out)
         {
-            sum+=term;
+            sum += term;
         }
     }
-        for(ounner=joinprob.begin();ounner!=joinprob.end();ounner++)
+    for (ounner = joinprob.begin(); ounner != joinprob.end(); ounner++)
     {
-        for(inner=(*ounner).begin();inner!=(*ounner).begin();inner++)
+        for (inner = (*ounner).begin(); inner != (*ounner).end(); inner++)
         {
-            (*inner)=(*inner)/sum;
+            (*inner) = (*inner) / sum;
         }
     }
 
+    //-------------test can be delete---------------------
+    /*sum=0;
+    for (const auto &out : joinprob)
+    {
+        for (const auto &term : out)
+        {
+            sum += term;
+        }
+    }
+    if(abs(sum-1)>pow(10,-20))
+        std::cout<<"sum not equal 1 but "<<1-sum<<std::endl;*/
+    //------------------------------------------------------
 }
+
+void ave_joinprob_llr(std::vector<std::vector<double>> &joinprob, double threshold)
+{
+    double new_1,new_2,sum;
+     std::vector<std::vector<double>>::iterator ounner;
+    std::vector<double>::iterator inner;
+    for (unsigned index = 0; index < joinprob[0].size() / 2; index++)
+    {
+        if (joinprob[0][index] < threshold && joinprob[1][index] < threshold)
+        {
+            new_1=threshold;
+            new_2=threshold/(joinprob[0][index]/joinprob[1][index]);
+            joinprob[0][index]=new_1;
+            joinprob[1][index]=new_2;
+        }
+    }
+    for (unsigned index = joinprob[0].size() / 2; index < joinprob[0].size(); index++)
+    {
+        joinprob[0][index]=joinprob[1][joinprob[0].size()-1-index];
+        joinprob[1][index]=joinprob[0][joinprob[0].size()-1-index];
+    }
+    sum = 0;
+    for (const auto &out : joinprob)
+    {
+        for (const auto &term : out)
+        {
+            sum += term;
+        }
+    }
+    for (ounner = joinprob.begin(); ounner != joinprob.end(); ounner++)
+    {
+        for (inner = (*ounner).begin(); inner != (*ounner).end(); inner++)
+        {
+            (*inner) = (*inner) / sum;
+        }
+    }
+}
+
 double it_entropy(std::vector<double> dist)
 {
     double it_ent = 0;

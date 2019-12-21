@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <iterator>
 #include "Information_Bottleneck/itbox.h"
+#include <numeric>
 
 class IB_kernel
 {
