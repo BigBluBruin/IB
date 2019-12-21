@@ -15,7 +15,7 @@ Regular_DE::Regular_DE(unsigned int Dc=0, unsigned int Dv=0, double Sigma2=0.0, 
 int Regular_DE::Discrete_Density_Evolution()
 {
     std::vector<std::vector<double>> channel_observation = gaussian_disretization(-5, 5, 3000, sigma2);
-    IB_kernel channel_IB(channel_observation, quantization_size,500);
+    IB_kernel channel_IB(channel_observation, quantization_size,2000);
     channel_IB.smIB();
     std::vector<std::vector<double>> first_input = channel_IB.prob_join_xt;
     std::vector<std::vector<double>> second_input = first_input;
@@ -30,12 +30,23 @@ int Regular_DE::Discrete_Density_Evolution()
             //---------------check part-----------------------------
             //------------------------------------------------------
             prob_sort(combined_output);
-            prob_llr_combined = llr_combination(combined_output, pow(10,-4));
+            prob_llr_combined = llr_combination(combined_output,0.001);
             //ave_joinprob(prob_llr_combined);
             ave_joinprob_llr( prob_llr_combined, pow(10.0,-80.0));
             first_input = prob_llr_combined;
         }
-        IB_kernel check_IB(prob_llr_combined, quantization_size,50);
+        std::vector<double> llr = llr_cal(first_input);
+        std::string llr_file_name = "check_llr_iteration_" + std::to_string(iter) + ".txt";
+        std::ofstream llr_file(llr_file_name);
+        if (llr_file.is_open())
+        {
+            for (unsigned index = 0; index < llr.size(); index++)
+            {
+                llr_file << llr[index] << "  " << first_input[0][index] + first_input[1][index] << std::endl;
+            }
+        }
+        llr_file.close();
+        IB_kernel check_IB(prob_llr_combined, quantization_size, 2000);
         check_IB.smIB();
         check_representation.push_back(llr_cal(check_IB.prob_join_xt));
         check_threshold.push_back(check_IB.threshold);
@@ -46,14 +57,14 @@ int Regular_DE::Discrete_Density_Evolution()
         {
             combined_output = prob_combination(first_input, second_input, "vari");
             prob_sort(combined_output);
-            prob_llr_combined = llr_combination(combined_output,pow(10,-4));
+            prob_llr_combined = llr_combination(combined_output,0.001);
             //ave_joinprob(prob_llr_combined);
             ave_joinprob_llr( prob_llr_combined, pow(10.0,-80.0));
             first_input = prob_llr_combined;
         }
-        std::vector<double> llr=llr_cal(first_input);
-        std::string llr_file_name="llr_iteration"+std::to_string(iter) +".txt";
-        std::ofstream llr_file(llr_file_name);
+        llr=llr_cal(first_input);
+        llr_file_name="vari_llr_iteration_"+std::to_string(iter) +".txt";
+        llr_file.open(llr_file_name);
         if(llr_file.is_open())
         {
             for(unsigned index=0; index<llr.size();index++)
@@ -62,7 +73,7 @@ int Regular_DE::Discrete_Density_Evolution()
             }
         }
         llr_file.close();
-        IB_kernel vari_IB(prob_llr_combined, quantization_size,50);
+        IB_kernel vari_IB(prob_llr_combined, quantization_size,2000);
         vari_IB.smIB();
         vari_representation.push_back(llr_cal(vari_IB.prob_join_xt));
         vari_threshold.push_back(vari_IB.threshold);

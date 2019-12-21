@@ -275,7 +275,7 @@ int main()
     double dv=3;
     double code_rate=0.5;
     double eb_no_low = 1.0;
-    double eb_no_high = 1.30;
+    double eb_no_high = 1.3;
     double cur_eb_no;
     unsigned int quansize =32;
     double threshold = pow(10.0, -7.0);
