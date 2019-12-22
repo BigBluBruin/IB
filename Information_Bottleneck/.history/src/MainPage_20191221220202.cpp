@@ -293,7 +293,7 @@ int main()
     unsigned max_iter = 50;
     bool flag=true;
     int regular_result;
-    double llr_intervel=1;
+    double llr_intervel=0.5;
     unsigned int ib_runtime=5000;
     while (flag)
     {
