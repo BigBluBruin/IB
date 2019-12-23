@@ -293,11 +293,11 @@ int main()
     unsigned max_iter = 50;
     bool flag=true;
     int regular_result;
-    double llr_intervel=0.5;
+    double llr_intervel=0.1;
     unsigned int ib_runtime=6000;
     while (flag)
     {
-        cur_eb_no =1.25;
+        cur_eb_no = (eb_no_high + eb_no_low) / 2;
         std::cout<<"---------------change ebno as : "<<cur_eb_no<<"-------------------"<<std::endl;
         double sigma2 = pow(10, (-0.1 * cur_eb_no) / (2.0 * code_rate));
         Irregular_DE irregular_ins(check_edge_dist, vari_edge_dist,sigma2,max_iter,quansize,threshold,llr_intervel,ib_runtime);

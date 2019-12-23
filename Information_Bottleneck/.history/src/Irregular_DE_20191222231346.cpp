@@ -58,7 +58,7 @@ int Irregular_DE::Discrete_Density_Evolution()
         }
         prob_sort(combined_check_dist);
         llr_combined_check_dist = llr_combination(combined_check_dist, 0.01);
-        clipped_ccd=clip_prob(llr_combined_check_dist,pow(10,-6.0));
+        clipped_ccd=clip_prob(llr_combined_check_dist,pow(10,-7.0));
         ave_joinprob_llr(clipped_ccd, pow(10.0, -80.0));
         std::vector<double> llr = llr_cal(clipped_ccd);
         std::string llr_file_name = "check_llr_iteration_" + std::to_string(iter) + ".txt";
