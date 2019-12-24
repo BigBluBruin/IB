@@ -48,10 +48,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /mnt/d/GitRepo/IB/Information_Bottleneck
+CMAKE_SOURCE_DIR = /mnt/e/Gitrepo/IB/Information_Bottleneck
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /mnt/d/GitRepo/IB/Information_Bottleneck/build
+CMAKE_BINARY_DIR = /mnt/e/Gitrepo/IB/Information_Bottleneck/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -80,9 +80,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/d/GitRepo/IB/Information_Bottleneck/build/CMakeFiles /mnt/d/GitRepo/IB/Information_Bottleneck/build/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/e/Gitrepo/IB/Information_Bottleneck/build/CMakeFiles /mnt/e/Gitrepo/IB/Information_Bottleneck/build/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/d/GitRepo/IB/Information_Bottleneck/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/e/Gitrepo/IB/Information_Bottleneck/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -231,6 +231,33 @@ src/Probability_Combination_Tool.cpp.s:
 	$(MAKE) -f CMakeFiles/runner.dir/build.make CMakeFiles/runner.dir/src/Probability_Combination_Tool.cpp.s
 .PHONY : src/Probability_Combination_Tool.cpp.s
 
+src/Quantize_Continuous_DE.o: src/Quantize_Continuous_DE.cpp.o
+
+.PHONY : src/Quantize_Continuous_DE.o
+
+# target to build an object file
+src/Quantize_Continuous_DE.cpp.o:
+	$(MAKE) -f CMakeFiles/runner.dir/build.make CMakeFiles/runner.dir/src/Quantize_Continuous_DE.cpp.o
+.PHONY : src/Quantize_Continuous_DE.cpp.o
+
+src/Quantize_Continuous_DE.i: src/Quantize_Continuous_DE.cpp.i
+
+.PHONY : src/Quantize_Continuous_DE.i
+
+# target to preprocess a source file
+src/Quantize_Continuous_DE.cpp.i:
+	$(MAKE) -f CMakeFiles/runner.dir/build.make CMakeFiles/runner.dir/src/Quantize_Continuous_DE.cpp.i
+.PHONY : src/Quantize_Continuous_DE.cpp.i
+
+src/Quantize_Continuous_DE.s: src/Quantize_Continuous_DE.cpp.s
+
+.PHONY : src/Quantize_Continuous_DE.s
+
+# target to generate assembly for a file
+src/Quantize_Continuous_DE.cpp.s:
+	$(MAKE) -f CMakeFiles/runner.dir/build.make CMakeFiles/runner.dir/src/Quantize_Continuous_DE.cpp.s
+.PHONY : src/Quantize_Continuous_DE.cpp.s
+
 src/Regular_DE.o: src/Regular_DE.cpp.o
 
 .PHONY : src/Regular_DE.o
@@ -360,6 +387,9 @@ help:
 	@echo "... src/Probability_Combination_Tool.o"
 	@echo "... src/Probability_Combination_Tool.i"
 	@echo "... src/Probability_Combination_Tool.s"
+	@echo "... src/Quantize_Continuous_DE.o"
+	@echo "... src/Quantize_Continuous_DE.i"
+	@echo "... src/Quantize_Continuous_DE.s"
 	@echo "... src/Regular_DE.o"
 	@echo "... src/Regular_DE.i"
 	@echo "... src/Regular_DE.s"
