@@ -490,8 +490,7 @@ unsigned IB_kernel::find_threshold(unsigned left_most, unsigned right_most)
     //point is not included. This is beneficial for writting program
 
     //Initialization
-    std::vector<unsigned> left_interval{left_most, left_most + 1};
-    std::vector<unsigned> right_interval{left_most + 1, right_most};
+    //std::cout<<"left most point--"<<left_most<<"--right most--"<<right_most<<std::endl;
     std::vector<double> right_join_prob(2), left_join_prob(2), single_join_prob(2);
     unsigned total_time = right_most - left_most - 2;
     unsigned single_point_pos;
@@ -505,9 +504,10 @@ unsigned IB_kernel::find_threshold(unsigned left_most, unsigned right_most)
         right_join_prob[0] = std::accumulate(prob_join_xy[0].begin() + single_point_pos + 1, prob_join_xy[0].begin() + right_most, 0.0);
         right_join_prob[1] = std::accumulate(prob_join_xy[1].begin() + single_point_pos + 1, prob_join_xy[1].begin() + right_most, 0.0);
         single_join_prob[0] = prob_join_xy[0][single_point_pos];
-        single_join_prob[1] = prob_join_xy[0][single_point_pos];
+        single_join_prob[1] = prob_join_xy[1][single_point_pos];
         py = left_join_prob[0] + left_join_prob[1];
         pt = single_join_prob[0] + single_join_prob[1];
+        //std::cout<<py<<"  "<<pt<<std::endl;
         ave_prob(left_join_prob);
         ave_prob(single_join_prob);
         left_cost = (py + pt) * it_js(py / (py + pt), left_join_prob, pt / (py + pt), single_join_prob);
@@ -538,20 +538,23 @@ void IB_kernel::Progressive_MMI()
         inner_length = boundary.size();
         for (unsigned index2 = 0; index2 < inner_length - 1; index2++)
         {
-            cur_left_most=boundary[index2];
-            cur_right_most=boundary[index2+1];
-            boundary.push_back(find_threshold(cur_left_most,cur_right_most));
+            cur_left_most = boundary[index2];
+            cur_right_most = boundary[index2 + 1];
+            //std::cout<<"has been here"<<find_threshold(cur_left_most, cur_right_most)<<"  "<<std::endl;
+            boundary.push_back(find_threshold(cur_left_most, cur_right_most));
         }
-        std::sort(boundary.begin(),boundary.end());
+        std::sort(boundary.begin(), boundary.end());
     }
-    for(unsigned index=0;index<quan_size/2;index++)
+    
+    for (unsigned index = 0; index < quan_size / 2; index++)
     {
         partition.push_back(boundary[index + 1] - boundary[index]);
     }
     partition_reverse = partition;
     std::reverse(partition_reverse.begin(), partition_reverse.end());
     std::copy(partition_reverse.begin(), partition_reverse.end(), std::back_inserter(partition));
-    prob_join_xt = quantize_to_xt(prob_join_xy, partition);
+    cluster=partition;
+    prob_join_xt = quantize_to_xt(prob_join_xy, cluster);
     mi = it_mi(prob_join_xt);
     unsigned counter;
     for (unsigned index = 1; index <= quan_size / 2 - 1; index++)

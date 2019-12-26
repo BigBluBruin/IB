@@ -1,6 +1,6 @@
 #include "Discrete_Density_Evolution/Irregular_DE.h"
 
-Irregular_DE::Irregular_DE(std::vector<double> Check_edge_dist={0.0}, std::vector<double> Vari_edge_dist={0.0}, double Sigma2=0.0, unsigned int Max_iter=0,unsigned int Quantization_size=0,double Stop_threshold=0.0,double Llr_combination_interval=0.0,unsigned Ib_runtime=0.0)
+Irregular_DE::Irregular_DE(std::vector<double> Check_edge_dist={0.0}, std::vector<double> Vari_edge_dist={0.0}, double Sigma2=0.0, unsigned int Max_iter=0,unsigned int Quantization_size=0,double Stop_threshold=0.0,double Llr_combination_interval=0.0,unsigned Ib_runtime=0.0, std::string Suffix=" ")
 {
     check_edge_dist=Check_edge_dist;
     vari_edge_dist=Vari_edge_dist;
@@ -10,6 +10,7 @@ Irregular_DE::Irregular_DE(std::vector<double> Check_edge_dist={0.0}, std::vecto
     stop_threshold=Stop_threshold;
     llr_combination_interval=Llr_combination_interval;
     ib_runtime=Ib_runtime;
+    suffix=Suffix;
 }
 
 
@@ -43,7 +44,7 @@ int Irregular_DE::Discrete_Density_Evolution()
             combined_output = prob_combination(first_input, second_input, "check");
             //combined_output = prob_combination_v2(first_input, second_input, "check",pow(10,-10));
             prob_sort(combined_output);
-            prob_llr_combined = llr_combination(combined_output, 0.001);
+            prob_llr_combined = llr_combination(combined_output, 0.0001);
             ave_joinprob_llr(prob_llr_combined, pow(10.0, -80.0));
             first_input = prob_llr_combined;
             
@@ -57,8 +58,8 @@ int Irregular_DE::Discrete_Density_Evolution()
             }
         }
         prob_sort(combined_check_dist);
-        llr_combined_check_dist = llr_combination(combined_check_dist, 0.01);
-        clipped_ccd=clip_prob(llr_combined_check_dist,pow(10,-8.0));
+        llr_combined_check_dist = llr_combination(combined_check_dist, llr_combination_interval);
+        clipped_ccd=clip_prob(llr_combined_check_dist,pow(10,-10.0));
         ave_joinprob_llr(clipped_ccd, pow(10.0, -80.0));
         std::vector<double> llr = llr_cal(clipped_ccd);
         std::string llr_file_name = "check_llr_iteration_" + std::to_string(iter) + ".txt";
@@ -74,11 +75,13 @@ int Irregular_DE::Discrete_Density_Evolution()
         IB_kernel check_IB(clipped_ccd, quantization_size, ib_runtime);
         if(iter==0)
         {
-            check_IB.smIB();
+            //check_IB.smIB();
+            check_IB.Progressive_MMI();
         }
         else
         {
-             check_IB.smIB2(check_representation[iter-1]);
+            //check_IB.smIB2(check_representation[iter-1]);
+            check_IB.Progressive_MMI();
         }
         
         
@@ -94,7 +97,7 @@ int Irregular_DE::Discrete_Density_Evolution()
         {
             combined_output = prob_combination(first_input, second_input, "vari");
             prob_sort(combined_output);
-            prob_llr_combined = llr_combination(combined_output, 0.001);
+            prob_llr_combined = llr_combination(combined_output, 0.0001);
             ave_joinprob_llr(prob_llr_combined, pow(10.0, -80.0));
             first_input = prob_llr_combined;
             if (vari_edge_dist[ii + 1] != 0)
@@ -108,10 +111,8 @@ int Irregular_DE::Discrete_Density_Evolution()
            
         }
         prob_sort(combined_vari_dist);
-        if(it_mi(combined_vari_dist)>0.99)
-            llr_combination_interval=1;
         llr_combined_vari_dist = llr_combination(combined_vari_dist,llr_combination_interval);
-        clipped_cvd=clip_prob(llr_combined_vari_dist,pow(10,-8.0));
+        clipped_cvd=clip_prob(llr_combined_vari_dist,pow(10,-10.0));
         ave_joinprob_llr(clipped_cvd, pow(10.0, -80.0));
         llr = llr_cal(clipped_cvd);
         llr_file_name = "vari_llr_iteration_" + std::to_string(iter) + ".txt";
@@ -127,11 +128,13 @@ int Irregular_DE::Discrete_Density_Evolution()
         IB_kernel vari_IB(clipped_cvd, quantization_size, ib_runtime);
         if(iter==0)
         {
-            vari_IB.smIB();
+            //vari_IB.smIB();
+            vari_IB.Progressive_MMI();
         }
         else
         {
-            vari_IB.smIB2(vari_representation[iter-1]);
+            //vari_IB.smIB2(vari_representation[iter-1]);
+            vari_IB.Progressive_MMI();
         }
         
         vari_representation.push_back(llr_cal(vari_IB.prob_join_xt));
@@ -182,7 +185,12 @@ int Irregular_DE::Discrete_Density_Evolution()
 
      //---------------file out info---------------------
         //Part 1: threholds 
-        std::ofstream outpufile("threshold.txt");
+        std::string threholdfile,recons_file,channelquan_file,channelrec_file;
+        threholdfile="threshold_"+suffix+".txt";
+        recons_file="reconstruction_"+suffix+".txt";
+        channelquan_file="channel_quantizer_"+suffix+".txt";
+        channelrec_file="channel_reconstruction_"+suffix+".txt";
+        std::ofstream outpufile(threholdfile);
         if (outpufile.is_open())
         {
             outpufile << quantization_size << " " << max_iter << "  " << std::endl;
@@ -204,7 +212,7 @@ int Irregular_DE::Discrete_Density_Evolution()
         }
 
         //Part 2: Reconstruction function
-        std::ofstream handle_reconstrction("reconstruction.txt");
+        std::ofstream handle_reconstrction(recons_file);
         if (handle_reconstrction.is_open())
         {
             handle_reconstrction << quantization_size << "  " << max_iter << "  " << std::endl;
@@ -234,7 +242,7 @@ int Irregular_DE::Discrete_Density_Evolution()
         }
 
         //Part 3: channel quantizer
-        std::ofstream handle_channel_quantizer("channel_quantizer.txt");
+        std::ofstream handle_channel_quantizer(channelquan_file);
         if (handle_channel_quantizer.is_open())
         {
             int cur=0;
@@ -255,7 +263,7 @@ int Irregular_DE::Discrete_Density_Evolution()
         }
 
         //Part 4: channel Reconstruction
-        std::ofstream handle_channel_recons("channel_reconstruction.txt");
+        std::ofstream handle_channel_recons(channelrec_file);
         if (handle_channel_recons.is_open())
         {
             handle_channel_recons << quantization_size << "  ";

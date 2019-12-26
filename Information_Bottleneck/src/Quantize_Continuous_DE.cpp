@@ -62,11 +62,11 @@ bool QCDE(const std::string filename, unsigned quansize)
             IB_kernel this_check_ib(joint_prob_xy, quansize, 6000);
             if(cur_iter==0)
             {
-                this_check_ib.smIB();
+                this_check_ib.Progressive_MMI();
             }
             else
             {
-                this_check_ib.smIB();
+                this_check_ib.Progressive_MMI();
                 //this_check_ib.smIB2(check_recons[cur_iter-1]);
             }
             
@@ -99,11 +99,14 @@ bool QCDE(const std::string filename, unsigned quansize)
             IB_kernel this_vari_ib(joint_prob_xy, quansize, 6000);
             if(cur_iter==0)
             {
-                this_vari_ib.smIB();
+                this_vari_ib.Progressive_MMI();
             }
             else
             {
+                this_vari_ib.Progressive_MMI();
+                std::cout<<"Pmmi  "<<this_vari_ib.mi<<"  ";
                 this_vari_ib.smIB();
+                std::cout<<"SmIB"<<this_vari_ib.mi<<"  "<<std::endl;
                 //this_vari_ib.smIB2(vari_recons[cur_iter-1]);
             }
             

@@ -14,6 +14,7 @@ public:
     double stop_threshold;
     double llr_combination_interval;
     unsigned ib_runtime;
+    std::string suffix;
 
 public: 
     std::vector<std::vector<double>> vari_representation;
@@ -22,7 +23,7 @@ public:
     std::vector<std::vector<double>> check_threshold;
 
 public:
-    Irregular_DE(std::vector<double> Check_edge_dist, std::vector<double> Vari_edge_dist, double Sigma2, unsigned int Max_iter,unsigned int Quantization_size,double Stop_threshold,double Llr_combination_interval,unsigned Ib_runtime);
+    Irregular_DE(std::vector<double> Check_edge_dist, std::vector<double> Vari_edge_dist, double Sigma2, unsigned int Max_iter,unsigned int Quantization_size,double Stop_threshold,double Llr_combination_interval,unsigned Ib_runtime, std::string Suffix);
     int Discrete_Density_Evolution();
 
 };

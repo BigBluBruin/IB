@@ -200,12 +200,14 @@ int main()
     for (unsigned index = 0; index < 8; index++)
     {
         sigma2+=0.1;
-        unsigned quansize = 16;
+        unsigned quansize = 8;
         std::vector<std::vector<double>> prob_join_xy = gaussian_disretization(-2,2,2000, sigma2);
         //std::cout<<prob_join_xy[0][0]<<"  "<<prob_join_xy[1][0]<<std::endl;
         IB_kernel kernel_instance(prob_join_xy, quansize, 6000);
+        kernel_instance.Progressive_MMI();*/
         //std::cout<<"------sigma2: "<<sigma2<<"----------"<<std::endl;
-        if(index==0)
+        //---------Compared Information Bottleneck Algorithm smIB2 -------------
+        /*if(index==0)
         {
             kernel_instance.smIB();
             last_llr=llr_cal(kernel_instance.prob_join_xt); 
@@ -220,17 +222,19 @@ int main()
             for(const auto & bb: last_llr)
                 std::cout<<bb<<"  ";
             std::cout<<std::endl;
-        }
+        }*/
+        //---------------------------------------------------------------------
                
         /*for (const auto &aa : kernel_instance.cluster)
             std::cout << aa << "  ";
-        std::cout << std::endl;
-        std::cout<<kernel_instance.mi<<std::endl;*/
+        std::cout << std::endl;*/
+        //std::cout<<kernel_instance.mi<<std::endl;
         /*for(const auto & aa:kernel_instance.prob_join_xt)
         {
             for(const auto & bb: aa)
                 std::cout<<bb<<"  ";
             std::cout<<std::endl;
+            
         }
     }*/
 
@@ -299,7 +303,7 @@ int main()
     
 
     /*double dc=6;
-    double dv=3;
+    double dv=3;*/
     std::vector<double> check_edge_dist{0,0,0,0,0,0,0.8140,0.1860};
     std::vector<double> vari_edge_dist{0,0.2558,0.3140,0.0465,0,0,0,0,0,0,0.3837};
     double code_rate=0.5;
@@ -311,18 +315,26 @@ int main()
     unsigned max_iter = 50;
     bool flag=true;
     int regular_result;
-    double llr_intervel=0.1;
+    double llr_intervel=0.005;
     unsigned int ib_runtime=6000;
-    while (flag)
+    std::vector<double> eb_no{0.70};
+    std::vector<std::string> suffix{"070"};
+    for(unsigned index=0;index<eb_no.size();index++)
     {
-        cur_eb_no =0.75;
+        cur_eb_no =eb_no[index];
         std::cout<<"---------------change ebno as : "<<cur_eb_no<<"-------------------"<<std::endl;
         double sigma2 = pow(10, (-0.1 * cur_eb_no) / (2.0 * code_rate));
-        Irregular_DE irregular_ins(check_edge_dist, vari_edge_dist,sigma2,max_iter,quansize,threshold,llr_intervel,ib_runtime);
+        Irregular_DE irregular_ins(check_edge_dist, vari_edge_dist,sigma2,max_iter,quansize,threshold,llr_intervel,ib_runtime,suffix[index]);
         regular_result = irregular_ins.Discrete_Density_Evolution();
         /*Regular_DE regularde_ins(dc, dv, sigma2, max_iter, quansize, threshold);
-        regular_result = regularde_ins.Discrete_Density_Evolution();*/
-        /*switch (regular_result)
+        regular_result = regularde_ins.Discrete_Density_Evolution();*/     
+    }
+
+    //QCDE("Density_Evolution.txt",16);
+    return 0;
+}
+
+ /*switch (regular_result)
         {
         case 1:
             eb_no_high = cur_eb_no;
@@ -335,10 +347,4 @@ int main()
         default:
             break;
         }  
-        return 0;     
-    }*/
-
-    QCDE("Density_Evolution.txt",4);
-
-    return 0;
-}
+        return 0;     */

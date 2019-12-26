@@ -110,11 +110,6 @@ void prob_sort(std::vector<std::vector<double>> & input)
 std::vector<std::vector<double>> llr_combination(std::vector<std::vector<double>> &input, double threshold)
 {
     std::vector<double> llr=llr_cal(input);
-    /*for(const auto &aa:llr)
-    {
-        std::cout<<aa<<" ";
-    }*/
-    //std::cout<<std::endl;
     std::vector<std::vector<double>> combined_prob(2);
     std::vector<unsigned> partition;
     std::vector<double>::iterator iter_start, iter_end;
@@ -136,21 +131,9 @@ std::vector<std::vector<double>> llr_combination(std::vector<std::vector<double>
         }
     }
 
-    //check if it is correct or not 
-    /*int sum_m=0;
-    for(unsigned index=0;index<partition.size();index++)
-    {
-        sum_m+=partition[index];
-    }
-    if(sum_m!=llr.size()/2)
-    {
-        std::cout<<"partition wrong....should be"<<llr.size()/2<<", but right now ..."<<sum_m<<std::endl;
-    }*/
-
     std::vector<unsigned> partition_reverse = partition;
     std::reverse(partition_reverse.begin(), partition_reverse.end());
     std::copy(partition_reverse.begin(), partition_reverse.end(), std::back_inserter(partition));
-    //std::cout<<partition.size()<<std::endl;
 
     for (unsigned index = 0; index < partition.size(); index++)
     {
