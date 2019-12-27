@@ -75,13 +75,14 @@ int Irregular_DE::Discrete_Density_Evolution()
         IB_kernel check_IB(clipped_ccd, quantization_size, ib_runtime);
         if(iter==0)
         {
-            //check_IB.smIB();
-            check_IB.Progressive_MMI();
+            check_IB.smIB();
+           // check_IB.Progressive_MMI();
         }
         else
         {
             //check_IB.smIB2(check_representation[iter-1]);
-            check_IB.Progressive_MMI();
+            check_IB.smIB();
+           // check_IB.Progressive_MMI();
         }
         
         
@@ -128,13 +129,14 @@ int Irregular_DE::Discrete_Density_Evolution()
         IB_kernel vari_IB(clipped_cvd, quantization_size, ib_runtime);
         if(iter==0)
         {
-            //vari_IB.smIB();
-            vari_IB.Progressive_MMI();
+            vari_IB.smIB();
+            //vari_IB.Progressive_MMI();
         }
         else
         {
+            vari_IB.smIB();
             //vari_IB.smIB2(vari_representation[iter-1]);
-            vari_IB.Progressive_MMI();
+            //vari_IB.Progressive_MMI();
         }
         
         vari_representation.push_back(llr_cal(vari_IB.prob_join_xt));

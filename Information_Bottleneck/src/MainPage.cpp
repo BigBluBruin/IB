@@ -315,7 +315,7 @@ int main()
     unsigned max_iter = 50;
     bool flag=true;
     int regular_result;
-    double llr_intervel=0.001;
+    double llr_intervel=0.05;
     unsigned int ib_runtime=6000;
     std::vector<double> eb_no{0.90};
     std::vector<std::string> suffix{"090"};
