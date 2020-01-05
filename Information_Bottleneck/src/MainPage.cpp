@@ -201,40 +201,22 @@ int main()
     {
         sigma2+=0.1;
         unsigned quansize = 8;
-        std::vector<std::vector<double>> prob_join_xy = gaussian_disretization(-2,2,2000, sigma2);
+        //std::vector<std::vector<double>> prob_join_xy = gaussian_disretization(-2,2,2000, sigma2);
+        std::vector<std::vector<double>> prob_join_xy = gaussian_disretization2(-2,2,2000, 4*sigma2,sigma2);
         //std::cout<<prob_join_xy[0][0]<<"  "<<prob_join_xy[1][0]<<std::endl;
         IB_kernel kernel_instance(prob_join_xy, quansize, 6000);
-        kernel_instance.Progressive_MMI();*/
-        //std::cout<<"------sigma2: "<<sigma2<<"----------"<<std::endl;
-        //---------Compared Information Bottleneck Algorithm smIB2 -------------
-        /*if(index==0)
-        {
-            kernel_instance.smIB();
-            last_llr=llr_cal(kernel_instance.prob_join_xt); 
-             for(const auto & bb: last_llr)
-                std::cout<<bb<<"  ";
-            std::cout<<std::endl;
-        }
-        else
-        {
-            kernel_instance.smIB2(last_llr);
-            last_llr=llr_cal(kernel_instance.prob_join_xt); 
-            for(const auto & bb: last_llr)
-                std::cout<<bb<<"  ";
-            std::cout<<std::endl;
-        }*/
-        //---------------------------------------------------------------------
-               
-        /*for (const auto &aa : kernel_instance.cluster)
+        kernel_instance.Progressive_MMI();
+        //std::cout<<"------sigma2: "<<sigma2<<"----------"<<std::endl;               
+        for (const auto &aa : kernel_instance.cluster)
             std::cout << aa << "  ";
-        std::cout << std::endl;*/
+        std::cout << std::endl;
         //std::cout<<kernel_instance.mi<<std::endl;
         /*for(const auto & aa:kernel_instance.prob_join_xt)
         {
             for(const auto & bb: aa)
                 std::cout<<bb<<"  ";
             std::cout<<std::endl;
-            
+        
         }
     }*/
 
@@ -327,7 +309,7 @@ int main()
         Irregular_DE irregular_ins(check_edge_dist, vari_edge_dist,sigma2,max_iter,quansize,threshold,llr_intervel,ib_runtime,suffix[index]);
         regular_result = irregular_ins.Discrete_Density_Evolution();
         /*Regular_DE regularde_ins(dc, dv, sigma2, max_iter, quansize, threshold);
-        regular_result = regularde_ins.Discrete_Density_Evolution();*/     
+        regular_result = regularde_ins.Discrete_Density_Evolution();   */
     }
 
     //QCDE("Density_Evolution.txt",16);

@@ -9,8 +9,8 @@
 
 /*This package gives statistical tools*/
 double qfunc(double in);
-
 std::vector<std::vector<double>> gaussian_disretization (double min, double max, int cardi, double sigma2);
+std::vector<std::vector<double>> gaussian_disretization2 (double min, double max, int cardi, double sigma21, double sigma22);
 
 template <typename T>
 std::vector<T> linspace(T a, T b, size_t N) {
