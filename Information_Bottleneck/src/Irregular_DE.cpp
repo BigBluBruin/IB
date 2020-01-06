@@ -52,13 +52,13 @@ int Irregular_DE::Discrete_Density_Evolution()
             {
                 temp=check_edge_dist[ii+2]*first_input[0];
                 std::copy(temp.begin(),temp.end(),std::back_inserter(combined_check_dist[0]));
-                std::cout<<"has been here"<<std::endl;
                 temp=check_edge_dist[ii+2]*first_input[1];
                 std::copy(temp.begin(),temp.end(),std::back_inserter(combined_check_dist[1]));
             }
         }
         prob_sort(combined_check_dist);
         llr_combined_check_dist = llr_combination(combined_check_dist, llr_combination_interval);
+        std::cout<<"C---before combined mi: "<<it_mi(combined_check_dist)<<";  after combined mi: "<<it_mi(llr_combined_check_dist)<<"; diff is: "<<it_mi(combined_check_dist)-it_mi(llr_combined_check_dist)<<std::endl;
         clipped_ccd=clip_prob(llr_combined_check_dist,pow(10,-10.0));
         ave_joinprob_llr(clipped_ccd, pow(10.0, -80.0));
         std::vector<double> llr = llr_cal(clipped_ccd);
@@ -107,12 +107,14 @@ int Irregular_DE::Discrete_Density_Evolution()
                 std::copy(temp.begin(), temp.end(), std::back_inserter(combined_vari_dist[0]));
                 temp = vari_edge_dist[ii + 1] * first_input[1];
                 std::copy(temp.begin(), temp.end(), std::back_inserter(combined_vari_dist[1]));
-                std::cout<<combined_vari_dist[1].size()<<"  "<<std::endl;
+                //std::cout<<combined_vari_dist[1].size()<<"  "<<std::endl;
             }
            
         }
         prob_sort(combined_vari_dist);
         llr_combined_vari_dist = llr_combination(combined_vari_dist,llr_combination_interval);
+        std::cout<<"v---before combined mi: "<<it_mi(combined_vari_dist)<<";  after combined mi: "<<it_mi(llr_combined_vari_dist)<<"; diff is: "<<it_mi(combined_vari_dist)-it_mi(llr_combined_vari_dist)<<std::endl;
+
         clipped_cvd=clip_prob(llr_combined_vari_dist,pow(10,-10.0));
         ave_joinprob_llr(clipped_cvd, pow(10.0, -80.0));
         llr = llr_cal(clipped_cvd);
@@ -150,13 +152,13 @@ int Irregular_DE::Discrete_Density_Evolution()
        
         //--------------Output Info------------------------
         std::cout << "DE Info:  iter--" << iter + 1 << "--mi--" << vari_IB.mi <<"---true mi ---"<< it_mi(clipped_cvd)<<std::endl;
-        std::cout << "Variable node threshold:" << std::endl;
+        /*std::cout << "Variable node threshold:" << std::endl;
         for (const auto &aa : vari_IB.threshold)
             std::cout << aa << "  ";
         std::cout << std::endl;
         std::cout << "cluster Info  :" << std::endl;
         for (const auto &aa : vari_IB.cluster)
-            std::cout << aa << "  ";
+            std::cout << aa << "  ";*/
         if (1 - vari_IB.mi < stop_threshold)
         {
             if (iter < max_iter - 3)
