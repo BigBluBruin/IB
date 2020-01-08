@@ -26,7 +26,6 @@ public:
 public:
     IB_kernel(std::vector<std::vector<double>> input, unsigned quan, int Max_run);
     void smIB();
-    void smIB2(std::vector<double> ref_llr);
     std::vector<unsigned> random_cluster(const unsigned total_num, const unsigned quan_size);
     std::vector<std::vector<double>> quantize_to_xt(std::vector<std::vector<double>> & input, std::vector<unsigned> & cluster);
     unsigned find_threshold(unsigned left_most, unsigned right_most);

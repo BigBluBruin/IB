@@ -6,12 +6,6 @@
 #include "Information_Bottleneck/overloadvec.h"
 #include "Information_Bottleneck/itbox.h"
 
-
-/*This package gives statistical tools*/
-double qfunc(double in);
-std::vector<std::vector<double>> gaussian_disretization (double min, double max, int cardi, double sigma2);
-std::vector<std::vector<double>> gaussian_disretization2 (double min, double max, int cardi, double sigma21, double sigma22);
-
 template <typename T>
 std::vector<T> linspace(T a, T b, size_t N) {
     T h = (b - a) / static_cast<T>(N-1);
@@ -22,3 +16,12 @@ std::vector<T> linspace(T a, T b, size_t N) {
         *x = val;
     return xs;
 }
+
+
+
+/*This package gives statistical tools*/
+double qfunc(double in);
+std::vector<std::vector<double>> gaussian_disretization (double min, double max, int cardi, double sigma2);
+std::vector<std::vector<double>> gaussian_disretization2 (double min, double max, int cardi, double sigma21, double sigma22);
+std::vector<std::vector<double>> llr_permutation(std::vector<std::vector<double>> &joint_prob, double permutation_factor);
+

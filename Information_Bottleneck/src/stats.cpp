@@ -46,3 +46,31 @@ std::vector<std::vector<double>> gaussian_disretization2 (double min, double max
     //ave_joinprob(joint_xy);
     return (joint_xy) ;                                                                                                                                                                                                                                                                                                                                                     
 }
+
+std::vector<std::vector<double>> llr_permutation(std::vector<std::vector<double>> &joint_prob, double permutation_factor)
+{
+    std::vector<double> llr = llr_cal(joint_prob);
+    std::vector<std::vector<double>> new_joint_prob(2);
+    double tempt;
+    for (unsigned ii = 0; ii < llr.size(); ii++)
+    {
+        if(llr[ii]<0)
+        {
+            
+            tempt=(joint_prob[0][ii]+joint_prob[1][ii])*exp(llr[ii]-permutation_factor)/(1+exp(llr[ii]-permutation_factor));
+            
+            new_joint_prob[0].push_back(tempt);
+            new_joint_prob[1].push_back(1-tempt);
+            //std::cout<<tempt<<"  "<<std::endl;
+        }
+        else
+        {
+            
+            new_joint_prob[0].push_back(new_joint_prob[1][llr.size()-1-ii]);
+            new_joint_prob[1].push_back(new_joint_prob[0][llr.size()-1-ii]);
+        }
+        
+    }
+    ave_joinprob(new_joint_prob);
+    return new_joint_prob;
+}

@@ -53,18 +53,6 @@ void ave_joinprob(std::vector<std::vector<double>> &joinprob)
         }
     }
 
-    //-------------test can be delete---------------------
-    /*sum=0;
-    for (const auto &out : joinprob)
-    {
-        for (const auto &term : out)
-        {
-            sum += term;
-        }
-    }
-    if(abs(sum-1)>pow(10,-20))
-        std::cout<<"sum not equal 1 but "<<1-sum<<std::endl;*/
-    //------------------------------------------------------
 }
 
 void ave_joinprob_llr(std::vector<std::vector<double>> &joinprob, double threshold)

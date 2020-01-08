@@ -200,24 +200,14 @@ int main()
     for (unsigned index = 0; index < 8; index++)
     {
         sigma2+=0.1;
-        unsigned quansize = 8;
-        //std::vector<std::vector<double>> prob_join_xy = gaussian_disretization(-2,2,2000, sigma2);
-        std::vector<std::vector<double>> prob_join_xy = gaussian_disretization2(-2,2,2000, 4*sigma2,sigma2);
-        //std::cout<<prob_join_xy[0][0]<<"  "<<prob_join_xy[1][0]<<std::endl;
+        unsigned quansize = 16;
+        std::vector<std::vector<double>> prob_join_xy = gaussian_disretization(-2,2,2000, sigma2);
         IB_kernel kernel_instance(prob_join_xy, quansize, 6000);
-        kernel_instance.Progressive_MMI();
-        //std::cout<<"------sigma2: "<<sigma2<<"----------"<<std::endl;               
+        kernel_instance.Progressive_MMI();         
         for (const auto &aa : kernel_instance.cluster)
             std::cout << aa << "  ";
         std::cout << std::endl;
         //std::cout<<kernel_instance.mi<<std::endl;
-        /*for(const auto & aa:kernel_instance.prob_join_xt)
-        {
-            for(const auto & bb: aa)
-                std::cout<<bb<<"  ";
-            std::cout<<std::endl;
-        
-        }
     }*/
 
     //std::vector<unsigned> partit{170,47,438,57,102,128,21,37,37,21,128,102,57,438,47,170};
@@ -284,32 +274,41 @@ int main()
     std::cout<<std::endl;*/
     
 
-    /*double dc=6;
-    double dv=3;*/
-    std::vector<double> check_edge_dist{0,0,0,0,0,0,0.8140,0.1860};
-    std::vector<double> vari_edge_dist{0,0.2558,0.3140,0.0465,0,0,0,0,0,0,0.3837};
+
+    //std::vector<double> check_edge_dist{0,0,0,0,0,0,0.8140,0.1860};
+    //std::vector<double> vari_edge_dist{0,0.2558,0.3140,0.0465,0,0,0,0,0,0,0.3837};
     double code_rate=0.5;
-    double eb_no_low = 1.0;
-    double eb_no_high = 1.5;
     double cur_eb_no;
+    double puncture_rate=0.0588;
+    std::vector<double> vari_edge_dist{0.0833333333333333,0,0,0.142857142857143,0.0595238095238095,0.0714285714285714,0,0,0.107142857142857,0.357142857142857,0,0,0,0,0.178571428571429};
+    std::vector<double> eff_vari_edge_dist{0.821400000000000,0,0,0.0476000000000000,0.131000000000000};
+    std::vector<double> check_edge_dist{0,0,0.0357142857142857,0,0,0,0.333333333333333,0.190476190476190,0,0,0,0,0,0,0,0,0,0.214285714285714,0.226190476190476};
+    std::vector<double> eff_check_edge_dist{0,0,0,0,0,0.500000000000000,0.250000000000000,0,0,0,0,0,0,0,0,0,0.250000000000000};
     unsigned int quansize =16;
     double threshold = pow(10.0, -7.0);
     unsigned max_iter = 50;
     bool flag=true;
     int regular_result;
     double llr_intervel=0.01;
-    unsigned int ib_runtime=6000;
-    std::vector<double> eb_no{0.90};
+    unsigned int ib_runtime=50;
+    std::vector<double> eb_no{2.0};
     std::vector<std::string> suffix{"090"};
     for(unsigned index=0;index<eb_no.size();index++)
     {
         cur_eb_no =eb_no[index];
         std::cout<<"---------------change ebno as : "<<cur_eb_no<<"-------------------"<<std::endl;
         double sigma2 = pow(10, (-0.1 * cur_eb_no) / (2.0 * code_rate));
-        Irregular_DE irregular_ins(check_edge_dist, vari_edge_dist,sigma2,max_iter,quansize,threshold,llr_intervel,ib_runtime,suffix[index]);
-        regular_result = irregular_ins.Discrete_Density_Evolution();
-        /*Regular_DE regularde_ins(dc, dv, sigma2, max_iter, quansize, threshold);
-        regular_result = regularde_ins.Discrete_Density_Evolution();   */
+        Irregular_DE irregular_ins(check_edge_dist, vari_edge_dist,sigma2,max_iter,quansize,threshold,llr_intervel,ib_runtime,suffix[index],eff_check_edge_dist,eff_vari_edge_dist,puncture_rate);
+        if(puncture_rate==0)
+        {
+            regular_result = irregular_ins.Discrete_Density_Evolution();
+        }
+        else
+        {
+            regular_result = irregular_ins.Discrete_Density_Evolution_punc();
+        }
+        
+
     }
 
     //QCDE("Density_Evolution.txt",16);
