@@ -44,45 +44,6 @@ std::vector<std::vector<double>> clip_prob(std::vector<std::vector<double>> & in
 }
 
 
-std::vector<std::vector<double>> prob_combination_v2 (std::vector<std::vector<double>> & first_input, std::vector<std::vector<double>> & second_input, const char oper_type[], double threshold)
-{
-    unsigned size_first=first_input[0].size();
-    unsigned size_second=second_input[0].size();
-    std::vector<std::vector<double>> combined_prob(2);
-    double upper_value,lower_value;
-    for (unsigned ii1 = 0; ii1 < size_first; ii1++)
-    {
-        for (unsigned ii2 = 0; ii2 < size_second; ii2++)
-        {
-            if(oper_type=="vari")
-            {
-                upper_value=first_input[0][ii1]*second_input[0][ii2]/0.5;
-                lower_value=first_input[1][ii1]*second_input[1][ii2]/0.5;
-                if(upper_value+lower_value>threshold)
-                {
-                    combined_prob[0].push_back(upper_value);
-                    combined_prob[1].push_back(lower_value);
-                }
-
-            }
-            else if (oper_type=="check")
-            {
-                upper_value=first_input[0][ii1]*second_input[0][ii2]+first_input[1][ii1]*second_input[1][ii2];
-                lower_value=first_input[0][ii1]*second_input[1][ii2]+first_input[1][ii1]*second_input[0][ii2];
-                if(upper_value+lower_value>threshold)
-                {
-                    combined_prob[0].push_back(upper_value);
-                    combined_prob[1].push_back(lower_value);
-                }
-            }
-            else
-                std::cout<<"Wrong Info: invalide command, plz check "<<std::endl;
-        }
-    }
-    return combined_prob;
-}
-
-
 std::vector<unsigned> sorted_pos(std::vector<double> &input)
 {
     std::vector<unsigned> y(input.size());

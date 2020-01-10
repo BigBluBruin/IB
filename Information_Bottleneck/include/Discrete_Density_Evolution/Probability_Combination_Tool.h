@@ -16,7 +16,6 @@ the following parts are includes
 
 
 std::vector<std::vector<double>> prob_combination (std::vector<std::vector<double>> & first_input, std::vector<std::vector<double>> & second_input, const char type[]);
-std::vector<std::vector<double>> prob_combination_v2 (std::vector<std::vector<double>> & first_input, std::vector<std::vector<double>> & second_input, const char oper_type[], double threshold);
 void prob_sort(std::vector<std::vector<double>> & input);
 std::vector<unsigned> sorted_pos(std::vector<double> &input);
 std::vector<std::vector<double>> prob_approx(std::vector<std::vector<double>> input);
