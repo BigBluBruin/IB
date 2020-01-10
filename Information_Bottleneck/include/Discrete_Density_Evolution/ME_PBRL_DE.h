@@ -14,8 +14,11 @@ class ME_PBRL_DE
     std::vector<std::vector<double>> check_representation_1,check_representation_2;
     std::vector<std::vector<double>> vari_threshold_1,vari_threshold_2;
     std::vector<std::vector<double>> check_threshold_1,check_threshold_2;
+    std::vector<std::vector<double>> channel_threshold;
+    std::vector<std::vector<double>> channel_representation;
     std::vector<std::vector<double>> vari_pmf_1,vari_pmf_2,vari_pmf_3;
     std::vector<std::vector<double>> check_pmf_1,check_pmf_2,check_pmf_3;
+    std::vector<std::vector<double>> p_channel_pmf,np_channel_pmf;
     
     double sigma2;
     unsigned int max_iter;
@@ -26,5 +29,6 @@ class ME_PBRL_DE
     std::string suffix;
 
     // methods
+    std::vector<std::vector<double>> calculate_output_distribution(std::vector<double> & distribution, const char type[]);
 
 }; 

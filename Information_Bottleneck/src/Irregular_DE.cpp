@@ -48,8 +48,7 @@ int Irregular_DE::Discrete_Density_Evolution()
             prob_sort(combined_output);
             prob_llr_combined = llr_combination(combined_output, 0.001);
             ave_joinprob_llr(prob_llr_combined, pow(10.0, -80.0));
-            first_input = prob_llr_combined;
-            
+            first_input = prob_llr_combined;            
             if(check_edge_dist[ii+2]!=0)
             {
                 temp=check_edge_dist[ii+2]*first_input[0];
