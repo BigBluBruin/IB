@@ -30,5 +30,6 @@ class ME_PBRL_DE
 
     // methods
     std::vector<std::vector<double>> calculate_output_distribution(std::vector<double> & distribution, const char type[]);
+    std::vector<std::vector<double>> type_distribution_update(std::vector<std::vector<double>> edge_distribution, const char type[],int iter,int socket);
 
 }; 
