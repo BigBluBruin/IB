@@ -7,72 +7,12 @@
 #include "Discrete_Density_Evolution/Regular_DE.h"
 #include "Discrete_Density_Evolution/Irregular_DE.h"
 #include "Discrete_Density_Evolution/Quantize_Continuous_DE.h"
+#include "Discrete_Density_Evolution/ME_PBRL_DE.h"
 #include <fstream>
 #include <time.h>
 #include <random>
 
-/*std::vector<unsigned> random_cluster(const unsigned total_num, const unsigned quan_size)
-{
-    //initialize random seed
-    std::random_device rd;
-    std::mt19937 generator(rd());
-    //srand(time(0));
 
-    //Para Initial
-    std::vector<unsigned> remaining(total_num - 1);
-    for (unsigned ii = 0; ii < total_num - 1; ii++)
-    {
-        remaining[ii] = ii + 1;
-    }
-
-    for (const auto &term : remaining)
-        std::cout << term;
-    std::cout << std::endl;
-    std::vector<unsigned> chosen(quan_size - 1);
-    int selected;
-
-    //start
-    for (unsigned ii = 0; ii < quan_size - 1; ii++)
-    {
-        std::uniform_int_distribution<> distribution(0,total_num - 2 - ii);
-        selected = distribution(generator);
-        std::cout << "round: " << ii << "select:" << selected;
-        chosen[ii] = remaining[selected];
-        std::cout << "number" << chosen[ii] << std::endl;
-        remaining.erase(remaining.begin() + selected);
-    }
-
-    chosen.push_back(0);
-    chosen.push_back(total_num);
-    std::sort(chosen.begin(), chosen.end());
-
-    std::vector<unsigned> cluster(quan_size);
-    for (unsigned ii = 0; ii < quan_size; ii++)
-    {
-        cluster[ii] = chosen[ii + 1] - chosen[ii];
-    }
-
-    return cluster;
-}*/
-
- /*-std::vector<std::vector<double>> quantize_to_xt2(std::vector<std::vector<double>> & input, std::vector<unsigned> & cluster)
- {
-     std::vector<std::vector<double>> join_prob_xt(2,std::vector<double>(cluster.size(),0.0));
-     std::vector<double>::iterator iter1=input[0].begin();
-     std::vector<double>::iterator iter2=input[1].begin();
-     int i=0;
-     for (const unsigned & cluval: cluster)
-     {
-         
-         join_prob_xt[0][i]=std::accumulate(iter1,iter1+cluval,0.0);
-         join_prob_xt[1][i]=std::accumulate(iter2,iter2+cluval,0.0);
-         iter1=iter1+cluval;
-         iter2=iter2+cluval;
-         i+=1;
-     }
-     std::cout<<std::endl;
-     return join_prob_xt;
- }*/
 
 int main()
 {
@@ -277,7 +217,7 @@ int main()
 
     //std::vector<double> check_edge_dist{0,0,0,0,0,0,0.8140,0.1860};
     //std::vector<double> vari_edge_dist{0,0.2558,0.3140,0.0465,0,0,0,0,0,0,0.3837};
-    double code_rate=0.5;
+    /*double code_rate=0.5;
     double cur_eb_no;
     double puncture_rate=0.0588;
     std::vector<double> vari_edge_dist{0.0833333333333333,0,0,0.142857142857143,0.0595238095238095,0.0714285714285714,0,0,0.107142857142857,0.357142857142857,0,0,0,0,0.178571428571429};
@@ -312,9 +252,37 @@ int main()
     }
 
     //QCDE("Density_Evolution.txt",16);
+    */
+
+    //This part tests read description of ME_PBRL_Code
+  
+
     return 0;
+
 }/*
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//------------------------------recycle bin------------------------------------------------------
  /*switch (regular_result)
         {
         case 1:
@@ -329,3 +297,138 @@ int main()
             break;
         }  
         return 0;     */
+        /*std::vector<unsigned> random_cluster(const unsigned total_num, const unsigned quan_size)
+{
+    //initialize random seed
+    std::random_device rd;
+    std::mt19937 generator(rd());
+    //srand(time(0));
+
+    //Para Initial
+    std::vector<unsigned> remaining(total_num - 1);
+    for (unsigned ii = 0; ii < total_num - 1; ii++)
+    {
+        remaining[ii] = ii + 1;
+    }
+
+    for (const auto &term : remaining)
+        std::cout << term;
+    std::cout << std::endl;
+    std::vector<unsigned> chosen(quan_size - 1);
+    int selected;
+
+    //start
+    for (unsigned ii = 0; ii < quan_size - 1; ii++)
+    {
+        std::uniform_int_distribution<> distribution(0,total_num - 2 - ii);
+        selected = distribution(generator);
+        std::cout << "round: " << ii << "select:" << selected;
+        chosen[ii] = remaining[selected];
+        std::cout << "number" << chosen[ii] << std::endl;
+        remaining.erase(remaining.begin() + selected);
+    }
+
+    chosen.push_back(0);
+    chosen.push_back(total_num);
+    std::sort(chosen.begin(), chosen.end());
+
+    std::vector<unsigned> cluster(quan_size);
+    for (unsigned ii = 0; ii < quan_size; ii++)
+    {
+        cluster[ii] = chosen[ii + 1] - chosen[ii];
+    }
+
+    return cluster;
+}*/
+
+ /*-std::vector<std::vector<double>> quantize_to_xt2(std::vector<std::vector<double>> & input, std::vector<unsigned> & cluster)
+ {
+     std::vector<std::vector<double>> join_prob_xt(2,std::vector<double>(cluster.size(),0.0));
+     std::vector<double>::iterator iter1=input[0].begin();
+     std::vector<double>::iterator iter2=input[1].begin();
+     int i=0;
+     for (const unsigned & cluval: cluster)
+     {
+         
+         join_prob_xt[0][i]=std::accumulate(iter1,iter1+cluval,0.0);
+         join_prob_xt[1][i]=std::accumulate(iter2,iter2+cluval,0.0);
+         iter1=iter1+cluval;
+         iter2=iter2+cluval;
+         i+=1;
+     }
+     std::cout<<std::endl;
+     return join_prob_xt;
+ }*/
+
+ /*
+   ME_PBRL_DE ins_mepbrl("PBRL_MET_description.txt", 6, 6, 6, 6, 6, "0");
+    if (ins_mepbrl.read_decription())
+    {
+        std::vector<std::vector<double>> cur_output;
+
+        cur_output = ins_mepbrl.variable_node_degree;
+        std::cout << "--------------------------" << std::endl;
+        for (const auto &outer : cur_output)
+        {
+            for (const auto &inner : outer)
+                std::cout << inner << "  ";
+            std::cout << std::endl;
+        }
+        cur_output = ins_mepbrl.check_node_degree;
+        std::cout << "--------------------------" << std::endl;
+        for (const auto &outer : cur_output)
+        {
+            for (const auto &inner : outer)
+                std::cout << inner << "  ";
+            std::cout << std::endl;
+        }
+        cur_output = ins_mepbrl.vari_edge_deg_1;
+        std::cout << "--------------------------" << std::endl;
+        for (const auto &outer : cur_output)
+        {
+            for (const auto &inner : outer)
+                std::cout << inner << "  ";
+            std::cout << std::endl;
+        }
+        cur_output = ins_mepbrl.vari_edge_deg_2;
+        std::cout << "--------------------------" << std::endl;
+        for (const auto &outer : cur_output)
+        {
+            for (const auto &inner : outer)
+                std::cout << inner << "  ";
+            std::cout << std::endl;
+        }
+        cur_output = ins_mepbrl.vari_edge_deg_3;
+        std::cout << "--------------------------" << std::endl;
+        for (const auto &outer : cur_output)
+        {
+            for (const auto &inner : outer)
+                std::cout << inner << "  ";
+            std::cout << std::endl;
+        }
+        cur_output = ins_mepbrl.check_edge_deg_1;
+        std::cout << "--------------------------" << std::endl;
+        for (const auto &outer : cur_output)
+        {
+            for (const auto &inner : outer)
+                std::cout << inner << "  ";
+            std::cout << std::endl;
+        }
+        cur_output = ins_mepbrl.check_edge_deg_2;
+        std::cout << "--------------------------" << std::endl;
+        for (const auto &outer : cur_output)
+        {
+            for (const auto &inner : outer)
+                std::cout << inner << "  ";
+            std::cout << std::endl;
+        }
+        cur_output = ins_mepbrl.check_edge_deg_3;
+        std::cout << "--------------------------" << std::endl;
+        for (const auto &outer : cur_output)
+        {
+            for (const auto &inner : outer)
+                std::cout << inner << "  ";
+            std::cout << std::endl;
+        }
+    }
+ */
