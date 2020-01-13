@@ -9,13 +9,13 @@ std::vector<std::vector<double>> prob_combination (std::vector<std::vector<doubl
     {
         for (unsigned ii2 = 0; ii2 < size_second; ii2++)
         {
-            if(oper_type=="vari")
+            if(strcmp(oper_type,"vari")==0)
             {
                 combined_prob[0][ii1*size_second+ii2]=first_input[0][ii1]*second_input[0][ii2]/0.5;
                 combined_prob[1][ii1*size_second+ii2]=first_input[1][ii1]*second_input[1][ii2]/0.5;
 
             }
-            else if (oper_type=="check")
+            else if (strcmp(oper_type,"check")==0)
             {
                 combined_prob[0][ii1*size_second+ii2]=first_input[0][ii1]*second_input[0][ii2]+first_input[1][ii1]*second_input[1][ii2];
                 combined_prob[1][ii1*size_second+ii2]=first_input[0][ii1]*second_input[1][ii2]+first_input[1][ii1]*second_input[0][ii2];

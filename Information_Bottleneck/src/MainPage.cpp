@@ -255,8 +255,25 @@ int main()
     */
 
     //This part tests read description of ME_PBRL_Code
-  
 
+    unsigned int quansize = 16;
+    double threshold = pow(10.0, -7.0);
+    unsigned max_iter = 50;
+    bool flag = true;
+    int regular_result;
+    double llr_intervel = 0.01;
+    unsigned int ib_runtime = 50;
+    double code_rate = 0.5;
+    double cur_eb_no;
+    std::vector<double> eb_no{2.0};
+    std::vector<std::string> suffix{"090"};
+    cur_eb_no = eb_no[0];
+    std::cout << "---------------change ebno as : " << cur_eb_no << "-------------------" << std::endl;
+    double sigma2 = pow(10, (-0.1 * cur_eb_no) / (2.0 * code_rate));
+    std::string filename="PBRL_MET_description.txt";
+    ME_PBRL_DE me_pbrl_ins(filename, max_iter, quansize,sigma2,threshold,llr_intervel,ib_runtime,suffix[0]);
+    me_pbrl_ins.read_decription();
+    me_pbrl_ins.density_evolution();
     return 0;
 
 }/*

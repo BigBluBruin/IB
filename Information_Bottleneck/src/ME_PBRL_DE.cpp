@@ -1,7 +1,8 @@
 #include "Discrete_Density_Evolution/ME_PBRL_DE.h"
 
-ME_PBRL_DE::ME_PBRL_DE(std::string PBRL_MET_Description = " ",
-                       unsigned Max_iter = 50, unsigned Quansize = 16, double Stop_treshold = 0, double LLR_interval = 0.01, unsigned IB_runtime = 50, std::string Suffix = " ")
+ME_PBRL_DE::ME_PBRL_DE(const std::string PBRL_MET_Description, unsigned Max_iter,
+                       unsigned Quansize, double Sigma2, double Stop_treshold,
+                       double LLR_interval, unsigned IB_runtime, std::string Suffix)
 {
     pbrl_met_description = PBRL_MET_Description;
     max_iter = Max_iter;
@@ -10,6 +11,7 @@ ME_PBRL_DE::ME_PBRL_DE(std::string PBRL_MET_Description = " ",
     llr_combination_interval = LLR_interval;
     ib_runtime = IB_runtime;
     suffix = Suffix;
+    sigma2 = Sigma2;
 }
 
 std::vector<std::vector<double>> ME_PBRL_DE::calculate_output_distribution(std::vector<double> &distribution, const char type[])
@@ -17,7 +19,6 @@ std::vector<std::vector<double>> ME_PBRL_DE::calculate_output_distribution(std::
     std::vector<std::vector<double>> output_joint(2);
     std::vector<std::vector<double>> first_input, second_input, combined_output, prob_llr_combined;
     std::vector<double> temp;
-
     if (strcmp(type, "vari") == 0)
     {
         if (distribution.size() == 5)
@@ -30,7 +31,7 @@ std::vector<std::vector<double>> ME_PBRL_DE::calculate_output_distribution(std::
             {
                 first_input = {{0.5 / (1 + exp(0.001)), 0.5 * exp(0.001) / (1 + exp(0.001))}, {0.5 * exp(0.001) / (1 + exp(0.001)), 0.5 / (1 + exp(0.001))}}; //a 0.001dB offset
             }
-
+           
             if (distribution[2] > 0)
             {
                 second_input = check_pmf_1;
@@ -43,6 +44,7 @@ std::vector<std::vector<double>> ME_PBRL_DE::calculate_output_distribution(std::
                     first_input = prob_llr_combined;
                 }
             }
+
             if (distribution[3] > 0)
             {
                 second_input = check_pmf_2;
@@ -67,11 +69,13 @@ std::vector<std::vector<double>> ME_PBRL_DE::calculate_output_distribution(std::
                     first_input = prob_llr_combined;
                 }
             }
+
             temp = distribution[0] * first_input[0];
             std::copy(temp.begin(), temp.end(), std::back_inserter(output_joint[0]));
             temp = distribution[0] * first_input[1];
             std::copy(temp.begin(), temp.end(), std::back_inserter(output_joint[1]));
             prob_sort(output_joint);
+            std::cout<<"has been here 2 "<<std::endl;
             return output_joint;
         }
         else
@@ -82,6 +86,7 @@ std::vector<std::vector<double>> ME_PBRL_DE::calculate_output_distribution(std::
     }
     else if (strcmp(type, "check") == 0)
     {
+        std::cout << std::endl;
         if (distribution.size() == 4)
         {
             std::vector<unsigned> ind;
@@ -116,6 +121,8 @@ std::vector<std::vector<double>> ME_PBRL_DE::calculate_output_distribution(std::
                     ave_joinprob_llr(prob_llr_combined, pow(10.0, -80.0));
                     first_input_c2 = prob_llr_combined;
                 }
+
+
             }
             //type 3
             if (distribution[3] != 0)
@@ -226,7 +233,10 @@ void ME_PBRL_DE::type_distribution_update(std::vector<std::vector<double>> edge_
         cur_output = calculate_output_distribution(edge_distribution[ii], type);
         std::copy(cur_output[0].begin(), cur_output[0].end(), std::back_inserter(output_joint[0]));
         std::copy(cur_output[1].begin(), cur_output[1].end(), std::back_inserter(output_joint[1]));
+        if (type =="vari")
+            std::cout<<edge_distribution.size()<<"  "<<"has been here \n";
     }
+    
     prob_sort(output_joint);
     llr_combined_output_joint = llr_combination(output_joint, llr_combination_interval);
     //std::cout << "Info: Type--"<<socket<<"--Node: "<<type<<"---before combined mi: " << it_mi(combined_vari_dist) << ";  after combined mi: " << it_mi(llr_combined_vari_dist) << std::endl;
@@ -244,7 +254,8 @@ void ME_PBRL_DE::type_distribution_update(std::vector<std::vector<double>> edge_
     }
     llr_file.close();
     IB_kernel IB_ins(clipped_cvd, quantization_size, ib_runtime);
-    IB_ins.Progressive_MMI();
+    IB_ins.Progressive_MMI();  
+
     if (strcmp(type, "vari") == 0)
     {
         switch (socket)
@@ -253,11 +264,13 @@ void ME_PBRL_DE::type_distribution_update(std::vector<std::vector<double>> edge_
             vari_representation_1.push_back(llr_cal(IB_ins.prob_join_xt));
             vari_threshold_1.push_back(IB_ins.threshold);
             vari_pmf_1 = IB_ins.prob_join_xt;
+            std::cout << "Info: Iteration " << iter << ", socket " << socket << ", variable mutual information update: " << IB_ins.mi << std::endl;
             break;
         case 1:
             vari_representation_2.push_back(llr_cal(IB_ins.prob_join_xt));
             vari_threshold_2.push_back(IB_ins.threshold);
             vari_pmf_2 = IB_ins.prob_join_xt;
+            std::cout << "Info: Iteration " << iter << ", socket " << socket << ", variable mutual information update: " << IB_ins.mi << std::endl;
             break;
         default:
             std::cout << "Wrong Info: In function (type_distribution_update), type is vari, but no socket " << socket << ".. please check again." << std::endl;
@@ -415,11 +428,11 @@ int ME_PBRL_DE::density_evolution()
     for (unsigned ii = 0; ii < vari_edge_deg_1.size(); ii++)
     {
         if (vari_edge_deg_1[ii][1] > 0)
-            channel_dist[0] += vari_edge_deg_1[ii][1];
+            channel_dist[0] += vari_edge_deg_1[ii][0];
         else
-            channel_dist[1] += vari_edge_deg_1[ii][1];
+            channel_dist[1] += vari_edge_deg_1[ii][0];
     }
-    if (channel_dist[0] + channel_dist[1] != 1)
+    if (channel_dist[0] + channel_dist[1] < 1 - pow(10, -7))
     {
         std::cout << "Wrong Info: Summation of variable edge dstirbution of socket 1 is not equal to 1 rather " << channel_dist[0] + channel_dist[1] << ", plz check and try again..." << std::endl;
         return -1;
@@ -434,19 +447,18 @@ int ME_PBRL_DE::density_evolution()
     prob_sort(temp_two_dim_vec);
     IB_kernel channel_IB_1(temp_two_dim_vec, quantization_size, ib_runtime);
     channel_IB_1.Progressive_MMI();
-    vari_edge_deg_1 = channel_IB_1.prob_join_xt;
-
+    vari_pmf_1 = channel_IB_1.prob_join_xt;
     channel_dist.assign(2, 0);
     for (unsigned ii = 0; ii < vari_edge_deg_2.size(); ii++)
     {
         if (vari_edge_deg_2[ii][1] > 0)
-            channel_dist[0] += vari_edge_deg_2[ii][1];
+            channel_dist[0] += vari_edge_deg_2[ii][0];
         else
-            channel_dist[1] += vari_edge_deg_2[ii][1];
+            channel_dist[1] += vari_edge_deg_2[ii][0];
     }
-    if (channel_dist[0] + channel_dist[1] != 1)
+    if (channel_dist[0] + channel_dist[1] < 1 - pow(10, -7))
     {
-        std::cout << "Wrong Info: Summation of variable edge dstirbution of socket 1 is not equal to 1 rather " << channel_dist[0] + channel_dist[1] << ", plz check and try again..." << std::endl;
+        std::cout << "Wrong Info: Summation of variable edge dstirbution of socket 2 is not equal to 1 rather " << channel_dist[0] + channel_dist[1] << ", plz check and try again..." << std::endl;
         return -1;
     }
     temp_two_dim_vec.clear();
@@ -459,9 +471,8 @@ int ME_PBRL_DE::density_evolution()
     prob_sort(temp_two_dim_vec);
     IB_kernel channel_IB_2(temp_two_dim_vec, quantization_size, ib_runtime);
     channel_IB_2.Progressive_MMI();
-    vari_edge_deg_2 = channel_IB_2.prob_join_xt;
-
-    vari_edge_deg_3 = p_channel_pmf;
+    vari_pmf_2 = channel_IB_2.prob_join_xt;
+    vari_pmf_3 = np_channel_pmf;
 
     channel_threshold.push_back(channel_IB_1.threshold);
     channel_threshold.push_back(channel_IB_2.threshold);
@@ -469,6 +480,7 @@ int ME_PBRL_DE::density_evolution()
     channel_representation.push_back(llr_cal(channel_IB_1.prob_join_xt));
     channel_representation.push_back(llr_cal(channel_IB_2.prob_join_xt));
     channel_representation.push_back(llr_cal(channel_IB.prob_join_xt));
+    std::cout << "Info: Finished channel quantization ..." << std::endl;
     //---------------------density evolution------------------------------------
     for (unsigned ii = 0; ii < max_iter; ii++)
     {
@@ -493,7 +505,7 @@ void ME_PBRL_DE::RQF_output()
     std::vector<std::vector<double>> cur_two_dim_vec;
     if (handle_channel_quantizer.is_open())
     {
-        handle_channel_quantizer<<quantization_size<<"  "<<std::endl;
+        handle_channel_quantizer << quantization_size << "  " << std::endl;
         cur_two_dim_vec = channel_threshold;
         for (const auto &aa : cur_two_dim_vec)
         {
@@ -508,11 +520,10 @@ void ME_PBRL_DE::RQF_output()
         std::cout << "Fail to write channel quantizer ..." << std::endl;
     }
 
-
     std::ofstream handle_channel_recons(channelrec_file);
     if (handle_channel_recons.is_open())
     {
-        handle_channel_recons<<quantization_size<<"  "<<std::endl;
+        handle_channel_recons << quantization_size << "  " << std::endl;
         cur_two_dim_vec = channel_representation;
         for (const auto &aa : cur_two_dim_vec)
         {
@@ -529,7 +540,6 @@ void ME_PBRL_DE::RQF_output()
 
     std::ofstream outpufile, handle_reconstrction;
     std::string threholdfile, recons_file;
-
 
     //------------------output socket 1 information---------------------------------
     threholdfile = "threshold_s1" + suffix + ".txt";
@@ -581,7 +591,6 @@ void ME_PBRL_DE::RQF_output()
     {
         std::cout << "Reconstruction failed to wirte ..." << std::endl;
     }
-
 
     //--------------------output sockect two information-----------------------------------
     threholdfile = "threshold_s2" + suffix + ".txt";

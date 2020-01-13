@@ -13,6 +13,7 @@ the following parts are includes
 #include <iterator>
 #include <algorithm>
 #include <numeric>
+#include <string.h>
 
 
 std::vector<std::vector<double>> prob_combination (std::vector<std::vector<double>> & first_input, std::vector<std::vector<double>> & second_input, const char type[]);

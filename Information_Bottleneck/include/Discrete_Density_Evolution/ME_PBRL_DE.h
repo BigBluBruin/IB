@@ -33,7 +33,7 @@ public:
 
 // methods
 public:
-    ME_PBRL_DE(std::string PBRL_MET_Description, unsigned Max_iter, unsigned Quansize, double Stop_treshold, double LLR_interval, unsigned IB_runtime, std::string Suffix);
+    ME_PBRL_DE(const std::string PBRL_MET_Description, unsigned Max_iter, unsigned Quansize,double Sigma2, double Stop_treshold, double LLR_interval, unsigned IB_runtime, std::string Suffix);
     std::vector<std::vector<double>> calculate_output_distribution(std::vector<double> &distribution, const char type[]);
     void type_distribution_update(std::vector<std::vector<double>> edge_distribution, const char type[], int iter, int socket);
     bool read_decription();
