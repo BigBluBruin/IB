@@ -37,4 +37,6 @@ public:
     std::vector<std::vector<double>> calculate_output_distribution(std::vector<double> &distribution, const char type[]);
     void type_distribution_update(std::vector<std::vector<double>> edge_distribution, const char type[], int iter, int socket);
     bool read_decription();
+    int density_evolution();
+    void RQF_output();
 };

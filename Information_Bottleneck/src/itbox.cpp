@@ -58,12 +58,13 @@ void ave_joinprob(std::vector<std::vector<double>> &joinprob)
 void ave_joinprob_llr(std::vector<std::vector<double>> &joinprob, double threshold)
 {
     double new_1,new_2,sum;
-     std::vector<std::vector<double>>::iterator ounner;
+    std::vector<std::vector<double>>::iterator ounner;
     std::vector<double>::iterator inner;
     for (unsigned index = 0; index < joinprob[0].size() / 2; index++)
     {
         if (joinprob[0][index] < threshold && joinprob[1][index] < threshold)
         {
+            //Preserves LLR information...
             new_1=threshold;
             new_2=threshold/(joinprob[0][index]/joinprob[1][index]);
             joinprob[0][index]=new_1;
