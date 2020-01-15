@@ -75,7 +75,6 @@ std::vector<std::vector<double>> ME_PBRL_DE::calculate_output_distribution(std::
             temp = distribution[0] * first_input[1];
             std::copy(temp.begin(), temp.end(), std::back_inserter(output_joint[1]));
             prob_sort(output_joint);
-            std::cout<<"has been here 2 "<<std::endl;
             return output_joint;
         }
         else
@@ -86,7 +85,6 @@ std::vector<std::vector<double>> ME_PBRL_DE::calculate_output_distribution(std::
     }
     else if (strcmp(type, "check") == 0)
     {
-        std::cout << std::endl;
         if (distribution.size() == 4)
         {
             std::vector<unsigned> ind;
@@ -140,7 +138,7 @@ std::vector<std::vector<double>> ME_PBRL_DE::calculate_output_distribution(std::
                 }
             }
             //-----------------------------------------------------------------------------------------
-
+            
             //-----------------------------fianl calculation-------------------------------------------
             if (ind.size() == 1)
             {
@@ -233,17 +231,22 @@ void ME_PBRL_DE::type_distribution_update(std::vector<std::vector<double>> edge_
         cur_output = calculate_output_distribution(edge_distribution[ii], type);
         std::copy(cur_output[0].begin(), cur_output[0].end(), std::back_inserter(output_joint[0]));
         std::copy(cur_output[1].begin(), cur_output[1].end(), std::back_inserter(output_joint[1]));
-        if (type =="vari")
-            std::cout<<edge_distribution.size()<<"  "<<"has been here \n";
     }
     
     prob_sort(output_joint);
-    llr_combined_output_joint = llr_combination(output_joint, llr_combination_interval);
+    if(strcmp(type,"check")==0)
+    {
+        llr_combined_output_joint = llr_combination(output_joint, 0.001);
+    }
+    else if(strcmp(type,"vari")==0)
+    {
+        llr_combined_output_joint = llr_combination(output_joint, 0.01);
+    }   
     //std::cout << "Info: Type--"<<socket<<"--Node: "<<type<<"---before combined mi: " << it_mi(combined_vari_dist) << ";  after combined mi: " << it_mi(llr_combined_vari_dist) << std::endl;
     clipped_cvd = clip_prob(llr_combined_output_joint, pow(10, -10.0));
     ave_joinprob_llr(clipped_cvd, pow(10.0, -80.0));
     llr = llr_cal(clipped_cvd);
-    llr_file_name = "vari_type_s" + std::to_string(socket) + "_llr_iteration_" + std::to_string(iter) + ".txt";
+    llr_file_name = std::string()+type+"_s" + std::to_string(socket) + "_llr_iteration_" + std::to_string(iter) + ".txt";
     llr_file.open(llr_file_name);
     if (llr_file.is_open())
     {
@@ -254,8 +257,18 @@ void ME_PBRL_DE::type_distribution_update(std::vector<std::vector<double>> edge_
     }
     llr_file.close();
     IB_kernel IB_ins(clipped_cvd, quantization_size, ib_runtime);
-    IB_ins.Progressive_MMI();  
-
+    if(strcmp(type,"vari")==0)
+    {
+        std::ofstream new_file_handle("diagnosis.txt");
+        for(const auto aa:clipped_cvd)
+        {
+            for(const auto bb:aa)
+                new_file_handle<<bb<<"  ";
+            new_file_handle<<std::endl;
+        }
+        new_file_handle.close();
+    }
+    IB_ins.Progressive_MMI();
     if (strcmp(type, "vari") == 0)
     {
         switch (socket)
@@ -473,7 +486,6 @@ int ME_PBRL_DE::density_evolution()
     channel_IB_2.Progressive_MMI();
     vari_pmf_2 = channel_IB_2.prob_join_xt;
     vari_pmf_3 = np_channel_pmf;
-
     channel_threshold.push_back(channel_IB_1.threshold);
     channel_threshold.push_back(channel_IB_2.threshold);
     channel_threshold.push_back(channel_IB.threshold);
@@ -491,7 +503,6 @@ int ME_PBRL_DE::density_evolution()
         type_distribution_update(vari_edge_deg_1, "vari", ii, 0);
         type_distribution_update(vari_edge_deg_2, "vari", ii, 1);
     }
-
     RQF_output();
     return 1;
 }
@@ -538,12 +549,14 @@ void ME_PBRL_DE::RQF_output()
         std::cout << "Fail to write channel reconstruction file ..." << std::endl;
     }
 
+
+
     std::ofstream outpufile, handle_reconstrction;
     std::string threholdfile, recons_file;
 
     //------------------output socket 1 information---------------------------------
-    threholdfile = "threshold_s1" + suffix + ".txt";
-    recons_file = "reconstruction_s1" + suffix + ".txt";
+    threholdfile = "threshold_s1_" + suffix + ".txt";
+    recons_file = "reconstruction_s1_" + suffix + ".txt";
     outpufile.open(threholdfile);
     if (outpufile.is_open())
     {
@@ -593,8 +606,8 @@ void ME_PBRL_DE::RQF_output()
     }
 
     //--------------------output sockect two information-----------------------------------
-    threholdfile = "threshold_s2" + suffix + ".txt";
-    recons_file = "reconstruction_s2" + suffix + ".txt";
+    threholdfile = "threshold_s2_" + suffix + ".txt";
+    recons_file = "reconstruction_s2_" + suffix + ".txt";
     outpufile.open(threholdfile);
     if (outpufile.is_open())
     {

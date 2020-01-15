@@ -14,7 +14,7 @@
 
 
 
-int main()
+int main(int argc, char* argv[])
 {
 
     //function testing
@@ -255,7 +255,8 @@ int main()
     */
 
     //This part tests read description of ME_PBRL_Code
-
+    //argv[1] ->eb_no 
+    //argv[2] -> correspoded string
     unsigned int quansize = 16;
     double threshold = pow(10.0, -7.0);
     unsigned max_iter = 50;
@@ -265,11 +266,12 @@ int main()
     unsigned int ib_runtime = 50;
     double code_rate = 0.5;
     double cur_eb_no;
-    std::vector<double> eb_no{2.0};
-    std::vector<std::string> suffix{"090"};
+    std::vector<double> eb_no{std::stod(argv[1])};
+    std::vector<std::string> suffix{argv[2]};
     cur_eb_no = eb_no[0];
     std::cout << "---------------change ebno as : " << cur_eb_no << "-------------------" << std::endl;
     double sigma2 = pow(10, (-0.1 * cur_eb_no) / (2.0 * code_rate));
+    std::cout<<"sigma 2: "<<sigma2<<std::endl;
     std::string filename="PBRL_MET_description.txt";
     ME_PBRL_DE me_pbrl_ins(filename, max_iter, quansize,sigma2,threshold,llr_intervel,ib_runtime,suffix[0]);
     me_pbrl_ins.read_decription();
