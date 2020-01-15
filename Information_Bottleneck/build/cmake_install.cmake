@@ -1,4 +1,4 @@
-# Install script for directory: /mnt/d/GitRepo/IB/Information_Bottleneck
+# Install script for directory: /mnt/e/Gitrepo/IB/Information_Bottleneck
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -45,5 +45,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/mnt/d/GitRepo/IB/Information_Bottleneck/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/mnt/e/Gitrepo/IB/Information_Bottleneck/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
