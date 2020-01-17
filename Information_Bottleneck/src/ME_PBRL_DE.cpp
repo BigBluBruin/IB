@@ -240,7 +240,7 @@ void ME_PBRL_DE::type_distribution_update(std::vector<std::vector<double>> edge_
     }
     else if(strcmp(type,"vari")==0)
     {
-        llr_combined_output_joint = llr_combination(output_joint, 0.01);
+        llr_combined_output_joint = llr_combination(output_joint, 0.001);
     }   
     //std::cout << "Info: Type--"<<socket<<"--Node: "<<type<<"---before combined mi: " << it_mi(combined_vari_dist) << ";  after combined mi: " << it_mi(llr_combined_vari_dist) << std::endl;
     clipped_cvd = clip_prob(llr_combined_output_joint, pow(10, -10.0));
