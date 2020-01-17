@@ -240,7 +240,7 @@ void ME_PBRL_DE::type_distribution_update(std::vector<std::vector<double>> edge_
     }
     else if(strcmp(type,"vari")==0)
     {
-        llr_combined_output_joint = llr_combination(output_joint, 0.001);
+        llr_combined_output_joint = llr_combination(output_joint, 0.005);
     }   
     //std::cout << "Info: Type--"<<socket<<"--Node: "<<type<<"---before combined mi: " << it_mi(combined_vari_dist) << ";  after combined mi: " << it_mi(llr_combined_vari_dist) << std::endl;
     clipped_cvd = clip_prob(llr_combined_output_joint, pow(10, -10.0));
@@ -493,15 +493,30 @@ int ME_PBRL_DE::density_evolution()
     channel_representation.push_back(llr_cal(channel_IB_2.prob_join_xt));
     channel_representation.push_back(llr_cal(channel_IB.prob_join_xt));
     std::cout << "Info: Finished channel quantization ..." << std::endl;
+    std::vector<std::vector<double>> check_1_0{{1.0,17,0,0}}, check_2_0{{1.0/3,0,6,1},{1.0/3,0,5,1}};
+    std::vector<std::vector<double>> vari_1_0{{1.0/37,-1,0,3,0},{3.0/37,-1,1,3,0},{33.0/37,1,0,0,0}}, vari_2_0{{3.0/40,-1,1,2,0},{8.0/40,-1,1,3,0},{29.0/40,1,0,0,0}};
     //---------------------density evolution------------------------------------
     for (unsigned ii = 0; ii < max_iter; ii++)
     {
-        //-----------------update check edge pmf---------------------------------
-        type_distribution_update(check_edge_deg_1, "check", ii, 0);
-        type_distribution_update(check_edge_deg_2, "check", ii, 1);
-        //-----------------update variable node pmf------------------------------
-        type_distribution_update(vari_edge_deg_1, "vari", ii, 0);
-        type_distribution_update(vari_edge_deg_2, "vari", ii, 1);
+        if (ii == 0)
+        {
+            //-----------------update check edge pmf---------------------------------
+            type_distribution_update(check_1_0, "check", ii, 0);
+            type_distribution_update(check_2_0, "check", ii, 1);
+            std::cout<<"has been here"<<std::endl;
+            //-----------------update variable node pmf------------------------------
+            type_distribution_update(vari_1_0, "vari", ii, 0);
+            type_distribution_update(vari_2_0, "vari", ii, 1);
+        }
+        else
+        {
+            //-----------------update check edge pmf---------------------------------
+            type_distribution_update(check_edge_deg_1, "check", ii, 0);
+            type_distribution_update(check_edge_deg_2, "check", ii, 1);
+            //-----------------update variable node pmf------------------------------
+            type_distribution_update(vari_edge_deg_1, "vari", ii, 0);
+            type_distribution_update(vari_edge_deg_2, "vari", ii, 1);
+        }
     }
     RQF_output();
     return 1;

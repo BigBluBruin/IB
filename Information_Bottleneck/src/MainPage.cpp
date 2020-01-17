@@ -257,12 +257,12 @@ int main(int argc, char* argv[])
     //This part tests read description of ME_PBRL_Code
     //argv[1] ->eb_no 
     //argv[2] -> correspoded string
-    unsigned int quansize = 8;
+    unsigned int quansize = 16;
     double threshold = pow(10.0, -10.0);
     unsigned max_iter = 50;
     bool flag = true;
     int regular_result;
-    double llr_intervel = 0.001;
+    double llr_intervel = 0.01;
     unsigned int ib_runtime = 50;
     double code_rate = 0.5;
     double cur_eb_no;
