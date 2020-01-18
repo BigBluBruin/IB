@@ -57,8 +57,7 @@ std::vector<std::vector<double>> llr_permutation(std::vector<std::vector<double>
         if(llr[ii]<0)
         {
             
-            tempt=(joint_prob[0][ii]+joint_prob[1][ii])*exp(llr[ii]-permutation_factor)/(1+exp(llr[ii]-permutation_factor));
-            
+            tempt=(joint_prob[0][ii]+joint_prob[1][ii])*exp(llr[ii]-permutation_factor)/(1+exp(llr[ii]-permutation_factor));        
             new_joint_prob[0].push_back(tempt);
             new_joint_prob[1].push_back(1-tempt);
             //std::cout<<tempt<<"  "<<std::endl;

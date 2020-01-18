@@ -215,11 +215,12 @@ int main(int argc, char* argv[])
     
 
 
-    //std::vector<double> check_edge_dist{0,0,0,0,0,0,0.8140,0.1860};
+   //// std::vector<double> check_edge_dist{0,0,0,0,0,0,0.8140,0.1860};
     //std::vector<double> vari_edge_dist{0,0.2558,0.3140,0.0465,0,0,0,0,0,0,0.3837};
-    /*double code_rate=0.5;
+    //double puncture_rate=0;
+    double code_rate=0.5;
     double cur_eb_no;
-    double puncture_rate=0.0588;
+    double puncture_rate=0.0588;    
     std::vector<double> vari_edge_dist{0.0833333333333333,0,0,0.142857142857143,0.0595238095238095,0.0714285714285714,0,0,0.107142857142857,0.357142857142857,0,0,0,0,0.178571428571429};
     std::vector<double> eff_vari_edge_dist{0.821400000000000,0,0,0.0476000000000000,0.131000000000000};
     std::vector<double> check_edge_dist{0,0,0.0357142857142857,0,0,0,0.333333333333333,0.190476190476190,0,0,0,0,0,0,0,0,0,0.214285714285714,0.226190476190476};
@@ -249,7 +250,7 @@ int main(int argc, char* argv[])
         }
         
 
-    }*/
+    }
 
     //QCDE("Density_Evolution.txt",16);
     
@@ -257,7 +258,7 @@ int main(int argc, char* argv[])
     //This part tests read description of ME_PBRL_Code
     //argv[1] ->eb_no 
     //argv[2] -> correspoded string
-    unsigned int quansize = 16;
+    /*unsigned int quansize = 16;
     double threshold = pow(10.0, -10.0);
     unsigned max_iter = 50;
     bool flag = true;
@@ -268,17 +269,23 @@ int main(int argc, char* argv[])
     double cur_eb_no;
     std::vector<double> eb_no{std::stod(argv[1])};
     std::vector<std::string> suffix{argv[2]};
-    cur_eb_no = eb_no[0];
-    std::cout << "---------------change ebno as : " << cur_eb_no << "-------------------" << std::endl;
-    double sigma2 = pow(10, (-0.1 * cur_eb_no) / (2.0 * code_rate));
-    std::cout<<"sigma 2: "<<sigma2<<std::endl;
-    std::string filename="PBRL_MET_description.txt";
-    ME_PBRL_DE me_pbrl_ins(filename, max_iter, quansize,sigma2,threshold,llr_intervel,ib_runtime,suffix[0]);
-    me_pbrl_ins.read_decription();
-    me_pbrl_ins.density_evolution();
+    //std::vector<double> eb_no{0.25,0.27,0.29,0.31,0.33,0.35};
+    //std::vector<std::string> suffix{"025", "027", "029", "031", "033"};
+    for (unsigned ii = 0; ii < eb_no.size(); ii++)
+    {
+        cur_eb_no = eb_no[ii];
+        std::cout << "---------------change ebno as : " << cur_eb_no << "-------------------" << std::endl;
+        double sigma2 = pow(10, (-0.1 * cur_eb_no) / (2.0 * code_rate));
+        std::cout << "sigma 2: " << sigma2 << std::endl;
+        std::string filename = "PBRL_MET_description.txt";
+        ME_PBRL_DE me_pbrl_ins(filename, max_iter, quansize, sigma2, threshold, llr_intervel, ib_runtime, suffix[ii]);
+        me_pbrl_ins.read_decription();
+        me_pbrl_ins.density_evolution();
+    }*/
+
     return 0;
 
-}/*
+} /*
 
 
 
@@ -316,7 +323,7 @@ int main(int argc, char* argv[])
             break;
         }  
         return 0;     */
-        /*std::vector<unsigned> random_cluster(const unsigned total_num, const unsigned quan_size)
+  /*std::vector<unsigned> random_cluster(const unsigned total_num, const unsigned quan_size)
 {
     //initialize random seed
     std::random_device rd;
@@ -360,7 +367,7 @@ int main(int argc, char* argv[])
     return cluster;
 }*/
 
- /*-std::vector<std::vector<double>> quantize_to_xt2(std::vector<std::vector<double>> & input, std::vector<unsigned> & cluster)
+/*-std::vector<std::vector<double>> quantize_to_xt2(std::vector<std::vector<double>> & input, std::vector<unsigned> & cluster)
  {
      std::vector<std::vector<double>> join_prob_xt(2,std::vector<double>(cluster.size(),0.0));
      std::vector<double>::iterator iter1=input[0].begin();
@@ -379,7 +386,7 @@ int main(int argc, char* argv[])
      return join_prob_xt;
  }*/
 
- /*
+/*
    ME_PBRL_DE ins_mepbrl("PBRL_MET_description.txt", 6, 6, 6, 6, 6, "0");
     if (ins_mepbrl.read_decription())
     {

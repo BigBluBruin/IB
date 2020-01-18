@@ -498,7 +498,7 @@ int ME_PBRL_DE::density_evolution()
     //---------------------density evolution------------------------------------
     for (unsigned ii = 0; ii < max_iter; ii++)
     {
-        if (ii == 0)
+        /*if (ii == 0)
         {
             //-----------------update check edge pmf---------------------------------
             type_distribution_update(check_1_0, "check", ii, 0);
@@ -508,7 +508,7 @@ int ME_PBRL_DE::density_evolution()
             type_distribution_update(vari_1_0, "vari", ii, 0);
             type_distribution_update(vari_2_0, "vari", ii, 1);
         }
-        else
+        else*/
         {
             //-----------------update check edge pmf---------------------------------
             type_distribution_update(check_edge_deg_1, "check", ii, 0);

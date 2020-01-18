@@ -296,6 +296,11 @@ int Irregular_DE::Discrete_Density_Evolution_punc()
             prob_llr_combined = llr_combination(combined_output, 0.001);
             ave_joinprob_llr(prob_llr_combined, pow(10.0, -80.0));
             first_input = prob_llr_combined;
+            //--------------------------------------------
+            IB_kernel vari_IB2(first_input, quantization_size, ib_runtime);
+            vari_IB2.Progressive_MMI();
+            first_input=vari_IB2.prob_join_xt;
+            //------------------------------------
             if (temp_check_edge_dist[ii + 2] != 0)
             {
                 temp = temp_check_edge_dist[ii + 2] * first_input[0];
@@ -320,7 +325,6 @@ int Irregular_DE::Discrete_Density_Evolution_punc()
         }
         llr_file.close();
         IB_kernel check_IB(clipped_ccd, quantization_size, ib_runtime);
-        //check_IB.smIB();
         check_IB.Progressive_MMI();
         check_representation.push_back(llr_cal(check_IB.prob_join_xt));
         check_threshold.push_back(check_IB.threshold);
@@ -346,6 +350,11 @@ int Irregular_DE::Discrete_Density_Evolution_punc()
             prob_llr_combined = llr_combination(combined_output, 0.001);
             ave_joinprob_llr(prob_llr_combined, pow(10.0, -80.0));
             first_input = prob_llr_combined;
+            //--------------------------------------------
+            IB_kernel vari_IB2(first_input, quantization_size, ib_runtime);
+            vari_IB2.Progressive_MMI();
+            first_input=vari_IB2.prob_join_xt;
+            //------------------------------------
             if (temp_vari_edge_dist[ii + 1] != 0)
             {
                 temp = (1 - puncture_rate) * temp_vari_edge_dist[ii + 1] * first_input[0];
@@ -364,6 +373,11 @@ int Irregular_DE::Discrete_Density_Evolution_punc()
             prob_llr_combined = llr_combination(combined_output, 0.001);
             ave_joinprob_llr(prob_llr_combined, pow(10.0, -80.0));
             first_input = prob_llr_combined;
+            //--------------------------------------------
+            IB_kernel vari_IB(first_input, quantization_size, ib_runtime);
+            vari_IB.Progressive_MMI();
+            first_input = vari_IB.prob_join_xt;
+            //------------------------------------
             if (temp_vari_edge_dist[ii + 2] != 0)
             {
                 temp = (puncture_rate) * temp_vari_edge_dist[ii + 2] * first_input[0];
@@ -380,7 +394,8 @@ int Irregular_DE::Discrete_Density_Evolution_punc()
             std::copy(temp.begin(), temp.end(), std::back_inserter(combined_vari_dist[1]));
         }
         prob_sort(combined_vari_dist);
-        llr_combined_vari_dist = llr_combination(combined_vari_dist, llr_combination_interval);
+        llr_combined_vari_dist = llr_combination(combined_vari_dist, 0);
+        std::cout<<"true mi under variable node iteration "<<iter<<" is:"<<it_mi(combined_vari_dist)<<std::endl;
         clipped_cvd = clip_prob(llr_combined_vari_dist, pow(10, -10.0));
         ave_joinprob_llr(clipped_cvd, pow(10.0, -80.0));
         llr = llr_cal(clipped_cvd);
