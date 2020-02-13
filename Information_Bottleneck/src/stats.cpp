@@ -59,7 +59,7 @@ std::vector<std::vector<double>> llr_permutation(std::vector<std::vector<double>
             
             tempt=(joint_prob[0][ii]+joint_prob[1][ii])*exp(llr[ii]-permutation_factor)/(1+exp(llr[ii]-permutation_factor));        
             new_joint_prob[0].push_back(tempt);
-            new_joint_prob[1].push_back(1-tempt);
+            new_joint_prob[1].push_back((joint_prob[0][ii]+joint_prob[1][ii])-tempt);
             //std::cout<<tempt<<"  "<<std::endl;
         }
         else
@@ -72,4 +72,13 @@ std::vector<std::vector<double>> llr_permutation(std::vector<std::vector<double>
     }
     ave_joinprob(new_joint_prob);
     return new_joint_prob;
+}
+
+double sum_two_vector(std::vector<std::vector<double>> & input)
+{
+    double sum=0;
+    for(const auto out: input)
+        for(const auto in: out)
+            sum+=in;
+    return sum;
 }

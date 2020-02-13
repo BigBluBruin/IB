@@ -26,7 +26,9 @@ public:
     std::vector<std::vector<double>> check_threshold;
 
 public:
-    Irregular_DE(std::vector<double> Check_edge_dist, std::vector<double> Vari_edge_dist, double Sigma2, unsigned int Max_iter,unsigned int Quantization_size,double Stop_threshold,double Llr_combination_interval,unsigned Ib_runtime, std::string Suffix, std::vector<double> Eff_check_edge_dist,std::vector<double> Eff_vari_edge_dist, double Punc_rate);
+    Irregular_DE(std::vector<double> Check_edge_dist, std::vector<double> Vari_edge_dist, double Sigma2, unsigned int Max_iter,unsigned int Quantization_size,
+                double Stop_threshold,double Llr_combination_interval,unsigned Ib_runtime, std::string Suffix, 
+                std::vector<double> Eff_check_edge_dist,std::vector<double> Eff_vari_edge_dist, double Punc_rate);
     int Discrete_Density_Evolution();
     int Discrete_Density_Evolution_punc();
 

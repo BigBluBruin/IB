@@ -8,6 +8,7 @@
 #include "Discrete_Density_Evolution/Irregular_DE.h"
 #include "Discrete_Density_Evolution/Quantize_Continuous_DE.h"
 #include "Discrete_Density_Evolution/ME_PBRL_DE.h"
+#include "Discrete_Density_Evolution/ME2_PBRL_DE.h"
 #include <fstream>
 #include <time.h>
 #include <random>
@@ -218,7 +219,9 @@ int main(int argc, char* argv[])
    //// std::vector<double> check_edge_dist{0,0,0,0,0,0,0.8140,0.1860};
     //std::vector<double> vari_edge_dist{0,0.2558,0.3140,0.0465,0,0,0,0,0,0,0.3837};
     //double puncture_rate=0;
-    double code_rate=0.5;
+    //argv[1]: design eb_no
+    //argv[2]: design eb_no string
+    /*double code_rate=0.5;
     double cur_eb_no;
     double puncture_rate=0.0588;    
     std::vector<double> vari_edge_dist{0.0833333333333333,0,0,0.142857142857143,0.0595238095238095,0.0714285714285714,0,0,0.107142857142857,0.357142857142857,0,0,0,0,0.178571428571429};
@@ -250,7 +253,7 @@ int main(int argc, char* argv[])
         }
         
 
-    }
+    }*/
 
     //QCDE("Density_Evolution.txt",16);
     
@@ -268,6 +271,7 @@ int main(int argc, char* argv[])
     double code_rate = 0.5;
     double cur_eb_no;
     std::vector<double> eb_no{std::stod(argv[1])};
+
     std::vector<std::string> suffix{argv[2]};
     //std::vector<double> eb_no{0.25,0.27,0.29,0.31,0.33,0.35};
     //std::vector<std::string> suffix{"025", "027", "029", "031", "033"};
@@ -282,6 +286,33 @@ int main(int argc, char* argv[])
         me_pbrl_ins.read_decription();
         me_pbrl_ins.density_evolution();
     }*/
+
+    //This parts implement ME2_PBRL_DE
+    unsigned int quansize = 16;
+    double threshold = pow(10.0, -10.0);
+    unsigned max_iter = 50;
+    bool flag = true;
+    int regular_result;
+    double llr_intervel = 0.01;
+    unsigned int ib_runtime = 50;
+    double code_rate = 0.5;
+    double cur_eb_no;
+    std::vector<double> eb_no{std::stod(argv[1])};
+
+    std::vector<std::string> suffix{argv[2]};
+    //std::vector<double> eb_no{0.25,0.27,0.29,0.31,0.33,0.35};
+    //std::vector<std::string> suffix{"025", "027", "029", "031", "033"};
+    for (unsigned ii = 0; ii < eb_no.size(); ii++)
+    {
+        cur_eb_no = eb_no[ii];
+        std::cout << "---------------change ebno as : " << cur_eb_no << "-------------------" << std::endl;
+        double sigma2 = pow(10, (-0.1 * cur_eb_no) / (2.0 * code_rate));
+        std::cout << "sigma 2: " << sigma2 << std::endl;
+        std::string filename = "PBRL_MET2_description.txt";
+        ME2_PBRL_DE me2_pbrl_ins(filename, max_iter, quansize, sigma2, threshold, llr_intervel, ib_runtime, suffix[ii]);
+        me2_pbrl_ins.read_decription();
+        me2_pbrl_ins.density_evolution();
+    }
 
     return 0;
 
@@ -458,3 +489,20 @@ int main(int argc, char* argv[])
         }
     }
  */
+
+  /*      //-------test can be delete------------------------
+        for(const auto aa: me2_pbrl_ins.vari_edge_deg_1)
+        {
+            for(const auto bb:aa)
+                std::cout<<bb<<" ";
+            std::cout<<std::endl;
+        }
+        std::cout<<std::endl;
+        for(const auto aa: me2_pbrl_ins.check_edge_deg_1)
+        {
+            for(const auto bb:aa)
+                std::cout<<bb<<" ";
+            std::cout<<std::endl;
+        }
+        std::cout<<std::endl;
+        //----------------------------------------------------*/

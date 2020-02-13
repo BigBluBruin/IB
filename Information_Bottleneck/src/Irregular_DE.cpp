@@ -271,7 +271,6 @@ int Irregular_DE::Discrete_Density_Evolution_punc()
     std::vector<std::vector<double>> combined_output, prob_llr_combined;
     std::vector<double> temp_check_edge_dist, temp_vari_edge_dist;
     std::cout << "finished channel quantization...." << std::endl;
-
     //-------------------start iteration------------------------------------------
     for (unsigned iter = 0; iter < max_iter; iter++)
     {
@@ -393,9 +392,11 @@ int Irregular_DE::Discrete_Density_Evolution_punc()
             temp = temp_vari_edge_dist[0] * channel_IB.prob_join_xt[1];
             std::copy(temp.begin(), temp.end(), std::back_inserter(combined_vari_dist[1]));
         }
+
+
         prob_sort(combined_vari_dist);
         llr_combined_vari_dist = llr_combination(combined_vari_dist, 0);
-        std::cout<<"true mi under variable node iteration "<<iter<<" is:"<<it_mi(combined_vari_dist)<<std::endl;
+        //std::cout<<"true mi under variable node iteration "<<iter<<" is:"<<it_mi(combined_vari_dist)<<std::endl;
         clipped_cvd = clip_prob(llr_combined_vari_dist, pow(10, -10.0));
         ave_joinprob_llr(clipped_cvd, pow(10.0, -80.0));
         llr = llr_cal(clipped_cvd);
@@ -420,7 +421,8 @@ int Irregular_DE::Discrete_Density_Evolution_punc()
         second_input = first_input;
 
         //--------------Output Info------------------------
-        std::cout << "DE Info:  iter--" << iter + 1 << "--mi--" << vari_IB.mi << "---true mi ---" << it_mi(clipped_cvd) << std::endl;
+        //std::cout << "DE Info:  iter--" << iter + 1 << "--mi--" << vari_IB.mi << "---true mi ---" << it_mi(clipped_cvd) << std::endl;
+        std::cout << vari_IB.mi << std::endl;
         if (1 - vari_IB.mi < stop_threshold)
         {
             if (iter < max_iter - 3)

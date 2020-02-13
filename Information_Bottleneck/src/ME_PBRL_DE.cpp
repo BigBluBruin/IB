@@ -30,8 +30,8 @@ std::vector<std::vector<double>> ME_PBRL_DE::calculate_output_distribution(std::
             else //<0 puncture
             {
                 first_input = {{0.5 / (1 + exp(0.001)), 0.5 * exp(0.001) / (1 + exp(0.001))}, {0.5 * exp(0.001) / (1 + exp(0.001)), 0.5 / (1 + exp(0.001))}}; //a 0.001dB offset
-            }
-           
+            } 
+                     
             if (distribution[2] > 0)
             {
                 second_input = check_pmf_1;
@@ -44,7 +44,6 @@ std::vector<std::vector<double>> ME_PBRL_DE::calculate_output_distribution(std::
                     first_input = prob_llr_combined;
                 }
             }
-
             if (distribution[3] > 0)
             {
                 second_input = check_pmf_2;
@@ -85,6 +84,7 @@ std::vector<std::vector<double>> ME_PBRL_DE::calculate_output_distribution(std::
     }
     else if (strcmp(type, "check") == 0)
     {
+        //std::cout<<distribution[0]<<std::endl;
         if (distribution.size() == 4)
         {
             std::vector<unsigned> ind;
@@ -119,8 +119,6 @@ std::vector<std::vector<double>> ME_PBRL_DE::calculate_output_distribution(std::
                     ave_joinprob_llr(prob_llr_combined, pow(10.0, -80.0));
                     first_input_c2 = prob_llr_combined;
                 }
-
-
             }
             //type 3
             if (distribution[3] != 0)
@@ -144,15 +142,16 @@ std::vector<std::vector<double>> ME_PBRL_DE::calculate_output_distribution(std::
             {
                 if (ind[0] == 0)
                 {
-                    return first_input_c1;
+                   
+                    return distribution[0]*first_input_c1;
                 }
                 else if (ind[0] == 1)
                 {
-                    return first_input_c2;
+                    return distribution[0]*first_input_c2;
                 }
                 else if (ind[0] == 2)
                 {
-                    return first_input_c3;
+                    return distribution[0]*first_input_c3;
                 }
                 else
                 {
@@ -168,7 +167,7 @@ std::vector<std::vector<double>> ME_PBRL_DE::calculate_output_distribution(std::
                     prob_sort(combined_output);
                     prob_llr_combined = llr_combination(combined_output, 0.001);
                     ave_joinprob_llr(prob_llr_combined, pow(10.0, -80.0));
-                    return prob_llr_combined;
+                    return distribution[0]*prob_llr_combined;
                 }
                 else if (ind[0] == 0 && ind[1] == 2)
                 {
@@ -176,15 +175,15 @@ std::vector<std::vector<double>> ME_PBRL_DE::calculate_output_distribution(std::
                     prob_sort(combined_output);
                     prob_llr_combined = llr_combination(combined_output, 0.001);
                     ave_joinprob_llr(prob_llr_combined, pow(10.0, -80.0));
-                    return prob_llr_combined;
+                    return distribution[0]*prob_llr_combined;
                 }
                 else if (ind[0] == 1 && ind[1] == 2)
                 {
                     combined_output = prob_combination(first_input_c2, first_input_c3, type);
                     prob_sort(combined_output);
                     prob_llr_combined = llr_combination(combined_output, 0.001);
-                    ave_joinprob_llr(prob_llr_combined, pow(10.0, -80.0));
-                    return prob_llr_combined;
+                    ave_joinprob_llr(prob_llr_combined, pow(10.0, -80.0));                   
+                    return distribution[0]*prob_llr_combined;
                 }
                 else
                 {
@@ -218,6 +217,7 @@ std::vector<std::vector<double>> ME_PBRL_DE::calculate_output_distribution(std::
     }
 }
 
+
 void ME_PBRL_DE::type_distribution_update(std::vector<std::vector<double>> edge_distribution,
                                           const char type[], int iter, int socket)
 {
@@ -232,11 +232,12 @@ void ME_PBRL_DE::type_distribution_update(std::vector<std::vector<double>> edge_
         std::copy(cur_output[0].begin(), cur_output[0].end(), std::back_inserter(output_joint[0]));
         std::copy(cur_output[1].begin(), cur_output[1].end(), std::back_inserter(output_joint[1]));
     }
-    
+
     prob_sort(output_joint);
     if(strcmp(type,"check")==0)
     {
         llr_combined_output_joint = llr_combination(output_joint, 0.001);
+        
     }
     else if(strcmp(type,"vari")==0)
     {
@@ -257,7 +258,7 @@ void ME_PBRL_DE::type_distribution_update(std::vector<std::vector<double>> edge_
     }
     llr_file.close();
     IB_kernel IB_ins(clipped_cvd, quantization_size, ib_runtime);
-    if(strcmp(type,"vari")==0)
+    /*if(strcmp(type,"check")==0 && socket==0)
     {
         std::ofstream new_file_handle("diagnosis.txt");
         for(const auto aa:clipped_cvd)
@@ -267,7 +268,7 @@ void ME_PBRL_DE::type_distribution_update(std::vector<std::vector<double>> edge_
             new_file_handle<<std::endl;
         }
         new_file_handle.close();
-    }
+    }*/
     IB_ins.Progressive_MMI();
     if (strcmp(type, "vari") == 0)
     {
@@ -298,11 +299,13 @@ void ME_PBRL_DE::type_distribution_update(std::vector<std::vector<double>> edge_
             check_representation_1.push_back(llr_cal(IB_ins.prob_join_xt));
             check_threshold_1.push_back(IB_ins.threshold);
             check_pmf_1 = IB_ins.prob_join_xt;
+            std::cout << "Info: Iteration " << iter << ", socket " << socket << ", check mutual information update: " << it_mi(IB_ins.prob_join_xt) << std::endl;            
             break;
         case 1:
             check_representation_2.push_back(llr_cal(IB_ins.prob_join_xt));
             check_threshold_2.push_back(IB_ins.threshold);
             check_pmf_2 = IB_ins.prob_join_xt;
+            std::cout << "Info: Iteration " << iter << ", socket " << socket << ", check mutual information update: " << it_mi(IB_ins.prob_join_xt) << std::endl;      
             break;
         default:
             std::cout << "Wrong Info: In function (type_distribution_update), type is check, but no socket " << socket << ".. please check again." << std::endl;
@@ -314,6 +317,7 @@ void ME_PBRL_DE::type_distribution_update(std::vector<std::vector<double>> edge_
         std::cout << "Wrong Info: In function (type_distribution_update), type is neither vari or check, it is " << type << ". Plz check again." << std::endl;
     }
 }
+
 
 bool ME_PBRL_DE::read_decription()
 {
@@ -493,7 +497,7 @@ int ME_PBRL_DE::density_evolution()
     channel_representation.push_back(llr_cal(channel_IB_2.prob_join_xt));
     channel_representation.push_back(llr_cal(channel_IB.prob_join_xt));
     std::cout << "Info: Finished channel quantization ..." << std::endl;
-    std::vector<std::vector<double>> check_1_0{{1.0,17,0,0}}, check_2_0{{1.0/3,0,6,1},{1.0/3,0,5,1}};
+    std::vector<std::vector<double>> check_1_0{{1.0,17,0,0}}, check_2_0{{1.0/3,0,6,1},{2.0/3,0,5,1}};
     std::vector<std::vector<double>> vari_1_0{{1.0/37,-1,0,3,0},{3.0/37,-1,1,3,0},{33.0/37,1,0,0,0}}, vari_2_0{{3.0/40,-1,1,2,0},{8.0/40,-1,1,3,0},{29.0/40,1,0,0,0}};
     //---------------------density evolution------------------------------------
     for (unsigned ii = 0; ii < max_iter; ii++)
@@ -510,6 +514,7 @@ int ME_PBRL_DE::density_evolution()
         }
         else*/
         {
+            std::cout<<"---------------------------"<<std::endl;
             //-----------------update check edge pmf---------------------------------
             type_distribution_update(check_edge_deg_1, "check", ii, 0);
             type_distribution_update(check_edge_deg_2, "check", ii, 1);
@@ -568,7 +573,6 @@ void ME_PBRL_DE::RQF_output()
 
     std::ofstream outpufile, handle_reconstrction;
     std::string threholdfile, recons_file;
-
     //------------------output socket 1 information---------------------------------
     threholdfile = "threshold_s1_" + suffix + ".txt";
     recons_file = "reconstruction_s1_" + suffix + ".txt";
@@ -583,6 +587,7 @@ void ME_PBRL_DE::RQF_output()
                 outpufile << bb << "  ";
             outpufile << std::endl;
         }
+        outpufile << std::endl;
         cur_two_dim_vec = vari_threshold_1;
         for (const auto &aa : cur_two_dim_vec)
         {
@@ -606,6 +611,7 @@ void ME_PBRL_DE::RQF_output()
                 handle_reconstrction << bb << "  ";
             handle_reconstrction << std::endl;
         }
+        handle_reconstrction << std::endl;
         cur_two_dim_vec = vari_representation_1;
         for (const auto &aa : cur_two_dim_vec)
         {
@@ -634,6 +640,7 @@ void ME_PBRL_DE::RQF_output()
                 outpufile << bb << "  ";
             outpufile << std::endl;
         }
+        outpufile << std::endl;
         cur_two_dim_vec = vari_threshold_2;
         for (const auto &aa : cur_two_dim_vec)
         {
@@ -657,6 +664,7 @@ void ME_PBRL_DE::RQF_output()
                 handle_reconstrction << bb << "  ";
             handle_reconstrction << std::endl;
         }
+        handle_reconstrction << std::endl;
         cur_two_dim_vec = vari_representation_2;
         for (const auto &aa : cur_two_dim_vec)
         {

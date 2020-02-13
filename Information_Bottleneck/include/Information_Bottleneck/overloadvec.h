@@ -66,6 +66,15 @@ double	vectors_distance(const std::vector<T>& a, const std::vector<T>& b)
 	return  sqrt(std::accumulate(auxiliary.begin(), auxiliary.end(), 0.0));
 } // end template vectors_distance
 
+template <class T, class Q>
+std::vector<std::vector<T>> operator*(const Q c, std::vector<std::vector<T>> &A)
+{
+    std::vector<std::vector<T>> result;
+    result.push_back(c*A[0]);
+    result.push_back(c*A[1]);
+    return result;
+}
+
 /*
 Consider the following (n,k,d) block code:
 D0  D1  D2  D3  D4   | P0
