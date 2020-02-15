@@ -278,6 +278,7 @@ int Irregular_DE::Discrete_Density_Evolution_punc()
         combined_check_dist[1].clear();
         combined_vari_dist[0].clear();
         combined_vari_dist[1].clear();
+        //std::cout <<1-sum_two_vector(combined_check_dist)<<std::endl;
         if (iter == 0)
         {
             temp_check_edge_dist = eff_check_edge_dist;
@@ -385,7 +386,24 @@ int Irregular_DE::Discrete_Density_Evolution_punc()
                 std::copy(temp.begin(), temp.end(), std::back_inserter(combined_vari_dist[1]));
             }
         }
+        llr_file_name = "varify.txt";
+        llr_file.open(llr_file_name);
+        if (llr_file.is_open())
+        {
+            for (unsigned index = 0; index < combined_vari_dist[0].size(); index++)
+            {
+                llr_file << "  " << combined_vari_dist[0][index] ;
+            }
+            llr_file <<std::endl;
+            for (unsigned index = 0; index < combined_vari_dist[1].size(); index++)
+            {
+                llr_file << "  " << combined_vari_dist[1][index] ;
+            }
+            llr_file.close();
+        }
         //------------deg 1 variable node----------------------------------------------
+        std::cout << it_mi(combined_vari_dist) <<"  " <<1-sum_two_vector(combined_vari_dist)<<std::endl;
+        if( temp_vari_edge_dist[0]>0)
         {
             temp = temp_vari_edge_dist[0] * channel_IB.prob_join_xt[0];
             std::copy(temp.begin(), temp.end(), std::back_inserter(combined_vari_dist[0]));
@@ -393,10 +411,9 @@ int Irregular_DE::Discrete_Density_Evolution_punc()
             std::copy(temp.begin(), temp.end(), std::back_inserter(combined_vari_dist[1]));
         }
 
-
+        //std::cout << it_mi(combined_vari_dist) <<"  " <<1-sum_two_vector(combined_vari_dist)<<std::endl;
         prob_sort(combined_vari_dist);
         llr_combined_vari_dist = llr_combination(combined_vari_dist, 0);
-        //std::cout<<"true mi under variable node iteration "<<iter<<" is:"<<it_mi(combined_vari_dist)<<std::endl;
         clipped_cvd = clip_prob(llr_combined_vari_dist, pow(10, -10.0));
         ave_joinprob_llr(clipped_cvd, pow(10.0, -80.0));
         llr = llr_cal(clipped_cvd);
@@ -421,8 +438,6 @@ int Irregular_DE::Discrete_Density_Evolution_punc()
         second_input = first_input;
 
         //--------------Output Info------------------------
-        //std::cout << "DE Info:  iter--" << iter + 1 << "--mi--" << vari_IB.mi << "---true mi ---" << it_mi(clipped_cvd) << std::endl;
-        std::cout << vari_IB.mi << std::endl;
         if (1 - vari_IB.mi < stop_threshold)
         {
             if (iter < max_iter - 3)

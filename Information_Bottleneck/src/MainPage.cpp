@@ -298,10 +298,7 @@ int main(int argc, char* argv[])
     double code_rate = 0.5;
     double cur_eb_no;
     std::vector<double> eb_no{std::stod(argv[1])};
-
     std::vector<std::string> suffix{argv[2]};
-    //std::vector<double> eb_no{0.25,0.27,0.29,0.31,0.33,0.35};
-    //std::vector<std::string> suffix{"025", "027", "029", "031", "033"};
     for (unsigned ii = 0; ii < eb_no.size(); ii++)
     {
         cur_eb_no = eb_no[ii];
@@ -313,9 +310,7 @@ int main(int argc, char* argv[])
         me2_pbrl_ins.read_decription();
         me2_pbrl_ins.density_evolution();
     }
-
     return 0;
-
 } /*
 
 

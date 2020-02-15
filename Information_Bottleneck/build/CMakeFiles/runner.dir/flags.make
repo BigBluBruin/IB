@@ -6,5 +6,5 @@ CXX_FLAGS = -Wall -Wextra -O3
 
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/mnt/e/Gitrepo/IB/Information_Bottleneck/include 
+CXX_INCLUDES = -I/mnt/d/GitRepo/IB/Information_Bottleneck/include 
 
