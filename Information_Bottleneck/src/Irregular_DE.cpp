@@ -59,7 +59,7 @@ int Irregular_DE::Discrete_Density_Evolution()
         }
         prob_sort(combined_check_dist);
         llr_combined_check_dist = llr_combination(combined_check_dist, llr_combination_interval);
-        std::cout<<"C---before combined mi: "<<it_mi(combined_check_dist)<<";  after combined mi: "<<it_mi(llr_combined_check_dist)<<"; diff is: "<<it_mi(combined_check_dist)-it_mi(llr_combined_check_dist)<<std::endl;
+        //std::cout<<"C---before combined mi: "<<it_mi(combined_check_dist)<<";  after combined mi: "<<it_mi(llr_combined_check_dist)<<"; diff is: "<<it_mi(combined_check_dist)-it_mi(llr_combined_check_dist)<<std::endl;
         clipped_ccd=clip_prob(llr_combined_check_dist,pow(10,-10.0));
         ave_joinprob_llr(clipped_ccd, pow(10.0, -80.0));
         std::vector<double> llr = llr_cal(clipped_ccd);
@@ -102,7 +102,7 @@ int Irregular_DE::Discrete_Density_Evolution()
         }
         prob_sort(combined_vari_dist);
         llr_combined_vari_dist = llr_combination(combined_vari_dist,llr_combination_interval);
-        std::cout<<"v---before combined mi: "<<it_mi(combined_vari_dist)<<";  after combined mi: "<<it_mi(llr_combined_vari_dist)<<"; diff is: "<<it_mi(combined_vari_dist)-it_mi(llr_combined_vari_dist)<<std::endl;
+        //std::cout<<"v---before combined mi: "<<it_mi(combined_vari_dist)<<";  after combined mi: "<<it_mi(llr_combined_vari_dist)<<"; diff is: "<<it_mi(combined_vari_dist)-it_mi(llr_combined_vari_dist)<<std::endl;
         clipped_cvd=clip_prob(llr_combined_vari_dist,pow(10,-10.0));
         ave_joinprob_llr(clipped_cvd, pow(10.0, -80.0));
         llr = llr_cal(clipped_cvd);

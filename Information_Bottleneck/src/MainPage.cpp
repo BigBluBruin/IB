@@ -221,16 +221,18 @@ int main(int argc, char* argv[])
     //double puncture_rate=0;
     //argv[1]: design eb_no
     //argv[2]: design eb_no string
-    /*double code_rate=0.5;
+    double code_rate=0.5;
     double cur_eb_no;
-    double puncture_rate=0.0588;    
-    std::vector<double> vari_edge_dist{0.0833333333333333,0,0,0.142857142857143,0.0595238095238095,0.0714285714285714,0,0,0.107142857142857,0.357142857142857,0,0,0,0,0.178571428571429};
+    double puncture_rate=0;    
+    //std::vector<double> vari_edge_dist{0.0833333333333333,0,0,0.142857142857143,0.0595238095238095,0.0714285714285714,0,0,0.107142857142857,0.357142857142857,0,0,0,0,0.178571428571429};
     std::vector<double> eff_vari_edge_dist{0.821400000000000,0,0,0.0476000000000000,0.131000000000000};
-    std::vector<double> check_edge_dist{0,0,0.0357142857142857,0,0,0,0.333333333333333,0.190476190476190,0,0,0,0,0,0,0,0,0,0.214285714285714,0.226190476190476};
+    //std::vector<double> check_edge_dist{0,0,0.0357142857142857,0,0,0,0.333333333333333,0.190476190476190,0,0,0,0,0,0,0,0,0,0.214285714285714,0.226190476190476};
     std::vector<double> eff_check_edge_dist{0,0,0,0,0,0.500000000000000,0.250000000000000,0,0,0,0,0,0,0,0,0,0.250000000000000};
-    unsigned int quansize =16;
+    std::vector<double> vari_edge_dist{0,0,0,1};
+    std::vector<double> check_edge_dist{0,0,0,0,0,0,1};
+    unsigned int quansize =128;
     double threshold = pow(10.0, -7.0);
-    unsigned max_iter = 50;
+    unsigned max_iter = 500;
     bool flag=true;
     int regular_result;
     double llr_intervel=0.01;
@@ -240,8 +242,8 @@ int main(int argc, char* argv[])
     for(unsigned index=0;index<eb_no.size();index++)
     {
         cur_eb_no =eb_no[index];
-        std::cout<<"---------------change ebno as : "<<cur_eb_no<<"-------------------"<<std::endl;
-        double sigma2 = pow(10, (-0.1 * cur_eb_no) / (2.0 * code_rate));
+        double sigma2 = pow((double)10, (-0.1 * cur_eb_no) / (2.0 * code_rate));
+        std::cout<<"---------------change ebno as : "<<cur_eb_no<<"|| corresponding sigma2:"<<sigma2<<"""-------------------"<<std::endl;
         Irregular_DE irregular_ins(check_edge_dist, vari_edge_dist,sigma2,max_iter,quansize,threshold,llr_intervel,ib_runtime,suffix[index],eff_check_edge_dist,eff_vari_edge_dist,puncture_rate);
         if(puncture_rate==0)
         {
@@ -253,7 +255,7 @@ int main(int argc, char* argv[])
         }
         
 
-    }*/
+    }
 
     //QCDE("Density_Evolution.txt",16);
     
@@ -288,7 +290,7 @@ int main(int argc, char* argv[])
     }*/
 
     //This parts implement ME2_PBRL_DE
-    unsigned int quansize = 16;
+    /*unsigned int quansize = 16;
     double threshold = pow(10.0, -10.0);
     unsigned max_iter = 50;
     bool flag = true;
@@ -309,7 +311,7 @@ int main(int argc, char* argv[])
         ME2_PBRL_DE me2_pbrl_ins(filename, max_iter, quansize, sigma2, threshold, llr_intervel, ib_runtime, suffix[ii]);
         me2_pbrl_ins.read_decription();
         me2_pbrl_ins.density_evolution();
-    }
+    }*/
     return 0;
 } /*
 
