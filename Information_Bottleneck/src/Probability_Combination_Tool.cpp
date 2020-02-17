@@ -1,33 +1,68 @@
 #include "Discrete_Density_Evolution/Probability_Combination_Tool.h"
 
-std::vector<std::vector<double>> prob_combination (std::vector<std::vector<double>> & first_input, std::vector<std::vector<double>> & second_input, const char oper_type[])
+std::vector<std::vector<double>> prob_combination(std::vector<std::vector<double>> &first_input, std::vector<std::vector<double>> &second_input, const char oper_type[])
 {
-    unsigned size_first=first_input[0].size();
-    unsigned size_second=second_input[0].size();
-    std::vector<std::vector<double>> combined_prob(2,std::vector<double>(size_first*size_second,-1.0));
-    for (unsigned ii1 = 0; ii1 < size_first; ii1++)
+    unsigned size_first = first_input[0].size();
+    unsigned size_second = second_input[0].size();
+    std::vector<std::vector<double>> combined_prob(2, std::vector<double>(size_first * size_second, -1.0));
+    if (strcmp(oper_type, "vari") == 0 || strcmp(oper_type, "check") == 0)
     {
-        for (unsigned ii2 = 0; ii2 < size_second; ii2++)
+        for (unsigned ii1 = 0; ii1 < size_first; ii1++)
         {
-            if(strcmp(oper_type,"vari")==0)
+            for (unsigned ii2 = 0; ii2 < size_second; ii2++)
             {
-                combined_prob[0][ii1*size_second+ii2]=first_input[0][ii1]*second_input[0][ii2]/0.5;
-                combined_prob[1][ii1*size_second+ii2]=first_input[1][ii1]*second_input[1][ii2]/0.5;
-
+                if (strcmp(oper_type, "vari") == 0)
+                {
+                    combined_prob[0][ii1 * size_second + ii2] = first_input[0][ii1] * second_input[0][ii2] / 0.5;
+                    combined_prob[1][ii1 * size_second + ii2] = first_input[1][ii1] * second_input[1][ii2] / 0.5;
+                }
+                else if (strcmp(oper_type, "check") == 0)
+                {
+                    combined_prob[0][ii1 * size_second + ii2] = first_input[0][ii1] * second_input[0][ii2] + first_input[1][ii1] * second_input[1][ii2];
+                    combined_prob[1][ii1 * size_second + ii2] = first_input[0][ii1] * second_input[1][ii2] + first_input[1][ii1] * second_input[0][ii2];
+                }
+                else
+                    std::cout << "Wrong Info: invalide command, plz check " << std::endl;
             }
-            else if (strcmp(oper_type,"check")==0)
-            {
-                combined_prob[0][ii1*size_second+ii2]=first_input[0][ii1]*second_input[0][ii2]+first_input[1][ii1]*second_input[1][ii2];
-                combined_prob[1][ii1*size_second+ii2]=first_input[0][ii1]*second_input[1][ii2]+first_input[1][ii1]*second_input[0][ii2];
-            }
-            else
-                std::cout<<"Wrong Info: invalide command, plz check "<<std::endl;
         }
     }
+
+    else if (strcmp(oper_type, "check_min") == 0)
+    {
+        combined_prob.assign(2, std::vector<double>(size_first, -1.0));
+        if(size_first!=size_second)
+        {
+            std::cout<<"min check wrong... two size not equal cardinality"<<std::endl;
+        }
+        for (unsigned ii1 = 0; ii1 < size_first; ii1++)
+        {
+            for (unsigned ii2 = 0; ii2 < size_second; ii2++)
+            {
+                double prob_0=first_input[0][ii1] * second_input[0][ii2] + first_input[1][ii1] * second_input[1][ii2];
+                double prob_1=first_input[0][ii1] * second_input[1][ii2] + first_input[1][ii1] * second_input[0][ii2];
+                if((ii1+1)>(ii2+1)&&(ii2+1)>size_first/2)
+                {
+                    combined_prob[0][ii1]=prob_0;
+                    combined_prob[1][ii1]=prob_1;
+                }
+                else if((ii1+1)<(ii2+1)&&(ii2+1)<size_first/2)
+                {
+                    combined_prob[0][size_first-1-ii1]=prob_0;
+                    combined_prob[1][size_first-1-ii1]=prob_1;
+                }
+                else
+                {
+                    combined_prob[0][std::min(ii2,size_first-1-ii1)]=prob_0;
+                    combined_prob[1][std::min(ii2,size_first-1-ii1)]=prob_1;
+                }
+            }
+        }
+    }
+
     return combined_prob;
 }
 
-std::vector<std::vector<double>> clip_prob(std::vector<std::vector<double>> & input, double threshold)
+std::vector<std::vector<double>> clip_prob(std::vector<std::vector<double>> &input, double threshold)
 {
     std::vector<std::vector<double>> out(2);
     out[0].clear();

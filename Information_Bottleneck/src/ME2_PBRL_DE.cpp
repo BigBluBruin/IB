@@ -367,6 +367,18 @@ int ME2_PBRL_DE::density_evolution()
     double small_offset = pow(10, -3);
     std::vector<std::vector<double>> temp_two_dim_vec;
     std::vector<std::vector<double>> channel_observation = gaussian_disretization(most_left, most_right, partition_number, sigma2);
+    //------
+    std::ofstream temp_file("channel.txt");
+    for (const auto aa: channel_observation)
+    {
+        for (const auto bb:aa)
+        {
+            temp_file<<bb<<" ";
+        }
+        temp_file<<std::endl;
+    }
+    temp_file.close();
+    //------
     IB_kernel channel_IB(channel_observation, quantization_size, ib_runtime);
     channel_IB.Progressive_MMI();
     np_channel_pmf = channel_IB.prob_join_xt;
