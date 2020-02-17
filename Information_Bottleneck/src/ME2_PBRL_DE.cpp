@@ -45,10 +45,6 @@ std::vector<std::vector<double>> ME2_PBRL_DE::calculate_output_distribution(std:
                     first_input = prob_llr_combined;
                 }
             }
-            if (distribution[3] > 0)
-            {
-                std::cout<<"Wrong Info: Varible node distribution from second type should be 0 ,rather than "<<distribution[3]<<". Please check..."<<std::endl;
-            }
             temp = distribution[0] * first_input[0];
             std::copy(temp.begin(), temp.end(), std::back_inserter(output_joint[0]));
             temp = distribution[0] * first_input[1];
@@ -62,6 +58,56 @@ std::vector<std::vector<double>> ME2_PBRL_DE::calculate_output_distribution(std:
             return output_joint;
         }
     }
+    /*if (strcmp(type, "vari") == 0)
+    {
+        if (distribution.size() == 4)
+        {
+            if (distribution[1] > 0) //>0 not pucture
+            {
+                first_input = np_channel_pmf;
+                if (distribution[2] > 0)
+                {
+                    second_input = check_pmf_1;
+                    for (int ii = 0; ii < int(distribution[2]); ii++)
+                    {
+
+                        combined_output = prob_combination(first_input, second_input, type);
+                        prob_sort(combined_output);
+                        prob_llr_combined = llr_combination(combined_output, 0.001);
+                        ave_joinprob_llr(prob_llr_combined, pow(10.0, -80.0));
+                        first_input = prob_llr_combined;
+                    }
+                }
+            }
+            else //<0 puncture
+            {
+                if (distribution[2] > 0)
+                {
+                    first_input=llr_permutation(check_pmf_1,0.001);
+                    second_input = check_pmf_1;
+                    for (int ii = 0; ii < int(distribution[2])-1; ii++)
+                    {
+                        combined_output = prob_combination(first_input, second_input, type);
+                        prob_sort(combined_output);
+                        prob_llr_combined = llr_combination(combined_output, 0.001);
+                        ave_joinprob_llr(prob_llr_combined, pow(10.0, -80.0));
+                        first_input = prob_llr_combined;
+                    }
+                }
+            }
+            temp = distribution[0] * first_input[0];
+            std::copy(temp.begin(), temp.end(), std::back_inserter(output_joint[0]));
+            temp = distribution[0] * first_input[1];
+            std::copy(temp.begin(), temp.end(), std::back_inserter(output_joint[1]));
+            prob_sort(output_joint);
+            return output_joint;
+        }
+        else
+        {
+            std::cout << "Wrong Info: It's not a variable node distribution vector (length: " << distribution.size() << "), plz check again" << std::endl;
+            return output_joint;
+        }
+    }*/
     else if (strcmp(type, "check") == 0)
     {
         //std::cout<<distribution[0]<<std::endl;
@@ -190,7 +236,7 @@ void ME2_PBRL_DE::type_distribution_update(std::vector<std::vector<double>> edge
     ave_joinprob_llr(clipped_cvd, pow(10.0, -80.0));
     llr = llr_cal(clipped_cvd);
     llr_file_name = std::string()+type+"_s" + std::to_string(socket) + "_llr_iteration_" + std::to_string(iter) + ".txt";
-    llr_file.open(llr_file_name);
+    /*llr_file.open(llr_file_name);
     if (llr_file.is_open())
     {
         for (unsigned index = 0; index < llr.size(); index++)
@@ -198,7 +244,7 @@ void ME2_PBRL_DE::type_distribution_update(std::vector<std::vector<double>> edge
             llr_file << llr[index] << "  " << clipped_cvd[0][index] + clipped_cvd[1][index] << std::endl;
         }
     }
-    llr_file.close();
+    llr_file.close();*/
     IB_kernel IB_ins(clipped_cvd, quantization_size, ib_runtime);
     /*if(strcmp(type,"check")==0 && socket==0)
     {
@@ -221,7 +267,7 @@ void ME2_PBRL_DE::type_distribution_update(std::vector<std::vector<double>> edge
             vari_threshold_1.push_back(IB_ins.threshold);
             vari_pmf_1 = IB_ins.prob_join_xt;
            // std::cout << "Info: Iteration " << iter << ", socket " << socket << ", variable mutual information update: " << IB_ins.mi << std::endl;
-            std::cout<<IB_ins.mi<<std::endl;
+            std::cout<< iter<<"  " <<IB_ins.mi<<std::endl;
             break;
         default:
             std::cout << "Wrong Info: In function (type_distribution_update), type is vari, but no socket " << socket << ".. please check again." << std::endl;
@@ -399,7 +445,7 @@ void ME2_PBRL_DE::RQF_output()
         for (const auto &aa : cur_two_dim_vec)
         {
             for (const auto &bb : aa)
-                handle_channel_quantizer << bb << "  ";
+                handle_channel_quantizer << bb*sigma2/2.0 << "  ";
             handle_channel_quantizer << std::endl;
         }
         handle_channel_quantizer.close();
@@ -426,8 +472,6 @@ void ME2_PBRL_DE::RQF_output()
     {
         std::cout << "Fail to write channel reconstruction file ..." << std::endl;
     }
-
-
 
     std::ofstream outpufile, handle_reconstrction;
     std::string threholdfile, recons_file;

@@ -221,7 +221,7 @@ int main(int argc, char* argv[])
     //double puncture_rate=0;
     //argv[1]: design eb_no
     //argv[2]: design eb_no string
-    double code_rate=0.5;
+    /*double code_rate=0.5;
     double cur_eb_no;
     double puncture_rate=0;    
     //std::vector<double> vari_edge_dist{0.0833333333333333,0,0,0.142857142857143,0.0595238095238095,0.0714285714285714,0,0,0.107142857142857,0.357142857142857,0,0,0,0,0.178571428571429};
@@ -255,7 +255,7 @@ int main(int argc, char* argv[])
         }
         
 
-    }
+    }*/
 
     //QCDE("Density_Evolution.txt",16);
     
@@ -290,7 +290,7 @@ int main(int argc, char* argv[])
     }*/
 
     //This parts implement ME2_PBRL_DE
-    /*unsigned int quansize = 16;
+    unsigned int quansize = 16;
     double threshold = pow(10.0, -10.0);
     unsigned max_iter = 50;
     bool flag = true;
@@ -311,7 +311,7 @@ int main(int argc, char* argv[])
         ME2_PBRL_DE me2_pbrl_ins(filename, max_iter, quansize, sigma2, threshold, llr_intervel, ib_runtime, suffix[ii]);
         me2_pbrl_ins.read_decription();
         me2_pbrl_ins.density_evolution();
-    }*/
+    }
     return 0;
 } /*
 

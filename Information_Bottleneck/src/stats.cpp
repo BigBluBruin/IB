@@ -55,12 +55,10 @@ std::vector<std::vector<double>> llr_permutation(std::vector<std::vector<double>
     for (unsigned ii = 0; ii < llr.size(); ii++)
     {
         if(llr[ii]<0)
-        {
-            
+        {           
             tempt=(joint_prob[0][ii]+joint_prob[1][ii])*exp(llr[ii]-permutation_factor)/(1+exp(llr[ii]-permutation_factor));        
             new_joint_prob[0].push_back(tempt);
-            new_joint_prob[1].push_back((joint_prob[0][ii]+joint_prob[1][ii])-tempt);
-            //std::cout<<tempt<<"  "<<std::endl;
+            new_joint_prob[1].push_back((joint_prob[0][ii]+joint_prob[1][ii])*1/(1+exp(llr[ii]-permutation_factor)));
         }
         else
         {
