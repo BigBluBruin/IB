@@ -216,23 +216,23 @@ int main(int argc, char* argv[])
     
 
 
-   //// std::vector<double> check_edge_dist{0,0,0,0,0,0,0.8140,0.1860};
-    //std::vector<double> vari_edge_dist{0,0.2558,0.3140,0.0465,0,0,0,0,0,0,0.3837};
     //double puncture_rate=0;
     //argv[1]: design eb_no
-    //argv[2]: design eb_no string
-    /*double code_rate=0.5;
+    //argv[2]: design eb_no string   
+    std::vector<double> check_edge_dist{0,0,0,0,0,0,0.8140,0.1860};
+    std::vector<double> vari_edge_dist{0,0.2558,0.3140,0.0465,0,0,0,0,0,0,0.3837};
+    double code_rate=0.5;
     double cur_eb_no;
     double puncture_rate=0;    
     //std::vector<double> vari_edge_dist{0.0833333333333333,0,0,0.142857142857143,0.0595238095238095,0.0714285714285714,0,0,0.107142857142857,0.357142857142857,0,0,0,0,0.178571428571429};
     std::vector<double> eff_vari_edge_dist{0.821400000000000,0,0,0.0476000000000000,0.131000000000000};
     //std::vector<double> check_edge_dist{0,0,0.0357142857142857,0,0,0,0.333333333333333,0.190476190476190,0,0,0,0,0,0,0,0,0,0.214285714285714,0.226190476190476};
     std::vector<double> eff_check_edge_dist{0,0,0,0,0,0.500000000000000,0.250000000000000,0,0,0,0,0,0,0,0,0,0.250000000000000};
-    std::vector<double> vari_edge_dist{0,0,0,1};
-    std::vector<double> check_edge_dist{0,0,0,0,0,0,1};
-    unsigned int quansize =128;
+    //std::vector<double> vari_edge_dist{0,0,0,1};
+    //std::vector<double> check_edge_dist{0,0,0,0,0,0,1};
+    unsigned int quansize =16;
     double threshold = pow(10.0, -7.0);
-    unsigned max_iter = 500;
+    unsigned max_iter = 50;
     bool flag=true;
     int regular_result;
     double llr_intervel=0.01;
@@ -255,7 +255,7 @@ int main(int argc, char* argv[])
         }
         
 
-    }*/
+    }
 
     //QCDE("Density_Evolution.txt",16);
     
@@ -290,7 +290,7 @@ int main(int argc, char* argv[])
     }*/
 
     //This parts implement ME2_PBRL_DE
-    unsigned int quansize = 16;
+    /*unsigned int quansize = 16;
     double threshold = pow(10.0, -10.0);
     unsigned max_iter = 50;
     bool flag = true;
@@ -312,7 +312,7 @@ int main(int argc, char* argv[])
         me2_pbrl_ins.read_decription();
         me2_pbrl_ins.density_evolution();
     }
-    return 0;
+    return 0;*/
 } /*
 
 
