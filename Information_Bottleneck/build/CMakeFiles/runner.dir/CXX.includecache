@@ -136,43 +136,43 @@ Information_Bottleneck/overloadvec.h
 Information_Bottleneck/itbox.h
 ../include/Information_Bottleneck/Information_Bottleneck/itbox.h
 
-/mnt/d/GitRepo/IB/Information_Bottleneck/src/IB_kernel.cpp
+/mnt/e/Gitrepo/IB/Information_Bottleneck/src/IB_kernel.cpp
 Information_Bottleneck/IB_kernel.h
-/mnt/d/GitRepo/IB/Information_Bottleneck/src/Information_Bottleneck/IB_kernel.h
+/mnt/e/Gitrepo/IB/Information_Bottleneck/src/Information_Bottleneck/IB_kernel.h
 
-/mnt/d/GitRepo/IB/Information_Bottleneck/src/Irregular_DE.cpp
+/mnt/e/Gitrepo/IB/Information_Bottleneck/src/Irregular_DE.cpp
 Discrete_Density_Evolution/Irregular_DE.h
-/mnt/d/GitRepo/IB/Information_Bottleneck/src/Discrete_Density_Evolution/Irregular_DE.h
+/mnt/e/Gitrepo/IB/Information_Bottleneck/src/Discrete_Density_Evolution/Irregular_DE.h
 
-/mnt/d/GitRepo/IB/Information_Bottleneck/src/ME2_PBRL_DE.cpp
+/mnt/e/Gitrepo/IB/Information_Bottleneck/src/ME2_PBRL_DE.cpp
 Discrete_Density_Evolution/ME2_PBRL_DE.h
-/mnt/d/GitRepo/IB/Information_Bottleneck/src/Discrete_Density_Evolution/ME2_PBRL_DE.h
+/mnt/e/Gitrepo/IB/Information_Bottleneck/src/Discrete_Density_Evolution/ME2_PBRL_DE.h
 
-/mnt/d/GitRepo/IB/Information_Bottleneck/src/ME_PBRL_DE.cpp
+/mnt/e/Gitrepo/IB/Information_Bottleneck/src/ME_PBRL_DE.cpp
 Discrete_Density_Evolution/ME_PBRL_DE.h
-/mnt/d/GitRepo/IB/Information_Bottleneck/src/Discrete_Density_Evolution/ME_PBRL_DE.h
+/mnt/e/Gitrepo/IB/Information_Bottleneck/src/Discrete_Density_Evolution/ME_PBRL_DE.h
 
-/mnt/d/GitRepo/IB/Information_Bottleneck/src/MainPage.cpp
+/mnt/e/Gitrepo/IB/Information_Bottleneck/src/MainPage.cpp
 Information_Bottleneck/itbox.h
-/mnt/d/GitRepo/IB/Information_Bottleneck/src/Information_Bottleneck/itbox.h
+/mnt/e/Gitrepo/IB/Information_Bottleneck/src/Information_Bottleneck/itbox.h
 Information_Bottleneck/overloadvec.h
-/mnt/d/GitRepo/IB/Information_Bottleneck/src/Information_Bottleneck/overloadvec.h
+/mnt/e/Gitrepo/IB/Information_Bottleneck/src/Information_Bottleneck/overloadvec.h
 Information_Bottleneck/stats.h
-/mnt/d/GitRepo/IB/Information_Bottleneck/src/Information_Bottleneck/stats.h
+/mnt/e/Gitrepo/IB/Information_Bottleneck/src/Information_Bottleneck/stats.h
 Information_Bottleneck/IB_kernel.h
-/mnt/d/GitRepo/IB/Information_Bottleneck/src/Information_Bottleneck/IB_kernel.h
+/mnt/e/Gitrepo/IB/Information_Bottleneck/src/Information_Bottleneck/IB_kernel.h
 Discrete_Density_Evolution/Probability_Combination_Tool.h
-/mnt/d/GitRepo/IB/Information_Bottleneck/src/Discrete_Density_Evolution/Probability_Combination_Tool.h
+/mnt/e/Gitrepo/IB/Information_Bottleneck/src/Discrete_Density_Evolution/Probability_Combination_Tool.h
 Discrete_Density_Evolution/Regular_DE.h
-/mnt/d/GitRepo/IB/Information_Bottleneck/src/Discrete_Density_Evolution/Regular_DE.h
+/mnt/e/Gitrepo/IB/Information_Bottleneck/src/Discrete_Density_Evolution/Regular_DE.h
 Discrete_Density_Evolution/Irregular_DE.h
-/mnt/d/GitRepo/IB/Information_Bottleneck/src/Discrete_Density_Evolution/Irregular_DE.h
+/mnt/e/Gitrepo/IB/Information_Bottleneck/src/Discrete_Density_Evolution/Irregular_DE.h
 Discrete_Density_Evolution/Quantize_Continuous_DE.h
-/mnt/d/GitRepo/IB/Information_Bottleneck/src/Discrete_Density_Evolution/Quantize_Continuous_DE.h
+/mnt/e/Gitrepo/IB/Information_Bottleneck/src/Discrete_Density_Evolution/Quantize_Continuous_DE.h
 Discrete_Density_Evolution/ME_PBRL_DE.h
-/mnt/d/GitRepo/IB/Information_Bottleneck/src/Discrete_Density_Evolution/ME_PBRL_DE.h
+/mnt/e/Gitrepo/IB/Information_Bottleneck/src/Discrete_Density_Evolution/ME_PBRL_DE.h
 Discrete_Density_Evolution/ME2_PBRL_DE.h
-/mnt/d/GitRepo/IB/Information_Bottleneck/src/Discrete_Density_Evolution/ME2_PBRL_DE.h
+/mnt/e/Gitrepo/IB/Information_Bottleneck/src/Discrete_Density_Evolution/ME2_PBRL_DE.h
 fstream
 -
 time.h
@@ -180,25 +180,25 @@ time.h
 random
 -
 
-/mnt/d/GitRepo/IB/Information_Bottleneck/src/Probability_Combination_Tool.cpp
+/mnt/e/Gitrepo/IB/Information_Bottleneck/src/Probability_Combination_Tool.cpp
 Discrete_Density_Evolution/Probability_Combination_Tool.h
-/mnt/d/GitRepo/IB/Information_Bottleneck/src/Discrete_Density_Evolution/Probability_Combination_Tool.h
+/mnt/e/Gitrepo/IB/Information_Bottleneck/src/Discrete_Density_Evolution/Probability_Combination_Tool.h
 
-/mnt/d/GitRepo/IB/Information_Bottleneck/src/Quantize_Continuous_DE.cpp
+/mnt/e/Gitrepo/IB/Information_Bottleneck/src/Quantize_Continuous_DE.cpp
 Discrete_Density_Evolution/Quantize_Continuous_DE.h
-/mnt/d/GitRepo/IB/Information_Bottleneck/src/Discrete_Density_Evolution/Quantize_Continuous_DE.h
+/mnt/e/Gitrepo/IB/Information_Bottleneck/src/Discrete_Density_Evolution/Quantize_Continuous_DE.h
 
-/mnt/d/GitRepo/IB/Information_Bottleneck/src/Regular_DE.cpp
+/mnt/e/Gitrepo/IB/Information_Bottleneck/src/Regular_DE.cpp
 Discrete_Density_Evolution/Regular_DE.h
-/mnt/d/GitRepo/IB/Information_Bottleneck/src/Discrete_Density_Evolution/Regular_DE.h
+/mnt/e/Gitrepo/IB/Information_Bottleneck/src/Discrete_Density_Evolution/Regular_DE.h
 
-/mnt/d/GitRepo/IB/Information_Bottleneck/src/itbox.cpp
+/mnt/e/Gitrepo/IB/Information_Bottleneck/src/itbox.cpp
 Information_Bottleneck/itbox.h
-/mnt/d/GitRepo/IB/Information_Bottleneck/src/Information_Bottleneck/itbox.h
+/mnt/e/Gitrepo/IB/Information_Bottleneck/src/Information_Bottleneck/itbox.h
 
-/mnt/d/GitRepo/IB/Information_Bottleneck/src/overloadvec.cpp
+/mnt/e/Gitrepo/IB/Information_Bottleneck/src/overloadvec.cpp
 
-/mnt/d/GitRepo/IB/Information_Bottleneck/src/stats.cpp
+/mnt/e/Gitrepo/IB/Information_Bottleneck/src/stats.cpp
 Information_Bottleneck/stats.h
-/mnt/d/GitRepo/IB/Information_Bottleneck/src/Information_Bottleneck/stats.h
+/mnt/e/Gitrepo/IB/Information_Bottleneck/src/Information_Bottleneck/stats.h
 

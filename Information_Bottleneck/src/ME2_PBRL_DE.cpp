@@ -387,6 +387,7 @@ int ME2_PBRL_DE::density_evolution()
 
     //-----------------initial variable node edge distribution---------------
     std::vector<double> channel_dist(2, 0); // (>0)->(not puncture)->(0) || (<0)->punc->(1)
+    //-----check correctness of channel distirbution
     for (unsigned ii = 0; ii < vari_edge_deg_1.size(); ii++)
     {
         if (vari_edge_deg_1[ii][1] > 0)
@@ -399,34 +400,42 @@ int ME2_PBRL_DE::density_evolution()
         std::cout << "Wrong Info: Summation of variable edge dstirbution of socket 1 is not equal to 1 rather " << channel_dist[0] + channel_dist[1] << ", plz check and try again..." << std::endl;
         return -1;
     }
-    temp_two_dim_vec.clear();
-    temp_two_dim_vec.push_back(channel_dist[0] * channel_observation[0]);
-    temp_two_dim_vec.push_back(channel_dist[0] * channel_observation[1]);
-    temp_two_dim_vec[0].push_back(channel_dist[1] * 0.5 * 1 / (1 + exp(small_offset)));
-    temp_two_dim_vec[0].push_back(channel_dist[1] * 0.5 * exp(small_offset) / (1 + exp(small_offset)));
-    temp_two_dim_vec[1].push_back(channel_dist[1] * 0.5 * exp(small_offset) / (1 + exp(small_offset)));
-    temp_two_dim_vec[1].push_back(channel_dist[1] * 0.5 * 1 / (1 + exp(small_offset)));
-    prob_sort(temp_two_dim_vec);
-    IB_kernel channel_IB_1(temp_two_dim_vec, quantization_size, ib_runtime);
-    channel_IB_1.Progressive_MMI();
+    //----------
+
+    //-----punctured node probability distribution----------
+    // temp_two_dim_vec.clear();
+    // temp_two_dim_vec.push_back(channel_dist[0] * channel_observation[0]);
+    // temp_two_dim_vec.push_back(channel_dist[0] * channel_observation[1]);
+    // temp_two_dim_vec[0].push_back(channel_dist[1] * 0.5 * 1 / (1 + exp(small_offset)));
+    // temp_two_dim_vec[0].push_back(channel_dist[1] * 0.5 * exp(small_offset) / (1 + exp(small_offset)));
+    // temp_two_dim_vec[1].push_back(channel_dist[1] * 0.5 * exp(small_offset) / (1 + exp(small_offset)));
+    // temp_two_dim_vec[1].push_back(channel_dist[1] * 0.5 * 1 / (1 + exp(small_offset)));
+    // prob_sort(temp_two_dim_vec);
+    // IB_kernel channel_IB_1(temp_two_dim_vec, quantization_size, ib_runtime);
+    // channel_IB_1.Progressive_MMI();
+    //-------------------------------------------------------
+
+    //-----push back channel threshold and reconstruction-------
+    // channel_threshold.push_back(channel_IB_1.threshold);
+    // channel_representation.push_back(llr_cal(channel_IB_1.prob_join_xt));
+    channel_threshold.push_back(channel_IB.threshold);  
+    channel_representation.push_back(llr_cal(channel_IB.prob_join_xt));
+    //-------------------------------------------------------
+
     vari_pmf_1 = np_channel_pmf;//channel_IB_1.prob_join_xt;
     vari_pmf_2 = np_channel_pmf;
-    channel_threshold.push_back(channel_IB_1.threshold);
-    channel_threshold.push_back(channel_IB.threshold);
-    channel_representation.push_back(llr_cal(channel_IB_1.prob_join_xt));
-    channel_representation.push_back(llr_cal(channel_IB.prob_join_xt));
     std::cout << "Info: Finished channel quantization ..." << std::endl;
-    std::vector<std::vector<double>> check_1_0{{1.0/4,17,0},{1.0/4,6,1},{2.0/4,5,1}};
-    std::vector<std::vector<double>> vari_1_0{{0.2667,-1,3,0},{0.7333,-1,4,0}};
+    std::vector<std::vector<double>> punc_check_edge_dist{{1.0/4,17,0},{1.0/4,6,1},{2.0/4,5,1}};
+    std::vector<std::vector<double>> punc_vari_edge_dist{{0.2667,-1,3,0},{0.7333,-1,4,0}};
     //---------------------density evolution------------------------------------
     for (unsigned ii = 0; ii < max_iter; ii++)
     {
         if (ii == 0)
         {
             //-----------------update check edge pmf---------------------------------
-            type_distribution_update(check_1_0, "check", ii, 0);
+            type_distribution_update(punc_check_edge_dist, "check", ii, 0);
             //-----------------update variable node pmf------------------------------
-            type_distribution_update(vari_1_0, "vari", ii, 0);
+            type_distribution_update(punc_vari_edge_dist, "vari", ii, 0);
         }
         else
         {

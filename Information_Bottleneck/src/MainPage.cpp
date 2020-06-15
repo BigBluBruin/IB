@@ -219,17 +219,49 @@ int main(int argc, char* argv[])
     //double puncture_rate=0;
     //argv[1]: design eb_no
     //argv[2]: design eb_no string   
+
+    //-----80211 LDPC code--------------------------
+    double puncture_rate=0;
     std::vector<double> check_edge_dist{0,0,0,0,0,0,0.8140,0.1860};
     std::vector<double> vari_edge_dist{0,0.2558,0.3140,0.0465,0,0,0,0,0,0,0.3837};
-    double code_rate=0.5;
-    double cur_eb_no;
-    double puncture_rate=0;    
-    //std::vector<double> vari_edge_dist{0.0833333333333333,0,0,0.142857142857143,0.0595238095238095,0.0714285714285714,0,0,0.107142857142857,0.357142857142857,0,0,0,0,0.178571428571429};
-    std::vector<double> eff_vari_edge_dist{0.821400000000000,0,0,0.0476000000000000,0.131000000000000};
-    //std::vector<double> check_edge_dist{0,0,0.0357142857142857,0,0,0,0.333333333333333,0.190476190476190,0,0,0,0,0,0,0,0,0,0.214285714285714,0.226190476190476};
     std::vector<double> eff_check_edge_dist{0,0,0,0,0,0.500000000000000,0.250000000000000,0,0,0,0,0,0,0,0,0,0.250000000000000};
+    std::vector<double> eff_vari_edge_dist{0.821400000000000,0,0,0.0476000000000000,0.131000000000000};
+    double code_rate=0.5;
+
+
+    //-----kasra pbrl ------------
+    // double puncture_rate=0.0588; //0.0588   
+    // std::vector<double> vari_edge_dist{0.0833333333333333,0,0,0.142857142857143,0.0595238095238095,0.0714285714285714,0,0,0.107142857142857,0.357142857142857,0,0,0,0,0.178571428571429};  
+    // std::vector<double> check_edge_dist{0,0,0.0357142857142857,0,0,0,0.333333333333333,0.190476190476190,0,0,0,0,0,0,0,0,0,0.214285714285714,0.226190476190476};
+    // std::vector<double> eff_check_edge_dist{0,0,0,0,0,0.500000000000000,0.250000000000000,0,0,0,0,0,0,0,0,0,0.250000000000000};
+    // std::vector<double> eff_vari_edge_dist{0.821400000000000,0,0,0.0476000000000000,0.131000000000000};
+
+    //----rate  1/2 taken from min-LUT paper-----
+    // double puncture_rate=0;
+    // std::vector<double> vari_edge_dist{0,0.240730062426354,0.210594930679169,0.0300849900970241,0.125354125404267,0,0.0175495775565974,0,0,0,0,0,0,0,0.375686313836588};  
+    // std::vector<double> check_edge_dist{0,0,0,0,0,0,0.0216,0.9762,0.0022};
+    // std::vector<double> eff_check_edge_dist{0,0,0,0,0,0.500000000000000,0.250000000000000,0,0,0,0,0,0,0,0,0,0.250000000000000};
+    // std::vector<double> eff_vari_edge_dist{0.821400000000000,0,0,0.0476000000000000,0.131000000000000};
+
+    //-----rate 1/2 MIM-BP paper -----
+    // double puncture_rate=0;
+    // std::vector<double> vari_edge_dist{0,0.138119246958694,0.401174892455710,0,0,0,0,0,0.0266432304916971,0,0,0,0,0,0,0,0.434062630093899};  
+    // std::vector<double> check_edge_dist{0,0,0,0,0,0,0,0.328969887598871,0.667329663721726,0.00370044867940238};
+    // std::vector<double> eff_check_edge_dist{0,0,0,0,0,0.500000000000000,0.250000000000000,0,0,0,0,0,0,0,0,0,0.250000000000000};
+    // std::vector<double> eff_vari_edge_dist{0.821400000000000,0,0,0.0476000000000000,0.131000000000000};
+
+    //----(7,4) hamming code----
+    // double puncture_rate=0;
+    // std::vector<double> vari_edge_dist{0.25,0.5,0.25};  
+    // std::vector<double> check_edge_dist{0,0,0,1};
+    // std::vector<double> eff_check_edge_dist{0,0,0,0,0,0.500000000000000,0.250000000000000,0,0,0,0,0,0,0,0,0,0.250000000000000};
+    // std::vector<double> eff_vari_edge_dist{0.821400000000000,0,0,0.0476000000000000,0.131000000000000};
+
+    //----Regular LDPC----------
     //std::vector<double> vari_edge_dist{0,0,0,1};
     //std::vector<double> check_edge_dist{0,0,0,0,0,0,1};
+
+    double cur_eb_no;
     unsigned int quansize =16;
     double threshold = pow(10.0, -7.0);
     unsigned max_iter = 50;
@@ -242,7 +274,7 @@ int main(int argc, char* argv[])
     for(unsigned index=0;index<eb_no.size();index++)
     {
         cur_eb_no =eb_no[index];
-        double sigma2 = pow((double)10, (-0.1 * cur_eb_no) / (2.0 * code_rate));
+        double sigma2 = pow((double)10, (-0.1 * cur_eb_no)) / (2.0 * code_rate);
         std::cout<<"---------------change ebno as : "<<cur_eb_no<<"|| corresponding sigma2:"<<sigma2<<"""-------------------"<<std::endl;
         Irregular_DE irregular_ins(check_edge_dist, vari_edge_dist,sigma2,max_iter,quansize,threshold,llr_intervel,ib_runtime,suffix[index],eff_check_edge_dist,eff_vari_edge_dist,puncture_rate);
         if(puncture_rate==0)
@@ -253,8 +285,6 @@ int main(int argc, char* argv[])
         {
             regular_result = irregular_ins.Discrete_Density_Evolution_punc();
         }
-        
-
     }
 
     //QCDE("Density_Evolution.txt",16);
@@ -290,29 +320,29 @@ int main(int argc, char* argv[])
     }*/
 
     //This parts implement ME2_PBRL_DE
-    /*unsigned int quansize = 16;
-    double threshold = pow(10.0, -10.0);
-    unsigned max_iter = 50;
-    bool flag = true;
-    int regular_result;
-    double llr_intervel = 0.01;
-    unsigned int ib_runtime = 50;
-    double code_rate = 0.5;
-    double cur_eb_no;
-    std::vector<double> eb_no{std::stod(argv[1])};
-    std::vector<std::string> suffix{argv[2]};
-    for (unsigned ii = 0; ii < eb_no.size(); ii++)
-    {
-        cur_eb_no = eb_no[ii];
-        std::cout << "---------------change ebno as : " << cur_eb_no << "-------------------" << std::endl;
-        double sigma2 = pow(10, (-0.1 * cur_eb_no) / (2.0 * code_rate));
-        std::cout << "sigma 2: " << sigma2 << std::endl;
-        std::string filename = "PBRL_MET2_description.txt";
-        ME2_PBRL_DE me2_pbrl_ins(filename, max_iter, quansize, sigma2, threshold, llr_intervel, ib_runtime, suffix[ii]);
-        me2_pbrl_ins.read_decription();
-        me2_pbrl_ins.density_evolution();
-    }
-    return 0;*/
+    // unsigned int quansize = 16;
+    // double threshold = pow(10.0, -10.0);
+    // unsigned max_iter = 50;
+    // bool flag = true;
+    // int regular_result;
+    // double llr_intervel = 0.01;
+    // unsigned int ib_runtime = 50;
+    // double code_rate = 0.5;
+    // double cur_eb_no;
+    // std::vector<double> eb_no{std::stod(argv[1])};
+    // std::vector<std::string> suffix{argv[2]};
+    // for (unsigned ii = 0; ii < eb_no.size(); ii++)
+    // {
+    //     cur_eb_no = eb_no[ii];
+    //     std::cout << "---------------change ebno as : " << cur_eb_no << "-------------------" << std::endl;
+    //     double sigma2 = pow(10, (-0.1 * cur_eb_no) / (2.0 * code_rate));
+    //     std::cout << "sigma 2: " << sigma2 << std::endl;
+    //     std::string filename = "PBRL_MET2_description.txt";
+    //     ME2_PBRL_DE me2_pbrl_ins(filename, max_iter, quansize, sigma2, threshold, llr_intervel, ib_runtime, suffix[ii]);
+    //     me2_pbrl_ins.read_decription();
+    //     me2_pbrl_ins.density_evolution();
+    // }
+    // return 0;
 } /*
 
 
