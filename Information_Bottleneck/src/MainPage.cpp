@@ -221,12 +221,29 @@ int main(int argc, char* argv[])
     //argv[2]: design eb_no string   
 
     //-----80211 LDPC code--------------------------
+    // double puncture_rate=0;
+    // std::vector<double> check_edge_dist{0,0,0,0,0,0,0.8140,0.1860};
+    // std::vector<double> vari_edge_dist{0,0.2558,0.3140,0.0465,0,0,0,0,0,0,0.3837};
+    // std::vector<double> eff_check_edge_dist{0,0,0,0,0,0.500000000000000,0.250000000000000,0,0,0,0,0,0,0,0,0,0.250000000000000}; //fake
+    // std::vector<double> eff_vari_edge_dist{0.821400000000000,0,0,0.0476000000000000,0.131000000000000}; // fake
+    // double code_rate=0.5;
+
+    // //------SA PBRL Code ------------
     double puncture_rate=0;
-    std::vector<double> check_edge_dist{0,0,0,0,0,0,0.8140,0.1860};
-    std::vector<double> vari_edge_dist{0,0.2558,0.3140,0.0465,0,0,0,0,0,0,0.3837};
-    std::vector<double> eff_check_edge_dist{0,0,0,0,0,0.500000000000000,0.250000000000000,0,0,0,0,0,0,0,0,0,0.250000000000000};
-    std::vector<double> eff_vari_edge_dist{0.821400000000000,0,0,0.0476000000000000,0.131000000000000};
+    std::vector<double> check_edge_dist{0,0,0,0,0,0.0681818181818182,0.0795454545454545,0.272727272727273,0.102272727272727,0.113636363636364,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.363636363636364};
+    std::vector<double> vari_edge_dist{0.0795454545454545,0,0.0340909090909091,0,0.0568181818181818,0.0681818181818182,0,0.0909090909090909,0.102272727272727,0.113636363636364,0.250000000000000,0,0,0,0,0,0,0.204545454545455};
+    std::vector<double> eff_check_edge_dist{0,0,0,0,0,0.500000000000000,0.250000000000000,0,0,0,0,0,0,0,0,0,0.250000000000000}; //fake
+    std::vector<double> eff_vari_edge_dist{0.821400000000000,0,0,0.0476000000000000,0.131000000000000}; // fake
     double code_rate=0.5;
+    
+
+    //------SA rate 8_9 --------
+    // double puncture_rate=0;
+    // std::vector<double> check_edge_dist{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1};
+    // std::vector<double> vari_edge_dist{0,0,0.375000000000000,0.625000000000000};
+    // std::vector<double> eff_check_edge_dist{0,0,0,0,0,0.500000000000000,0.250000000000000,0,0,0,0,0,0,0,0,0,0.250000000000000}; //fake
+    // std::vector<double> eff_vari_edge_dist{0.821400000000000,0,0,0.0476000000000000,0.131000000000000}; // fake
+    // double code_rate=8.0/9.0;
 
 
     //-----kasra pbrl ------------
@@ -262,9 +279,9 @@ int main(int argc, char* argv[])
     //std::vector<double> check_edge_dist{0,0,0,0,0,0,1};
 
     double cur_eb_no;
-    unsigned int quansize =16;
+    unsigned int quansize =32;
     double threshold = pow(10.0, -7.0);
-    unsigned max_iter = 50;
+    unsigned max_iter = 1;
     bool flag=true;
     int regular_result;
     double llr_intervel=0.01;
@@ -320,13 +337,13 @@ int main(int argc, char* argv[])
     }*/
 
     //This parts implement ME2_PBRL_DE
-    // unsigned int quansize = 16;
+    // unsigned int quansize = 32;
     // double threshold = pow(10.0, -10.0);
-    // unsigned max_iter = 50;
+    // unsigned max_iter = 16;
     // bool flag = true;
     // int regular_result;
     // double llr_intervel = 0.01;
-    // unsigned int ib_runtime = 50;
+    // unsigned int ib_runtime = 200;
     // double code_rate = 0.5;
     // double cur_eb_no;
     // std::vector<double> eb_no{std::stod(argv[1])};
@@ -342,7 +359,7 @@ int main(int argc, char* argv[])
     //     me2_pbrl_ins.read_decription();
     //     me2_pbrl_ins.density_evolution();
     // }
-    // return 0;
+    return 0;
 } /*
 
 

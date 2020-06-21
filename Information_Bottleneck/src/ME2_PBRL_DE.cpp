@@ -58,57 +58,7 @@ std::vector<std::vector<double>> ME2_PBRL_DE::calculate_output_distribution(std:
             return output_joint;
         }
     }
-    /*if (strcmp(type, "vari") == 0)
-    {
-        if (distribution.size() == 4)
-        {
-            if (distribution[1] > 0) //>0 not pucture
-            {
-                first_input = np_channel_pmf;
-                if (distribution[2] > 0)
-                {
-                    second_input = check_pmf_1;
-                    for (int ii = 0; ii < int(distribution[2]); ii++)
-                    {
-
-                        combined_output = prob_combination(first_input, second_input, type);
-                        prob_sort(combined_output);
-                        prob_llr_combined = llr_combination(combined_output, 0.001);
-                        ave_joinprob_llr(prob_llr_combined, pow(10.0, -80.0));
-                        first_input = prob_llr_combined;
-                    }
-                }
-            }
-            else //<0 puncture
-            {
-                if (distribution[2] > 0)
-                {
-                    first_input=llr_permutation(check_pmf_1,0.001);
-                    second_input = check_pmf_1;
-                    for (int ii = 0; ii < int(distribution[2])-1; ii++)
-                    {
-                        combined_output = prob_combination(first_input, second_input, type);
-                        prob_sort(combined_output);
-                        prob_llr_combined = llr_combination(combined_output, 0.001);
-                        ave_joinprob_llr(prob_llr_combined, pow(10.0, -80.0));
-                        first_input = prob_llr_combined;
-                    }
-                }
-            }
-            temp = distribution[0] * first_input[0];
-            std::copy(temp.begin(), temp.end(), std::back_inserter(output_joint[0]));
-            temp = distribution[0] * first_input[1];
-            std::copy(temp.begin(), temp.end(), std::back_inserter(output_joint[1]));
-            prob_sort(output_joint);
-            return output_joint;
-        }
-        else
-        {
-            std::cout << "Wrong Info: It's not a variable node distribution vector (length: " << distribution.size() << "), plz check again" << std::endl;
-            return output_joint;
-        }
-    }*/
-    else if (strcmp(type, "check") == 0)
+    else if ((strcmp(type, "check") == 0))
     {
         //std::cout<<distribution[0]<<std::endl;
         if (distribution.size() == 3)
@@ -198,13 +148,91 @@ std::vector<std::vector<double>> ME2_PBRL_DE::calculate_output_distribution(std:
             return output_joint;
         }
     }
+    else if ((strcmp(type, "check_min") == 0))
+    {
+        //std::cout<<distribution[0]<<std::endl;
+        if (distribution.size() == 3)
+        {
+            std::vector<unsigned> ind;
+            std::vector<std::vector<double>> first_input_c1, first_input_c2;
+            //---------------------------caculate respectively---------------------------------
+            //tyep 1
+            if (distribution[1] != 0)
+            {
+                ind.push_back(0);
+                first_input_c1 = vari_pmf_1;
+                second_input = vari_pmf_1;
+                for (int ii = 0; ii < int(distribution[1]) - 1; ii++)
+                {
+                    combined_output = prob_combination(first_input_c1, second_input, type);
+                    prob_sort(combined_output);
+                    first_input_c1 = combined_output;
+                }
+            }
+            //type 2
+            if (distribution[2] != 0)
+            {
+
+                ind.push_back(1);
+                first_input_c2 = vari_pmf_2;
+                second_input = vari_pmf_2;
+                for (int ii = 0; ii < int(distribution[2]) - 1; ii++)
+                {
+                    std::cout << "Wrong Info: Check node distribution from second socked as at most 1, here the number is " << int(distribution[2]) << ". Please check again..." << std::endl;
+                    combined_output = prob_combination(first_input_c2, second_input, type);
+                    prob_sort(combined_output);
+                    first_input_c2 = combined_output;
+                }
+            }
+            //-----------------------------------------------------------------------------------------
+
+            //-----------------------------fianl calculation-------------------------------------------
+            if (ind.size() == 1)
+            {
+                if (ind[0] == 0)
+                {
+
+                    return distribution[0] * first_input_c1;
+                }
+                else if (ind[0] == 1)
+                {
+                    return distribution[0] * first_input_c2;
+                }
+                else
+                {
+                    std::cout << "Wrong Info: No such one check node, ind is: " << ind[0] << ". plz check..." << std::endl;
+                    return output_joint;
+                }
+            }
+            else if (ind.size() == 2)
+            {
+                if (ind[0] == 0 && ind[1] == 1)
+                {
+                    combined_output = prob_combination(first_input_c1, first_input_c2, type);
+                    prob_sort(combined_output);
+                    return distribution[0] * combined_output;
+                }
+                else
+                {
+                    std::cout << "Wrong Info: No such two check node, inds are: (" << ind[0] << ", " << ind[1] << "). plz check..." << std::endl;
+                    return output_joint;
+                }
+            }
+            else
+            {
+                std::cout << "Wrong Info: No such check node combinations, ind size is: " << ind.size() << ". plz check..." << std::endl;
+                return output_joint;
+            }
+
+            //-----------------------------------------------------------------------------------------
+        }
+    }
     else
     {
         std::cout << "Neiter vari nor check, plz check again..." << std::endl;
         return output_joint;
     }
 }
-
 
 void ME2_PBRL_DE::type_distribution_update(std::vector<std::vector<double>> edge_distribution,
                                           const char type[], int iter, int socket)
@@ -230,33 +258,16 @@ void ME2_PBRL_DE::type_distribution_update(std::vector<std::vector<double>> edge
     else if(strcmp(type,"vari")==0)
     {
         llr_combined_output_joint = llr_combination(output_joint, 0.005);
-    }   
-    //std::cout << "Info: Type--"<<socket<<"--Node: "<<type<<"---before combined mi: " << it_mi(combined_vari_dist) << ";  after combined mi: " << it_mi(llr_combined_vari_dist) << std::endl;
+    } 
+    else if (strcmp(type,"check_min")==0)
+    {
+        llr_combined_output_joint = output_joint;
+    }  
     clipped_cvd = clip_prob(llr_combined_output_joint, pow(10, -10.0));
     ave_joinprob_llr(clipped_cvd, pow(10.0, -80.0));
     llr = llr_cal(clipped_cvd);
     llr_file_name = std::string()+type+"_s" + std::to_string(socket) + "_llr_iteration_" + std::to_string(iter) + ".txt";
-    /*llr_file.open(llr_file_name);
-    if (llr_file.is_open())
-    {
-        for (unsigned index = 0; index < llr.size(); index++)
-        {
-            llr_file << llr[index] << "  " << clipped_cvd[0][index] + clipped_cvd[1][index] << std::endl;
-        }
-    }
-    llr_file.close();*/
     IB_kernel IB_ins(clipped_cvd, quantization_size, ib_runtime);
-    /*if(strcmp(type,"check")==0 && socket==0)
-    {
-        std::ofstream new_file_handle("diagnosis.txt");
-        for(const auto aa:clipped_cvd)
-        {
-            for(const auto bb:aa)
-                new_file_handle<<bb<<"  ";
-            new_file_handle<<std::endl;
-        }
-        new_file_handle.close();
-    }*/
     IB_ins.Progressive_MMI();
     if (strcmp(type, "vari") == 0)
     {
@@ -274,7 +285,7 @@ void ME2_PBRL_DE::type_distribution_update(std::vector<std::vector<double>> edge
             break;
         }
     }
-    else if (strcmp(type, "check") == 0)
+    else if (strcmp(type, "check") == 0||strcmp(type, "check_min") == 0)
     {
         switch (socket)
         {
@@ -367,18 +378,6 @@ int ME2_PBRL_DE::density_evolution()
     double small_offset = pow(10, -3);
     std::vector<std::vector<double>> temp_two_dim_vec;
     std::vector<std::vector<double>> channel_observation = gaussian_disretization(most_left, most_right, partition_number, sigma2);
-    //------
-    std::ofstream temp_file("channel.txt");
-    for (const auto aa: channel_observation)
-    {
-        for (const auto bb:aa)
-        {
-            temp_file<<bb<<" ";
-        }
-        temp_file<<std::endl;
-    }
-    temp_file.close();
-    //------
     IB_kernel channel_IB(channel_observation, quantization_size, ib_runtime);
     channel_IB.Progressive_MMI();
     np_channel_pmf = channel_IB.prob_join_xt;
@@ -387,7 +386,7 @@ int ME2_PBRL_DE::density_evolution()
 
     //-----------------initial variable node edge distribution---------------
     std::vector<double> channel_dist(2, 0); // (>0)->(not puncture)->(0) || (<0)->punc->(1)
-    //-----check correctness of channel distirbution
+    //-----check correctness of channel distirbution---------------------------
     for (unsigned ii = 0; ii < vari_edge_deg_1.size(); ii++)
     {
         if (vari_edge_deg_1[ii][1] > 0)
@@ -400,24 +399,9 @@ int ME2_PBRL_DE::density_evolution()
         std::cout << "Wrong Info: Summation of variable edge dstirbution of socket 1 is not equal to 1 rather " << channel_dist[0] + channel_dist[1] << ", plz check and try again..." << std::endl;
         return -1;
     }
-    //----------
-
-    //-----punctured node probability distribution----------
-    // temp_two_dim_vec.clear();
-    // temp_two_dim_vec.push_back(channel_dist[0] * channel_observation[0]);
-    // temp_two_dim_vec.push_back(channel_dist[0] * channel_observation[1]);
-    // temp_two_dim_vec[0].push_back(channel_dist[1] * 0.5 * 1 / (1 + exp(small_offset)));
-    // temp_two_dim_vec[0].push_back(channel_dist[1] * 0.5 * exp(small_offset) / (1 + exp(small_offset)));
-    // temp_two_dim_vec[1].push_back(channel_dist[1] * 0.5 * exp(small_offset) / (1 + exp(small_offset)));
-    // temp_two_dim_vec[1].push_back(channel_dist[1] * 0.5 * 1 / (1 + exp(small_offset)));
-    // prob_sort(temp_two_dim_vec);
-    // IB_kernel channel_IB_1(temp_two_dim_vec, quantization_size, ib_runtime);
-    // channel_IB_1.Progressive_MMI();
-    //-------------------------------------------------------
+    //-------------------------------------------------------------------
 
     //-----push back channel threshold and reconstruction-------
-    // channel_threshold.push_back(channel_IB_1.threshold);
-    // channel_representation.push_back(llr_cal(channel_IB_1.prob_join_xt));
     channel_threshold.push_back(channel_IB.threshold);  
     channel_representation.push_back(llr_cal(channel_IB.prob_join_xt));
     //-------------------------------------------------------
@@ -425,15 +409,18 @@ int ME2_PBRL_DE::density_evolution()
     vari_pmf_1 = np_channel_pmf;//channel_IB_1.prob_join_xt;
     vari_pmf_2 = np_channel_pmf;
     std::cout << "Info: Finished channel quantization ..." << std::endl;
-    std::vector<std::vector<double>> punc_check_edge_dist{{1.0/4,17,0},{1.0/4,6,1},{2.0/4,5,1}};
-    std::vector<std::vector<double>> punc_vari_edge_dist{{0.2667,-1,3,0},{0.7333,-1,4,0}};
+    // std::vector<std::vector<double>> punc_check_edge_dist{{1.0/4,17,0},{1.0/4,6,1},{2.0/4,5,1}};
+    // std::vector<std::vector<double>> punc_vari_edge_dist{{0.2667,-1,3,0},{0.7333,-1,4,0}};
+    std::vector<std::vector<double>> punc_check_edge_dist=check_edge_deg_1;
+    std::vector<std::vector<double>> punc_vari_edge_dist=vari_edge_deg_1;
+
     //---------------------density evolution------------------------------------
     for (unsigned ii = 0; ii < max_iter; ii++)
     {
         if (ii == 0)
         {
             //-----------------update check edge pmf---------------------------------
-            type_distribution_update(punc_check_edge_dist, "check", ii, 0);
+            type_distribution_update(punc_check_edge_dist, "check_min", ii, 0);
             //-----------------update variable node pmf------------------------------
             type_distribution_update(punc_vari_edge_dist, "vari", ii, 0);
         }
@@ -441,7 +428,7 @@ int ME2_PBRL_DE::density_evolution()
         {
             //std::cout<<"---------------------------"<<std::endl;
             //-----------------update check edge pmf---------------------------------
-            type_distribution_update(check_edge_deg_1, "check", ii, 0);
+            type_distribution_update(check_edge_deg_1, "check_min", ii, 0);
             //-----------------update variable node pmf------------------------------
             type_distribution_update(vari_edge_deg_1, "vari", ii, 0);
         }
@@ -550,3 +537,74 @@ void ME2_PBRL_DE::RQF_output()
     }
 
 }
+
+
+
+
+ //-----punctured node probability distribution----------
+    // temp_two_dim_vec.clear();
+    // temp_two_dim_vec.push_back(channel_dist[0] * channel_observation[0]);
+    // temp_two_dim_vec.push_back(channel_dist[0] * channel_observation[1]);
+    // temp_two_dim_vec[0].push_back(channel_dist[1] * 0.5 * 1 / (1 + exp(small_offset)));
+    // temp_two_dim_vec[0].push_back(channel_dist[1] * 0.5 * exp(small_offset) / (1 + exp(small_offset)));
+    // temp_two_dim_vec[1].push_back(channel_dist[1] * 0.5 * exp(small_offset) / (1 + exp(small_offset)));
+    // temp_two_dim_vec[1].push_back(channel_dist[1] * 0.5 * 1 / (1 + exp(small_offset)));
+    // prob_sort(temp_two_dim_vec);
+    // IB_kernel channel_IB_1(temp_two_dim_vec, quantization_size, ib_runtime);
+    // channel_IB_1.Progressive_MMI();
+    //-------------------------------------------------------
+
+    //channel_threshold.push_back(channel_IB_1.threshold);
+    // channel_representation.push_back(llr_cal(channel_IB_1.prob_join_xt));
+
+
+        /*if (strcmp(type, "vari") == 0)
+    {
+        if (distribution.size() == 4)
+        {
+            if (distribution[1] > 0) //>0 not pucture
+            {
+                first_input = np_channel_pmf;
+                if (distribution[2] > 0)
+                {
+                    second_input = check_pmf_1;
+                    for (int ii = 0; ii < int(distribution[2]); ii++)
+                    {
+
+                        combined_output = prob_combination(first_input, second_input, type);
+                        prob_sort(combined_output);
+                        prob_llr_combined = llr_combination(combined_output, 0.001);
+                        ave_joinprob_llr(prob_llr_combined, pow(10.0, -80.0));
+                        first_input = prob_llr_combined;
+                    }
+                }
+            }
+            else //<0 puncture
+            {
+                if (distribution[2] > 0)
+                {
+                    first_input=llr_permutation(check_pmf_1,0.001);
+                    second_input = check_pmf_1;
+                    for (int ii = 0; ii < int(distribution[2])-1; ii++)
+                    {
+                        combined_output = prob_combination(first_input, second_input, type);
+                        prob_sort(combined_output);
+                        prob_llr_combined = llr_combination(combined_output, 0.001);
+                        ave_joinprob_llr(prob_llr_combined, pow(10.0, -80.0));
+                        first_input = prob_llr_combined;
+                    }
+                }
+            }
+            temp = distribution[0] * first_input[0];
+            std::copy(temp.begin(), temp.end(), std::back_inserter(output_joint[0]));
+            temp = distribution[0] * first_input[1];
+            std::copy(temp.begin(), temp.end(), std::back_inserter(output_joint[1]));
+            prob_sort(output_joint);
+            return output_joint;
+        }
+        else
+        {
+            std::cout << "Wrong Info: It's not a variable node distribution vector (length: " << distribution.size() << "), plz check again" << std::endl;
+            return output_joint;
+        }
+    }*/

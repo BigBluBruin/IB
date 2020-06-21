@@ -23,10 +23,10 @@ int Irregular_DE::Discrete_Density_Evolution()
     std::vector<double> temp;
     double most_left=-5.0;
     double most_right=5.0;
-    int partition_number=3000;
+    int partition_number=4000;
     std::vector<std::vector<double>> channel_observation = gaussian_disretization(most_left, most_right, partition_number, sigma2);
     IB_kernel channel_IB(channel_observation, quantization_size, ib_runtime);
-    channel_IB.Progressive_MMI();
+    channel_IB.smIB();
     std::vector<std::vector<double>> first_input = channel_IB.prob_join_xt;
     std::vector<std::vector<double>> second_input = first_input;
     std::vector<std::vector<double>> combined_output, prob_llr_combined;
@@ -41,65 +41,65 @@ int Irregular_DE::Discrete_Density_Evolution()
         combined_vari_dist[1].clear();
 
         //---------------check node--------------------
-        for (unsigned ii = 0; ii < check_edge_dist.size() - 2; ii++)
-        {
-            combined_output = prob_combination(first_input, second_input, "check");
-            prob_sort(combined_output);
-            prob_llr_combined = llr_combination(combined_output, 0.0005);
-            //prob_llr_combined = combined_output;
-            ave_joinprob_llr(prob_llr_combined, pow(10.0, -80.0));
-            first_input = prob_llr_combined;            
-            if(check_edge_dist[ii+2]!=0)
-            {
-                temp=check_edge_dist[ii+2]*first_input[0];
-                std::copy(temp.begin(),temp.end(),std::back_inserter(combined_check_dist[0]));
-                temp=check_edge_dist[ii+2]*first_input[1];
-                std::copy(temp.begin(),temp.end(),std::back_inserter(combined_check_dist[1]));
-            }
-        }
-        prob_sort(combined_check_dist);
-        llr_combined_check_dist = llr_combination(combined_check_dist, llr_combination_interval);
-        //std::cout<<"C---before combined mi: "<<it_mi(combined_check_dist)<<";  after combined mi: "<<it_mi(llr_combined_check_dist)<<"; diff is: "<<it_mi(combined_check_dist)-it_mi(llr_combined_check_dist)<<std::endl;
-        clipped_ccd=clip_prob(llr_combined_check_dist,pow(10,-10.0));
-        ave_joinprob_llr(clipped_ccd, pow(10.0, -80.0));
-        std::vector<double> llr = llr_cal(clipped_ccd);
-        std::string llr_file_name = "check_llr_iteration_" + std::to_string(iter) + ".txt";
-        // std::ofstream llr_file(llr_file_name);
-        // if (llr_file.is_open())
+        // for (unsigned ii = 0; ii < check_edge_dist.size() - 2; ii++)
         // {
-        //     for (unsigned index = 0; index < llr.size(); index++)
+        //     combined_output = prob_combination(first_input, second_input, "check");
+        //     prob_sort(combined_output);
+        //     prob_llr_combined = llr_combination(combined_output, 0.0005);
+        //     //prob_llr_combined = combined_output;
+        //     ave_joinprob_llr(prob_llr_combined, pow(10.0, -80.0));
+        //     first_input = prob_llr_combined;            
+        //     if(check_edge_dist[ii+2]!=0)
         //     {
-        //         llr_file << llr[index] << "  " << clipped_ccd[0][index] + clipped_ccd[1][index] << std::endl;
+        //         temp=check_edge_dist[ii+2]*first_input[0];
+        //         std::copy(temp.begin(),temp.end(),std::back_inserter(combined_check_dist[0]));
+        //         temp=check_edge_dist[ii+2]*first_input[1];
+        //         std::copy(temp.begin(),temp.end(),std::back_inserter(combined_check_dist[1]));
         //     }
         // }
-        // llr_file.close();
-        IB_kernel check_IB(clipped_ccd, quantization_size, ib_runtime);
-        check_IB.Progressive_MMI();
-        check_representation.push_back(llr_cal(check_IB.prob_join_xt));
-        check_threshold.push_back(check_IB.threshold);
+        // prob_sort(combined_check_dist);
+        // llr_combined_check_dist = llr_combination(combined_check_dist, llr_combination_interval);
+        // //std::cout<<"C---before combined mi: "<<it_mi(combined_check_dist)<<";  after combined mi: "<<it_mi(llr_combined_check_dist)<<"; diff is: "<<it_mi(combined_check_dist)-it_mi(llr_combined_check_dist)<<std::endl;
+        // clipped_ccd=clip_prob(llr_combined_check_dist,pow(10,-10.0));
+        // ave_joinprob_llr(clipped_ccd, pow(10.0, -80.0));
+        // std::vector<double> llr = llr_cal(clipped_ccd);
+        // std::string llr_file_name = "check_llr_iteration_" + std::to_string(iter) + ".txt";
+        // // std::ofstream llr_file(llr_file_name);
+        // // if (llr_file.is_open())
+        // // {
+        // //     for (unsigned index = 0; index < llr.size(); index++)
+        // //     {
+        // //         llr_file << llr[index] << "  " << clipped_ccd[0][index] + clipped_ccd[1][index] << std::endl;
+        // //     }
+        // // }
+        // // llr_file.close();
+        // IB_kernel check_IB(clipped_ccd, quantization_size, ib_runtime);
+        // check_IB.Progressive_MMI();
+        // check_representation.push_back(llr_cal(check_IB.prob_join_xt));
+        // check_threshold.push_back(check_IB.threshold);
         //--------------------------------------------------------------
 
 
         //--------------check min---------------------------------------
-        // for (unsigned ii = 0; ii < check_edge_dist.size() - 2; ii++)
-        // {
-        //     combined_output = prob_combination(first_input, second_input, "check_min");
-        //     first_input = combined_output;
-        //     if (check_edge_dist[ii + 2] != 0)
-        //     {
-        //         temp = check_edge_dist[ii + 2] * first_input[0];
-        //         std::copy(temp.begin(), temp.end(), std::back_inserter(combined_check_dist[0]));
-        //         temp = check_edge_dist[ii + 2] * first_input[1];
-        //         std::copy(temp.begin(), temp.end(), std::back_inserter(combined_check_dist[1]));
-        //     }
-        // }
-        // prob_sort(combined_check_dist);
-        // clipped_ccd = combined_check_dist;
-        // ave_joinprob_llr(clipped_ccd, pow(10.0, -100.0));
-        // IB_kernel check_IB(clipped_ccd, quantization_size, ib_runtime);
-        // check_IB.smIB();
-        // check_representation.push_back(llr_cal(check_IB.prob_join_xt));
-        // check_threshold.push_back(check_IB.threshold);
+        for (unsigned ii = 0; ii < check_edge_dist.size() - 2; ii++)
+        {
+            combined_output = prob_combination(first_input, second_input, "check_min");
+            first_input = combined_output;
+            if (check_edge_dist[ii + 2] != 0)
+            {
+                temp = check_edge_dist[ii + 2] * first_input[0];
+                std::copy(temp.begin(), temp.end(), std::back_inserter(combined_check_dist[0]));
+                temp = check_edge_dist[ii + 2] * first_input[1];
+                std::copy(temp.begin(), temp.end(), std::back_inserter(combined_check_dist[1]));
+            }
+        }
+        prob_sort(combined_check_dist);
+        clipped_ccd = combined_check_dist;
+        ave_joinprob_llr(clipped_ccd, pow(10.0, -100.0));
+        IB_kernel check_IB(clipped_ccd, quantization_size, ib_runtime);
+        check_IB.smIB();
+        check_representation.push_back(llr_cal(check_IB.prob_join_xt));
+        check_threshold.push_back(check_IB.threshold);
         //--------------------------------------------------------------
 
 
@@ -121,30 +121,27 @@ int Irregular_DE::Discrete_Density_Evolution()
                 std::copy(temp.begin(), temp.end(), std::back_inserter(combined_vari_dist[1]));
             }  
         }
+        if( vari_edge_dist[0]>0)
+        {
+            temp = vari_edge_dist[0] * channel_IB.prob_join_xt[0];
+            std::copy(temp.begin(), temp.end(), std::back_inserter(combined_vari_dist[0]));
+            temp = vari_edge_dist[0] * channel_IB.prob_join_xt[1];
+            std::copy(temp.begin(), temp.end(), std::back_inserter(combined_vari_dist[1]));
+        } 
         prob_sort(combined_vari_dist);
         llr_combined_vari_dist = llr_combination(combined_vari_dist,llr_combination_interval);
         clipped_cvd=clip_prob(llr_combined_vari_dist,pow(10,-10.0));
         ave_joinprob_llr(clipped_cvd, pow(10.0, -80.0));
-        // llr = llr_cal(clipped_cvd);
-        // llr_file_name = "vari_llr_iteration_" + std::to_string(iter) + ".txt";
-        // llr_file.open(llr_file_name);
-        // if (llr_file.is_open())
-        // {
-        //     for (unsigned index = 0; index < llr.size(); index++)
-        //     {
-        //         llr_file << llr[index] << "  " << clipped_cvd[0][index] + clipped_cvd[1][index] << std::endl;
-        //     }
-        // }
-        // llr_file.close();
         IB_kernel vari_IB(clipped_cvd, quantization_size, ib_runtime);
-        vari_IB.Progressive_MMI();
+        vari_IB.smIB();
         vari_representation.push_back(llr_cal(vari_IB.prob_join_xt));
         vari_threshold.push_back(vari_IB.threshold);
         //------------------------------------------------------------------------
-        //std::cout<<combined_vari_dist[0].size()<<std::endl;
-        //---------------check node------------------------
+
+        //---------------prepare for check node------------------------
         first_input =vari_IB.prob_join_xt;
         second_input = first_input;
+        //-------------------------------------------------
 
        
         //--------------Output Info------------------------

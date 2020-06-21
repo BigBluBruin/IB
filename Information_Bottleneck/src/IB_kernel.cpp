@@ -502,7 +502,6 @@ void IB_kernel::Progressive_MMI()
         cluster = partition;
     }
     //-----------------------------------------------
-
     prob_join_xt = quantize_to_xt(prob_join_xy, cluster);
     mi = it_mi(prob_join_xt);
     unsigned counter;
