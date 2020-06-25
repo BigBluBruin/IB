@@ -171,7 +171,19 @@ std::vector<std::vector<double>> llr_combination(std::vector<std::vector<double>
 
 
 
-
+void prob_offset(std::vector<std::vector<double>> &input, double alpha)
+{
+    double summ;
+    double llr;
+    for (unsigned ii = 0 ; ii<input.size(); ii++)
+    {
+        llr = log(input[ii][0]/input[ii][1]);
+        llr = alpha*llr;
+        summ = input[ii][0]+input[ii][1];
+        input[ii][0] = (summ*exp(llr))/(1+exp(llr));
+        input[ii][1] = summ/(1+exp(llr));
+    }
+}
 
 
 

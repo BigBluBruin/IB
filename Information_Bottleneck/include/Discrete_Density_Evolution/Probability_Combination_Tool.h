@@ -22,3 +22,4 @@ std::vector<unsigned> sorted_pos(std::vector<double> &input);
 std::vector<std::vector<double>> prob_approx(std::vector<std::vector<double>> input);
 std::vector<std::vector<double>> llr_combination(std::vector<std::vector<double>> & input, double threshold);
 std::vector<std::vector<double>> clip_prob(std::vector<std::vector<double>> & input, double threshold);
+void prob_offset(std::vector<std::vector<double>> &input, double alpha);

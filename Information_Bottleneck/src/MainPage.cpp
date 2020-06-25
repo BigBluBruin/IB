@@ -228,13 +228,7 @@ int main(int argc, char* argv[])
     // std::vector<double> eff_vari_edge_dist{0.821400000000000,0,0,0.0476000000000000,0.131000000000000}; // fake
     // double code_rate=0.5;
 
-    // //------SA PBRL Code ------------
-    double puncture_rate=0;
-    std::vector<double> check_edge_dist{0,0,0,0,0,0.0681818181818182,0.0795454545454545,0.272727272727273,0.102272727272727,0.113636363636364,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.363636363636364};
-    std::vector<double> vari_edge_dist{0.0795454545454545,0,0.0340909090909091,0,0.0568181818181818,0.0681818181818182,0,0.0909090909090909,0.102272727272727,0.113636363636364,0.250000000000000,0,0,0,0,0,0,0.204545454545455};
-    std::vector<double> eff_check_edge_dist{0,0,0,0,0,0.500000000000000,0.250000000000000,0,0,0,0,0,0,0,0,0,0.250000000000000}; //fake
-    std::vector<double> eff_vari_edge_dist{0.821400000000000,0,0,0.0476000000000000,0.131000000000000}; // fake
-    double code_rate=0.5;
+ 
     
 
     //------SA rate 8_9 --------
@@ -278,10 +272,26 @@ int main(int argc, char* argv[])
     //std::vector<double> vari_edge_dist{0,0,0,1};
     //std::vector<double> check_edge_dist{0,0,0,0,0,0,1};
 
+    //------SA PBRL Code ------------
+    // double puncture_rate=0;
+    // std::vector<double> check_edge_dist{0,0,0,0,0,0.0681818181818182,0.0795454545454545,0.272727272727273,0.102272727272727,0.113636363636364,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.363636363636364};
+    // std::vector<double> vari_edge_dist{0.0795454545454545,0,0.0340909090909091,0,0.0568181818181818,0.0681818181818182,0,0.0909090909090909,0.102272727272727,0.113636363636364,0.250000000000000,0,0,0,0,0,0,0.204545454545455};
+    // std::vector<double> eff_check_edge_dist{0,0,0,0,0,0.500000000000000,0.250000000000000,0,0,0,0,0,0,0,0,0,0.250000000000000}; //fake
+    // std::vector<double> eff_vari_edge_dist{0.821400000000000,0,0,0.0476000000000000,0.131000000000000}; // fake
+    // double code_rate=0.5;
+
+    //-----Nake SA PBRL -------------
+    double puncture_rate=0;
+    std::vector<double> check_edge_dist{0,0,0,0.0617283950617284,0.0740740740740741,0.259259259259259,0.0987654320987654,0.111111111111111,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.395061728395062};
+    std::vector<double> vari_edge_dist{0,0,0.0370370370370370,0,0.0617283950617284,0.0740740740740741,0,0.0987654320987654,0.111111111111111,0.123456790123457,0.271604938271605,0,0,0,0,0,0,0.222222222222222};
+    std::vector<double> eff_check_edge_dist{0,0,0,0,0,0.500000000000000,0.250000000000000,0,0,0,0,0,0,0,0,0,0.250000000000000}; //fake
+    std::vector<double> eff_vari_edge_dist{0.821400000000000,0,0,0.0476000000000000,0.131000000000000}; // fake
+    double code_rate=0.5;
+
     double cur_eb_no;
-    unsigned int quansize =32;
+    unsigned int quansize =16;
     double threshold = pow(10.0, -7.0);
-    unsigned max_iter = 1;
+    unsigned max_iter = 16;
     bool flag=true;
     int regular_result;
     double llr_intervel=0.01;
@@ -296,6 +306,7 @@ int main(int argc, char* argv[])
         Irregular_DE irregular_ins(check_edge_dist, vari_edge_dist,sigma2,max_iter,quansize,threshold,llr_intervel,ib_runtime,suffix[index],eff_check_edge_dist,eff_vari_edge_dist,puncture_rate);
         if(puncture_rate==0)
         {
+            std::cout<<"here"<<std::endl;
             regular_result = irregular_ins.Discrete_Density_Evolution();
         }
         else
@@ -359,7 +370,7 @@ int main(int argc, char* argv[])
     //     me2_pbrl_ins.read_decription();
     //     me2_pbrl_ins.density_evolution();
     // }
-    return 0;
+    // return 0;
 } /*
 
 

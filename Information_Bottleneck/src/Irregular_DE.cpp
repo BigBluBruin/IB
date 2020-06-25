@@ -26,7 +26,7 @@ int Irregular_DE::Discrete_Density_Evolution()
     int partition_number=4000;
     std::vector<std::vector<double>> channel_observation = gaussian_disretization(most_left, most_right, partition_number, sigma2);
     IB_kernel channel_IB(channel_observation, quantization_size, ib_runtime);
-    channel_IB.smIB();
+    channel_IB.Progressive_MMI();
     std::vector<std::vector<double>> first_input = channel_IB.prob_join_xt;
     std::vector<std::vector<double>> second_input = first_input;
     std::vector<std::vector<double>> combined_output, prob_llr_combined;
@@ -363,6 +363,7 @@ int Irregular_DE::Discrete_Density_Evolution_punc()
         prob_sort(combined_check_dist);
         clipped_ccd = combined_check_dist;
         ave_joinprob_llr(clipped_ccd, pow(10.0, -100.0));
+        prob_offset(clipped_ccd,0.70);
         IB_kernel check_IB(clipped_ccd, quantization_size, ib_runtime);
         check_IB.smIB();
         check_representation.push_back(llr_cal(check_IB.prob_join_xt));
