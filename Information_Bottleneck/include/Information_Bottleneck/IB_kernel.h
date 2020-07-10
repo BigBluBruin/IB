@@ -8,6 +8,8 @@
 #include "Information_Bottleneck/itbox.h"
 #include "Discrete_Density_Evolution/Probability_Combination_Tool.h"
 #include <numeric>
+#include <math.h>
+#include "stats.h"
 
 class IB_kernel
 {

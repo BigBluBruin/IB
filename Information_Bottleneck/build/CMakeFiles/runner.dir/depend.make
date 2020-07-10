@@ -5,6 +5,7 @@ CMakeFiles/runner.dir/src/IB_kernel.cpp.o: ../include/Discrete_Density_Evolution
 CMakeFiles/runner.dir/src/IB_kernel.cpp.o: ../include/Information_Bottleneck/IB_kernel.h
 CMakeFiles/runner.dir/src/IB_kernel.cpp.o: ../include/Information_Bottleneck/itbox.h
 CMakeFiles/runner.dir/src/IB_kernel.cpp.o: ../include/Information_Bottleneck/overloadvec.h
+CMakeFiles/runner.dir/src/IB_kernel.cpp.o: ../include/Information_Bottleneck/stats.h
 CMakeFiles/runner.dir/src/IB_kernel.cpp.o: ../src/IB_kernel.cpp
 
 CMakeFiles/runner.dir/src/Irregular_DE.cpp.o: ../include/Discrete_Density_Evolution/Irregular_DE.h

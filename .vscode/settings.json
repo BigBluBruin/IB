@@ -59,5 +59,6 @@
         "xtr1common": "cpp",
         "xutility": "cpp",
         "concepts": "cpp"
-    }
+    },
+    "cmake.configureOnOpen": false
 }

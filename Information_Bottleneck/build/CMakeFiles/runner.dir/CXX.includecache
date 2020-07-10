@@ -95,6 +95,10 @@ Discrete_Density_Evolution/Probability_Combination_Tool.h
 ../include/Information_Bottleneck/Discrete_Density_Evolution/Probability_Combination_Tool.h
 numeric
 -
+math.h
+-
+stats.h
+../include/Information_Bottleneck/stats.h
 
 ../include/Information_Bottleneck/itbox.h
 vector

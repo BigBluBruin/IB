@@ -298,8 +298,10 @@ unsigned IB_kernel::find_threshold(unsigned left_most, unsigned right_most)
     std::vector<double> right_join_prob(2), left_join_prob(2), single_join_prob(2);
     unsigned total_time = right_most - left_most - 2;
     unsigned single_point_pos;
+    single_point_pos=left_most + 1;
     double py, pt;
     double left_cost,right_cost;
+    
     for (unsigned index = 0; index < total_time; index++)
     {
         single_point_pos = left_most + 1 + index;
@@ -323,6 +325,7 @@ unsigned IB_kernel::find_threshold(unsigned left_most, unsigned right_most)
             return single_point_pos;
         }
     }
+    return single_point_pos;
 }
 
 void IB_kernel::Progressive_MMI()
@@ -330,9 +333,11 @@ void IB_kernel::Progressive_MMI()
     unsigned total_size = prob_join_xy[1].size();
     unsigned sym_size = total_size / 2;
     unsigned outer_time = log2(quan_size) - 1;
-    unsigned cur_left_most;
-    unsigned cur_right_most;
+    unsigned itercount = outer_time-1;
+    int cur_left_most;
+    int cur_right_most;
     unsigned inner_length;
+    int m;
     std::vector<unsigned> partition,partition_reverse;
     std::vector<unsigned> boundary;
     boundary.push_back(0);
@@ -342,12 +347,23 @@ void IB_kernel::Progressive_MMI()
         inner_length = boundary.size();
         for (unsigned index2 = 0; index2 < inner_length - 1; index2++)
         {
+            if(itercount >=0)
+            {
+                m = pow(2,itercount);
+            }
+            else
+            {
+                std::cout<<"Wrong info: variable itercount should be non-negtive"<<std::endl;
+            }
+            
             cur_left_most = boundary[index2];
             cur_right_most = boundary[index2 + 1];
-            //std::cout<<"has been here"<<find_threshold(cur_left_most, cur_right_most)<<"  "<<std::endl;
-            boundary.push_back(find_threshold(cur_left_most, cur_right_most));
+            boundary.push_back(find_threshold(cur_left_most+(m-1), cur_right_most-(m-1)));
         }
         std::sort(boundary.begin(), boundary.end());
+        std::cout<<m<<"|| ";
+        display(boundary);
+        itercount--;     
     }
     
     for (unsigned index = 0; index < quan_size / 2; index++)
@@ -358,149 +374,7 @@ void IB_kernel::Progressive_MMI()
     std::reverse(partition_reverse.begin(), partition_reverse.end());
     std::copy(partition_reverse.begin(), partition_reverse.end(), std::back_inserter(partition));
     cluster=partition;
-    //-----------------------------------------------
-    for (int run_ind = 0; run_ind < 1; run_ind++)
-    {
-        std::vector<double> left_join, right_join, sin_join;
-        double left_cost, right_cost;
-        double py, pt;
-        bool finish = false;
-        //step 1: generate a random cluster
-        std::vector<double>::iterator iter1, iter2;
-        unsigned counter;
-        std::vector<unsigned> partition = cluster;
-        bool left_done = false;
-        bool right_done = false;
-        do
-        {
-            left_done = true;
-            right_done = true;
-            //step 2: for all left part
-            for (unsigned ii = 0; ii < quan_size / 2 - 1; ii++)
-            {
-
-                do
-                { //each cluater has at least one element !
-                    if (partition[ii] > 1)
-                    {
-
-                        //get left, right and single probabilities
-                        counter = 0;
-                        for (unsigned jj = 0; jj < ii; jj++)
-                            counter += partition[jj];
-                        //left
-                        iter1 = prob_join_xy[0].begin() + counter;
-                        iter2 = iter1 + partition[ii] - 1;
-                        left_join.resize(2);
-                        left_join[0] = std::accumulate(iter1, iter2, 0.0);
-                        iter1 = prob_join_xy[1].begin() + counter;
-                        iter2 = iter1 + partition[ii] - 1;
-                        left_join[1] = std::accumulate(iter1, iter2, 0.0);
-                        //single
-                        sin_join = {prob_join_xy[0][counter + partition[ii] - 1], prob_join_xy[1][counter + partition[ii] - 1]};
-                        //right
-                        iter1 = prob_join_xy[0].begin() + counter + partition[ii];
-                        iter2 = iter1 + partition[ii + 1];
-                        right_join.resize(2);
-                        right_join[0] = std::accumulate(iter1, iter2, 0.0);
-                        iter1 = prob_join_xy[1].begin() + counter + partition[ii];
-                        iter2 = iter1 + partition[ii + 1];
-                        right_join[1] = std::accumulate(iter1, iter2, 0.0);
-                        py = left_join[0] + left_join[1];
-                        pt = sin_join[0] + sin_join[1];
-                        ave_prob(left_join);
-                        ave_prob(sin_join);
-                        //std::cout<<"left: "<<py<<"single: "<<pt<<" ";
-                        left_cost = (py + pt) * it_js(py / (py + pt), left_join, pt / (py + pt), sin_join);
-                        py = right_join[0] + right_join[1];
-                        ave_prob(right_join);
-                        right_cost = (py + pt) * it_js(py / (py + pt), right_join, pt / (py + pt), sin_join);
-                        //std::cout<<"right: "<<py<<"single: "<<pt<<" ";
-                        if (left_cost < right_cost)
-                            finish = true;
-                        else
-                        {
-                            left_done = false;
-                            partition[ii]--;
-                            partition[ii + 1]++;
-                            partition[quan_size - 1 - ii]--;
-                            partition[quan_size - 2 - ii]++;
-                            //std::cout<<ii<<"th size is: "<<partition[ii]<<std::endl;
-                        }
-                        //std::cout<<left_cost<<"  "<<right_cost<<std::endl;
-                    }
-                    else
-                    {
-                        finish = true;
-                    }
-
-                } while (!finish);
-            }
-            //std::cout<<"left finished"<<std::endl;
-            finish = false;
-            //step 3: for all right part
-            for (unsigned ii = 0; ii < quan_size / 2 - 1; ii++)
-            {
-                do
-                { //each cluater has at least one element !
-                    if (partition[ii + 1] > 1)
-                    {
-
-                        //get left, right and single probabilities
-                        counter = 0;
-                        for (unsigned jj = 0; jj < ii; jj++)
-                            counter += partition[jj];
-                        //left
-                        iter1 = prob_join_xy[0].begin() + counter;
-                        iter2 = iter1 + partition[ii];
-                        left_join.resize(2);
-                        left_join[0] = std::accumulate(iter1, iter2, 0.0);
-                        iter1 = prob_join_xy[1].begin() + counter;
-                        iter2 = iter1 + partition[ii];
-                        left_join[1] = std::accumulate(iter1, iter2, 0.0);
-                        //std::cout<<"finished left"<<std::endl;
-                        //single
-                        sin_join = {prob_join_xy[0][counter + partition[ii]], prob_join_xy[1][counter + partition[ii]]};
-                        //right
-                        iter1 = prob_join_xy[0].begin() + counter + partition[ii] + 1;
-                        iter2 = prob_join_xy[0].begin() + counter + partition[ii] + partition[ii + 1];
-                        right_join.resize(2);
-                        right_join[0] = std::accumulate(iter1, iter2, 0.0);
-                        iter1 = prob_join_xy[1].begin() + counter + partition[ii] + 1;
-                        iter2 = prob_join_xy[1].begin() + counter + partition[ii] + partition[ii + 1];
-                        right_join[1] = std::accumulate(iter1, iter2, 0.0);
-                        //std::cout<<"finished right"<<std::endl;
-                        py = left_join[0] + left_join[1];
-                        pt = sin_join[0] + sin_join[1];
-                        //calculate
-                        ave_prob(left_join);
-                        ave_prob(sin_join);
-                        left_cost = (py + pt) * it_js(py / (py + pt), left_join, pt / (py + pt), sin_join);
-                        py = right_join[0] + right_join[1];
-                        ave_prob(right_join);
-                        right_cost = (py + pt) * it_js(py / (py + pt), right_join, pt / (py + pt), sin_join);
-                        //std::cout<<left_cost<<"  "<<right_cost<<"size: "<<std::endl;
-                        if (left_cost > right_cost)
-                            finish = true;
-                        else
-                        {
-                            right_done = false;
-                            partition[ii]++;
-                            partition[ii + 1]--;
-                            partition[quan_size - 1 - ii]++;
-                            partition[quan_size - 2 - ii]--;
-                        }
-                    }
-                    else
-                    {
-                        finish = true;
-                    }
-
-                } while (!finish);
-            }
-        } while (!(left_done && right_done));
-        cluster = partition;
-    }
+    display(cluster);
     //-----------------------------------------------
     prob_join_xt = quantize_to_xt(prob_join_xy, cluster);
     mi = it_mi(prob_join_xt);

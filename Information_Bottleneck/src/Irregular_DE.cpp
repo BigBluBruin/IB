@@ -21,12 +21,14 @@ int Irregular_DE::Discrete_Density_Evolution()
 {
     std::vector<std::vector<double>> combined_check_dist(2), combined_vari_dist(2),llr_combined_check_dist, llr_combined_vari_dist, clipped_ccd,clipped_cvd;
     std::vector<double> temp;
-    double most_left=-5.0;
-    double most_right=5.0;
-    int partition_number=4000;
+    double most_left=-2.0;
+    double most_right=2.0;
+    int partition_number=3000;
     std::vector<std::vector<double>> channel_observation = gaussian_disretization(most_left, most_right, partition_number, sigma2);
     IB_kernel channel_IB(channel_observation, quantization_size, ib_runtime);
+    std::cout<<"here "<<std::endl;
     channel_IB.Progressive_MMI();
+
     std::vector<std::vector<double>> first_input = channel_IB.prob_join_xt;
     std::vector<std::vector<double>> second_input = first_input;
     std::vector<std::vector<double>> combined_output, prob_llr_combined;

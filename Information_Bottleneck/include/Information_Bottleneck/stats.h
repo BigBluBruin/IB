@@ -26,3 +26,22 @@ std::vector<std::vector<double>> gaussian_disretization2 (double min, double max
 std::vector<std::vector<double>> llr_permutation(std::vector<std::vector<double>> &joint_prob, double permutation_factor);
 double sum_two_vector(std::vector<std::vector<double>> & input);
 
+//--------------------------------------------------
+template <class T>
+void display(std::vector<T> input)
+{
+    for (const auto aa:input)
+    {
+        std::cout<<aa<<"  ";
+    }
+    std::cout<<"  "<<std::endl;
+
+}
+template <class T>
+void display(std::vector<std::vector<T>> input)
+{
+    for (const auto aa:input)
+    {
+        display(aa);
+    }
+}
