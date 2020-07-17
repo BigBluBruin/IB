@@ -2,6 +2,7 @@
 
 std::vector<std::vector<double>> prob_combination(std::vector<std::vector<double>> &first_input, std::vector<std::vector<double>> &second_input, const char oper_type[])
 {
+    std::vector<std::vector<double>> aa(2);
     unsigned size_first = first_input[0].size();
     unsigned size_second = second_input[0].size();
     std::vector<std::vector<double>> combined_prob(2, std::vector<double>(size_first * size_second, -1.0));
@@ -15,11 +16,19 @@ std::vector<std::vector<double>> prob_combination(std::vector<std::vector<double
                 {
                     combined_prob[0][ii1 * size_second + ii2] = first_input[0][ii1] * second_input[0][ii2] / 0.5;
                     combined_prob[1][ii1 * size_second + ii2] = first_input[1][ii1] * second_input[1][ii2] / 0.5;
+                    // if (isnan(combined_prob[0][ii1 * size_second + ii2])||isnan( combined_prob[1][ii1 * size_second + ii2]))
+                    // {
+                    //     std::cout<<"vari -- NAN"<<first_input[0][ii1]<<" "<<second_input[0][ii2]<<"  "<<first_input[1][ii1]<<"  "<<second_input[1][ii2]<<std::endl;;
+                    // }
                 }
                 else if (strcmp(oper_type, "check") == 0)
                 {
                     combined_prob[0][ii1 * size_second + ii2] = first_input[0][ii1] * second_input[0][ii2] + first_input[1][ii1] * second_input[1][ii2];
                     combined_prob[1][ii1 * size_second + ii2] = first_input[0][ii1] * second_input[1][ii2] + first_input[1][ii1] * second_input[0][ii2];
+                    //  if (isnan(combined_prob[0][ii1 * size_second + ii2])||isnan( combined_prob[1][ii1 * size_second + ii2]))
+                    // {
+                    //     std::cout<<"check NAN"<<first_input[0][ii1]<<" "<<second_input[0][ii2]<<"  "<<first_input[1][ii1]<<"  "<<second_input[1][ii2]<<std::endl;;
+                    // }
                 }
                 else
                     std::cout << "Wrong Info: invalide command, plz check " << std::endl;
@@ -31,7 +40,7 @@ std::vector<std::vector<double>> prob_combination(std::vector<std::vector<double
         combined_prob.assign(2, std::vector<double>(size_first, 0.0));
         if(size_first!=size_second)
         {
-            std::cout << "min check wrong... two size not equal cardinality" << std::endl;
+            std::cout << "min check wrong... two size not equal cardinality" <<"first size :"<<size_first<<"--second size"<<size_second<< std::endl;
         }
         for (unsigned ii1 = 0; ii1 < size_first; ii1++)
         {
@@ -39,6 +48,12 @@ std::vector<std::vector<double>> prob_combination(std::vector<std::vector<double
             {
                 double prob_0 = first_input[0][ii1] * second_input[0][ii2] + first_input[1][ii1] * second_input[1][ii2];
                 double prob_1 = first_input[0][ii1] * second_input[1][ii2] + first_input[1][ii1] * second_input[0][ii2];
+                if (isnan(prob_0)||isnan(prob_1))
+                {
+                    prob_1=0;
+                    prob_0=0;
+                    std::cout<<"here"<<std::endl;
+                }
                 if ((ii1) >= (ii2) && (ii2 + 1) > size_first / 2)
                 {
                     combined_prob[0][ii2] += prob_0;
@@ -76,6 +91,20 @@ std::vector<std::vector<double>> prob_combination(std::vector<std::vector<double
             }
         }
     }
+
+    // if (strcmp(oper_type, "check_min") != 0)
+    //{
+        for (unsigned ii = 0; ii < combined_prob[0].size(); ii++)
+        {
+            if (!isnan(combined_prob[0][ii]) && !isnan(combined_prob[1][ii]) && !(combined_prob[0][ii] == 0) && !(combined_prob[1][ii] == 0))
+            {
+                aa[0].push_back(combined_prob[0][ii]);
+                aa[1].push_back(combined_prob[1][ii]);
+            }
+        }
+
+        combined_prob = aa;
+    //}
 
     return combined_prob;
 }

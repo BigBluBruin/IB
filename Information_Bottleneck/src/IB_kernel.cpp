@@ -361,8 +361,8 @@ void IB_kernel::Progressive_MMI()
             boundary.push_back(find_threshold(cur_left_most+(m-1), cur_right_most-(m-1)));
         }
         std::sort(boundary.begin(), boundary.end());
-        std::cout<<m<<"|| ";
-        display(boundary);
+        // std::cout<<m<<"|| ";
+        // display(boundary);
         itercount--;     
     }
     
@@ -374,7 +374,7 @@ void IB_kernel::Progressive_MMI()
     std::reverse(partition_reverse.begin(), partition_reverse.end());
     std::copy(partition_reverse.begin(), partition_reverse.end(), std::back_inserter(partition));
     cluster=partition;
-    display(cluster);
+    //display(cluster);
     //-----------------------------------------------
     prob_join_xt = quantize_to_xt(prob_join_xy, cluster);
     mi = it_mi(prob_join_xt);
