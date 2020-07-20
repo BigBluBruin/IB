@@ -13,5 +13,9 @@ void ave_prob(std::vector <double> & prob);
 void ave_joinprob(std::vector<std::vector<double>> & joinprob);
 void ave_joinprob_llr(std::vector<std::vector<double>> & joinprob, double threshold);
 void flow_stop(double & in);
+// For the extreme probabilities with extreme larger / small llrs
+// we  limited its value to some max_allowed_llr and prob(ind) as 
+// some predefined probabilities
+void adjust_joint_prob(std::vector<std::vector<double>> & joint_prob, double max_allowed_llr, double allocated_prob);
 std::vector<double> llr_cal(std::vector<std::vector<double>> & joint_prob);
 

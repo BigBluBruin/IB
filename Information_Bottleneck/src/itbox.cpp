@@ -170,4 +170,26 @@ std::vector<double> llr_cal(std::vector<std::vector<double>> & joint_prob)
     return llr;
 }
 
-
+void adjust_joint_prob(std::vector<std::vector<double>> & joint_prob, double max_allowed_llr, double allocated_prob)
+{
+    std::vector<double> llr = llr_cal(joint_prob);
+    double new_llr;
+    for (unsigned ii =0 ;ii <llr.size();ii++)
+    {
+        if(abs(llr[ii])>max_allowed_llr)
+        {
+            std::cout<<"here"<<std::endl;
+            if(llr[ii]>0)
+            {
+                new_llr = max_allowed_llr;
+            }
+            else
+            {
+                new_llr = -max_allowed_llr;
+            }
+            joint_prob[0][ii] = allocated_prob*exp(new_llr)/(1+exp(new_llr));
+            joint_prob[1][ii] = allocated_prob/(1+exp(new_llr));
+        }
+    }
+    ave_joinprob(joint_prob);
+}
