@@ -178,7 +178,6 @@ void adjust_joint_prob(std::vector<std::vector<double>> & joint_prob, double max
     {
         if(abs(llr[ii])>max_allowed_llr)
         {
-            std::cout<<"here"<<std::endl;
             if(llr[ii]>0)
             {
                 new_llr = max_allowed_llr;
@@ -193,3 +192,14 @@ void adjust_joint_prob(std::vector<std::vector<double>> & joint_prob, double max
     }
     ave_joinprob(joint_prob);
 }
+
+
+ bool cluster_verification(std::vector<double> old_llr, std::vector<double> new_llr)
+ {
+     for (unsigned ii=0; ii<new_llr.size()/2;ii++)
+     {
+         if(new_llr[ii]>old_llr[ii])
+            return false;
+     }
+     return true;
+ }

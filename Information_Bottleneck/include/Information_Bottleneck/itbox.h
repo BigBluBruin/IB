@@ -17,5 +17,6 @@ void flow_stop(double & in);
 // we  limited its value to some max_allowed_llr and prob(ind) as 
 // some predefined probabilities
 void adjust_joint_prob(std::vector<std::vector<double>> & joint_prob, double max_allowed_llr, double allocated_prob);
+bool cluster_verification(std::vector<double> old_llr, std::vector<double> new_llr);
 std::vector<double> llr_cal(std::vector<std::vector<double>> & joint_prob);
 

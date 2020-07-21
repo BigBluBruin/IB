@@ -389,3 +389,21 @@ void IB_kernel::Progressive_MMI()
         prob_t[ind] = prob_join_xt[0][ind] + prob_join_xt[1][ind];
     }
 }
+
+
+void IB_kernel::external_force(std::vector<unsigned> Cluster)
+{
+    cluster = Cluster;
+    prob_join_xt = quantize_to_xt(prob_join_xy, cluster);
+    mi = it_mi(prob_join_xt);
+    unsigned counter;
+    for (unsigned index = 1; index <= quan_size / 2 - 1; index++)
+    {
+        counter = std::accumulate(cluster.begin(), cluster.begin() + index, 0.0);
+        threshold[index - 1] = log(prob_join_xy[0][counter] / prob_join_xy[1][counter]);
+    }
+    for (unsigned ind = 0; ind < quan_size; ind++)
+    {
+        prob_t[ind] = prob_join_xt[0][ind] + prob_join_xt[1][ind];
+    }
+}

@@ -32,4 +32,7 @@ public:
     std::vector<std::vector<double>> quantize_to_xt(std::vector<std::vector<double>> & input, std::vector<unsigned> & cluster);
     unsigned find_threshold(unsigned left_most, unsigned right_most);
     void Progressive_MMI();
+    //external force means that we can just give him a cluster
+    // it is eary for test purpose
+    void external_force(std::vector<unsigned> Cluster);
 };
