@@ -30,6 +30,8 @@ int Irregular_DE::Discrete_Density_Evolution()
     std::vector<std::vector<double>> first_input = channel_IB.prob_join_xt;
     std::vector<std::vector<double>> second_input = first_input;
     std::vector<std::vector<double>> combined_output, prob_llr_combined;
+    std::vector<double> old_llr;
+    std::vector<unsigned> old_cluster;
     std::cout<<"finished channel quantization...."<<std::endl;
     std::ofstream myfilehandle("checknodeib.txt"); 
 
@@ -59,6 +61,26 @@ int Irregular_DE::Discrete_Density_Evolution()
         //prob_offset(clipped_ccd,1);
         IB_kernel check_IB(clipped_ccd, quantization_size, ib_runtime);
         check_IB.Progressive_MMI();
+        if (iter == 0)
+        {
+            old_llr = llr_cal(check_IB.prob_join_xt);
+            old_cluster = check_IB.cluster;
+        }
+        else
+        {
+            if (!llr_verification(old_llr, llr_cal(check_IB.prob_join_xt)))
+            {
+                double old_mi = check_IB.mi;
+                check_IB.external_force(old_cluster);
+                std::cout<<"changed and MI diff is : "<<old_mi-check_IB.mi<<std::endl;
+            }
+            else
+            {
+                old_llr = llr_cal(check_IB.prob_join_xt);
+                old_cluster = check_IB.cluster;
+            }
+        }
+
         // if (iter >= 2 && iter <= 9)
         // {
         //     std::cout<<iter <<"origial mi: "<<check_IB.mi;
