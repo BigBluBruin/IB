@@ -194,12 +194,28 @@ void adjust_joint_prob(std::vector<std::vector<double>> & joint_prob, double max
 }
 
 
- bool cluster_verification(std::vector<double> old_llr, std::vector<double> new_llr)
+ bool llr_verification(std::vector<double> old_llr, std::vector<double> new_llr)
  {
      for (unsigned ii=0; ii<new_llr.size()/2;ii++)
      {
          if(new_llr[ii]>old_llr[ii])
             return false;
+     }
+     return true;
+ }
+
+
+ bool cluster_verification(std::vector<unsigned> old_cluster, std::vector<unsigned> new_cluster)
+ {
+     int sum=0;
+     for (unsigned ii=0; ii<new_cluster.size()/2;ii++)
+     {
+         sum+=abs((int)old_cluster[ii]-(int)new_cluster[ii]);
+     }
+
+     if(sum <= 2)
+     {
+         return false;
      }
      return true;
  }

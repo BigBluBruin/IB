@@ -23,13 +23,15 @@ int Irregular_DE::Discrete_Density_Evolution()
     std::vector<double> temp;
     double most_left=-3.0;
     double most_right=3.0;
-    int partition_number=2000;
+    int partition_number=5000;
     std::vector<std::vector<double>> channel_observation = gaussian_disretization(most_left, most_right, partition_number, sigma2);
     IB_kernel channel_IB(channel_observation, quantization_size, ib_runtime);
     channel_IB.Progressive_MMI();
     std::vector<std::vector<double>> first_input = channel_IB.prob_join_xt;
     std::vector<std::vector<double>> second_input = first_input;
     std::vector<std::vector<double>> combined_output, prob_llr_combined;
+    std::vector<double> old_llr;
+    std::vector<unsigned> old_cluster;
     std::cout<<"finished channel quantization...."<<std::endl;
     std::ofstream myfilehandle("checknodeib.txt"); 
 
@@ -59,6 +61,26 @@ int Irregular_DE::Discrete_Density_Evolution()
         //prob_offset(clipped_ccd,1);
         IB_kernel check_IB(clipped_ccd, quantization_size, ib_runtime);
         check_IB.Progressive_MMI();
+        // if (iter == 0)
+        // {
+        //     old_llr = llr_cal(check_IB.prob_join_xt);
+        //     old_cluster = check_IB.cluster;
+        // }
+        // else
+        // {
+        //     if (!llr_verification(old_llr, llr_cal(check_IB.prob_join_xt)))
+        //     {
+        //         double old_mi = check_IB.mi;
+        //         check_IB.external_force(old_cluster);
+        //         std::cout<<"changed and MI diff is : "<<old_mi-check_IB.mi<<std::endl;
+        //     }
+        //     else
+        //     {
+        //         old_llr = llr_cal(check_IB.prob_join_xt);
+        //         old_cluster = check_IB.cluster;
+        //     }
+        // }
+
         // if (iter >= 2 && iter <= 9)
         // {
         //     std::cout<<iter <<"origial mi: "<<check_IB.mi;
@@ -118,8 +140,7 @@ int Irregular_DE::Discrete_Density_Evolution()
         //std::cout<<iter<<" "<<clipped_cvd[0].size()<<std::endl;
         IB_kernel vari_IB(clipped_cvd, quantization_size, ib_runtime);       
         vari_IB.Progressive_MMI();
-
-        adjust_joint_prob(vari_IB.prob_join_xt, 30, pow(10,-10));
+        adjust_joint_prob(vari_IB.prob_join_xt, 40, pow(10,-7));
         vari_representation.push_back(llr_cal(vari_IB.prob_join_xt));
         vari_threshold.push_back(vari_IB.threshold);
         //------------------------------------------------------------------------
