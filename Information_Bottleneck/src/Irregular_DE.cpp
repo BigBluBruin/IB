@@ -33,7 +33,6 @@ int Irregular_DE::Discrete_Density_Evolution()
     std::vector<double> old_llr;
     std::vector<unsigned> old_cluster;
     std::cout<<"finished channel quantization...."<<std::endl;
-    std::ofstream myfilehandle("checknodeib.txt"); 
 
     //-------------------start iteration------------------------------------------
     for (unsigned iter = 0; iter < max_iter; iter++)
@@ -100,11 +99,7 @@ int Irregular_DE::Discrete_Density_Evolution()
         check_representation.push_back(llr_cal(check_IB.prob_join_xt));
         check_threshold.push_back(check_IB.threshold);
         //--------------------------------------------------------------
-        for (auto aa : check_IB.cluster)
-        {
-            myfilehandle<<aa<<" ";
-        }
-        myfilehandle<<std::endl;
+
 
 
         //--------------variable node-------------------
@@ -187,7 +182,7 @@ int Irregular_DE::Discrete_Density_Evolution()
             }
         }
     }
-    myfilehandle.close();
+
      //---------------file out info---------------------
         //Part 1: threholds 
         std::string threholdfile,recons_file,channelquan_file,channelrec_file;

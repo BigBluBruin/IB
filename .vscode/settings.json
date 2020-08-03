@@ -60,5 +60,7 @@
         "xutility": "cpp",
         "concepts": "cpp"
     },
-    "cmake.configureOnOpen": false
+    "cmake.configureOnOpen": false,
+    "cmake.sourceDirectory": "${workspaceFolder}/Information_Bottleneck",
+    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools"
 }
