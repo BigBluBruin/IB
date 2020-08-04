@@ -129,24 +129,14 @@ int Irregular_DE::Discrete_Density_Evolution()
         } 
         prob_sort(combined_vari_dist);
         llr_combined_vari_dist = llr_combination(combined_vari_dist,llr_combination_interval);
-        //std::cout<<iter<<" "<<llr_combined_vari_dist[0].size()<<std::endl;
         clipped_cvd=clip_prob(llr_combined_vari_dist,pow(10,-10.0));
         ave_joinprob_llr(clipped_cvd, pow(10.0, -80.0));
-        //std::cout<<iter<<" "<<clipped_cvd[0].size()<<std::endl;
         IB_kernel vari_IB(clipped_cvd, quantization_size, ib_runtime);       
         vari_IB.Progressive_MMI();
         adjust_joint_prob(vari_IB.prob_join_xt, 40, pow(10,-7));
         vari_representation.push_back(llr_cal(vari_IB.prob_join_xt));
         vari_threshold.push_back(vari_IB.threshold);
         //------------------------------------------------------------------------
-        // for (auto aa : vari_IB.prob_join_xt)
-        // {
-        //     for (auto bb :aa)
-        //     {
-        //         myfilehandle<<bb<<" ";
-        //     }
-        //     myfilehandle<<std::endl;
-        // }
             
         //---------------prepare for check node------------------------
         first_input =vari_IB.prob_join_xt;
