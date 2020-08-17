@@ -108,26 +108,34 @@ int main(int argc, char* argv[])
     // double code_rate=1.0/2.0;
 
     //----- Naked SA rate 1/2 NEW v1 -----
-    double puncture_rate=0;
-    std::vector<double> check_edge_dist{0,0,0,0,0,0.0645161290322581,0.0752688172043011,0.258064516129032,0.0967741935483871,0,0.118279569892473,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.387096774193548};
-    std::vector<double> vari_edge_dist{0.0752688172043011,0,0,0,0.0537634408602151,0.0645161290322581,0.0752688172043011,0,0.193548387096774,0.107526881720430,0.236559139784946,0,0,0,0,0,0,0.193548387096774};
-    std::vector<double> eff_check_edge_dist{0}; //fake
-    std::vector<double> eff_vari_edge_dist{0}; // fake
-    double code_rate=1.0/2.0;
+    // double puncture_rate=0;
+    // std::vector<double> check_edge_dist{0,0,0,0,0,0.0645161290322581,0.0752688172043011,0.258064516129032,0.0967741935483871,0,0.118279569892473,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.387096774193548};
+    // std::vector<double> vari_edge_dist{0.0752688172043011,0,0,0,0.0537634408602151,0.0645161290322581,0.0752688172043011,0,0.193548387096774,0.107526881720430,0.236559139784946,0,0,0,0,0,0,0.193548387096774};
+    // std::vector<double> eff_check_edge_dist{0}; //fake
+    // std::vector<double> eff_vari_edge_dist{0}; // fake
+    // double code_rate=1.0/2.0;
 
     //------SS 3K --------
+    double puncture_rate=0;
+    std::vector<double> check_edge_dist{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.6246,0.3754};
+    std::vector<double> vari_edge_dist{0, 0.0599, 0 , 0.7634,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.1767};
+    std::vector<double> eff_check_edge_dist{0,0,0,0,0,0.500000000000000,0.250000000000000,0,0,0,0,0,0,0,0,0,0.250000000000000}; //fake
+    std::vector<double> eff_vari_edge_dist{0.821400000000000,0,0,0.0476000000000000,0.131000000000000}; // fake
+    double code_rate=0.8707;
+
+    //------SS 6K --------
     // double puncture_rate=0;
     // std::vector<double> check_edge_dist{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.6246,0.3754};
     // std::vector<double> vari_edge_dist{0, 0.0599, 0 , 0.7634,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.1767};
     // std::vector<double> eff_check_edge_dist{0,0,0,0,0,0.500000000000000,0.250000000000000,0,0,0,0,0,0,0,0,0,0.250000000000000}; //fake
     // std::vector<double> eff_vari_edge_dist{0.821400000000000,0,0,0.0476000000000000,0.131000000000000}; // fake
-    // double code_rate=7.0/8.0;
+    // double code_rate=0.8707;
 
     double cur_eb_no;
-    unsigned int quansize =32;
+    unsigned int quansize =16;
     double threshold = pow(10.0, -7.0);
-    unsigned max_iter = 16;
-    bool flag=true;
+    unsigned max_iter = 20;
+    //bool flag=true;
     int regular_result;
     double llr_intervel=0.01;
     unsigned int ib_runtime=100;
