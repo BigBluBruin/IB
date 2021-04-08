@@ -23,12 +23,12 @@ int main(int argc, char* argv[])
     //argv[2]: design eb_no string   
 
     //-----80211 LDPC code--------------------------
-    // double puncture_rate=0;
-    // std::vector<double> check_edge_dist{0,0,0,0,0,0,0.8140,0.1860};
-    // std::vector<double> vari_edge_dist{0,0.2558,0.3140,0.0465,0,0,0,0,0,0,0.3837};
+    //double puncture_rate=0;
+    //std::vector<double> check_edge_dist{0,0,0,0,0,0,0.8140,0.1860};
+    //std::vector<double> vari_edge_dist{0,0.2558,0.3140,0.0465,0,0,0,0,0,0,0.3837};
     // std::vector<double> eff_check_edge_dist{0,0,0,0,0,0.500000000000000,0.250000000000000,0,0,0,0,0,0,0,0,0,0.250000000000000}; //fake
     // std::vector<double> eff_vari_edge_dist{0.821400000000000,0,0,0.0476000000000000,0.131000000000000}; // fake
-    // double code_rate=0.5;
+    //double code_rate=0.5;
 
  
     
@@ -71,8 +71,10 @@ int main(int argc, char* argv[])
     // std::vector<double> eff_vari_edge_dist{0.821400000000000,0,0,0.0476000000000000,0.131000000000000};
 
     //----Regular LDPC----------
-    //std::vector<double> vari_edge_dist{0,0,0,1};
-    //std::vector<double> check_edge_dist{0,0,0,0,0,0,1};
+    //  double puncture_rate=0;
+    // std::vector<double> vari_edge_dist{0,0,1};
+    // std::vector<double> check_edge_dist{0,0,0,0,0,1};
+    // double code_rate=0.5;
 
     //------SA PBRL Code ------------
     // double puncture_rate=0;
@@ -116,12 +118,12 @@ int main(int argc, char* argv[])
     // double code_rate=1.0/2.0;
 
     //------SS 3K --------
-    double puncture_rate=0;
-    std::vector<double> check_edge_dist{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.6246,0.3754};
-    std::vector<double> vari_edge_dist{0, 0.0599, 0 , 0.7634,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.1767};
-    std::vector<double> eff_check_edge_dist{0,0,0,0,0,0.500000000000000,0.250000000000000,0,0,0,0,0,0,0,0,0,0.250000000000000}; //fake
-    std::vector<double> eff_vari_edge_dist{0.821400000000000,0,0,0.0476000000000000,0.131000000000000}; // fake
-    double code_rate=0.8707;
+    // double puncture_rate=0;
+    // std::vector<double> check_edge_dist{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.6246,0.3754};
+    // std::vector<double> vari_edge_dist{0, 0.0599, 0 , 0.7634,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.1767};
+    // std::vector<double> eff_check_edge_dist{0,0,0,0,0,0.500000000000000,0.250000000000000,0,0,0,0,0,0,0,0,0,0.250000000000000}; //fake
+    // std::vector<double> eff_vari_edge_dist{0.821400000000000,0,0,0.0476000000000000,0.131000000000000}; // fake
+    // double code_rate=0.8707;
 
     //------SS 6K --------
     // double puncture_rate=0;
@@ -131,8 +133,25 @@ int main(int argc, char* argv[])
     // std::vector<double> eff_vari_edge_dist{0.821400000000000,0,0,0.0476000000000000,0.131000000000000}; // fake
     // double code_rate=0.8707;
 
+    //------Samsung 4k---------------------------
+    // double puncture_rate=0;
+    // std::vector<double> check_edge_dist{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.391891891891892,0.608108108108108};
+    // std::vector<double> vari_edge_dist{0,0,0,1};
+    // std::vector<double> eff_check_edge_dist{0,0,0,0,0,0.500000000000000,0.250000000000000,0,0,0,0,0,0,0,0,0,0.250000000000000}; //fake
+    // std::vector<double> eff_vari_edge_dist{0.821400000000000,0,0,0.0476000000000000,0.131000000000000}; // fake
+    // double code_rate=0.8649;
+
+    //------ 8k-------------------
+    double puncture_rate = 0;
+    std::vector<double> check_edge_dist{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.391891891891892, 0.608108108108108};
+    std::vector<double> vari_edge_dist{0, 0, 0, 1};
+    double code_rate = 0.8649;
+    std::vector<double> eff_check_edge_dist{0, 0, 0, 0, 0, 0.500000000000000, 0.250000000000000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.250000000000000}; //fake
+    std::vector<double> eff_vari_edge_dist{0.821400000000000, 0, 0, 0.0476000000000000, 0.131000000000000};                                     // fake
+   
+
     double cur_eb_no;
-    unsigned int quansize =16;
+    unsigned int quansize = 32;
     double threshold = pow(10.0, -7.0);
     unsigned max_iter = 20;
     //bool flag=true;
