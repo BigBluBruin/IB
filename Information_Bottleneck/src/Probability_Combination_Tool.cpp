@@ -198,8 +198,6 @@ std::vector<std::vector<double>> llr_combination(std::vector<std::vector<double>
     return combined_prob;
 }
 
-
-
 void prob_offset(std::vector<std::vector<double>> &input, double alpha)
 {
     double summ;

@@ -151,9 +151,9 @@ int main(int argc, char* argv[])
    
 
     double cur_eb_no;
-    unsigned int quansize = 32;
+    unsigned int quansize = 16;
     double threshold = pow(10.0, -7.0);
-    unsigned max_iter = 20;
+    unsigned max_iter = 10;
     //bool flag=true;
     int regular_result;
     double llr_intervel=0.01;

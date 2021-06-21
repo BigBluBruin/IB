@@ -33,6 +33,7 @@ int Irregular_DE::Discrete_Density_Evolution()
     std::vector<double> old_llr;
     std::vector<unsigned> old_cluster;
     std::cout<<"finished channel quantization...."<<std::endl;
+    display(channel_IB.prob_join_xt);
 
     //-------------------start iteration------------------------------------------
     for (unsigned iter = 0; iter < max_iter; iter++)
@@ -125,21 +126,6 @@ int Irregular_DE::Discrete_Density_Evolution()
         clipped_cvd=clip_prob(llr_combined_vari_dist,pow(10,-10.0));
         ave_joinprob_llr(clipped_cvd, pow(10.0, -80.0));
         IB_kernel vari_IB(clipped_cvd, quantization_size, ib_runtime);
-        // if (iter== 10)
-        // {
-        //     std::cout<<"here"<<std::endl;
-        //     std::ofstream prob_handle("prob.txt");
-        //     for (int iii = 0; iii < 2; iii++)
-        //     {
-        //         for (auto &&entry : clipped_cvd[iii])
-        //         {
-        //             prob_handle<<entry<<"  ";
-        //         }
-        //         prob_handle<<std::endl;
-        //     }
-        //     prob_handle.close();
-        // }
-
         vari_IB.Progressive_MMI();
         adjust_joint_prob(vari_IB.prob_join_xt, 40, pow(10,-7));
         vari_representation.push_back(llr_cal(vari_IB.prob_join_xt));
@@ -625,9 +611,6 @@ int Irregular_DE::Discrete_Density_Evolution_punc()
 
     return 1;
 }
-
-
-
 
 
       //---------------check node--------------------

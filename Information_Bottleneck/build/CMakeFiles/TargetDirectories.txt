@@ -1,3 +1,3 @@
-/home/nick/Documents/Gitpro/IB/Information_Bottleneck/build/CMakeFiles/rebuild_cache.dir
-/home/nick/Documents/Gitpro/IB/Information_Bottleneck/build/CMakeFiles/edit_cache.dir
-/home/nick/Documents/Gitpro/IB/Information_Bottleneck/build/CMakeFiles/runner.dir
+/home/linfang/Documents/GitHubCodes/IB/Information_Bottleneck/build/CMakeFiles/rebuild_cache.dir
+/home/linfang/Documents/GitHubCodes/IB/Information_Bottleneck/build/CMakeFiles/edit_cache.dir
+/home/linfang/Documents/GitHubCodes/IB/Information_Bottleneck/build/CMakeFiles/runner.dir
